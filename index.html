@@ -254,6 +254,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
   <div><span class="owner-badge">OWNER ACCESS</span><h2 style="margin:8px 0 4px">Business Owner Panel</h2><p class="muted" style="margin:0">Full control over job posts: confirm, update, complete or delete.</p></div>
   <button class="btn ghost" id="ownerRefresh">Refresh</button>
+<button class="btn secondary" id="ownerRequirementsManageBtn">Manage Company Requirements</button>
 </div>
 <div class="notice" style="margin-top:18px"><b>Owner:</b> Virjul Kumar Yadav · <b>Email:</b> kaammilaga.official@gmail.com</div>
 <div id="ownerPanelMsg"></div>
@@ -988,115 +989,74 @@ Requirement: ${note}`);
   });
 })();
 
-
-// Owner Company Requirements Management
-async function ownerRequirementsMutation(method, path, body){
-  const owner = await getOwnerUser();
+async function ownerRequirementsMutation(method,path,body){
+  const owner=await getOwnerUser();
   if(!owner) throw new Error("Owner login required.");
-  const token = await getSession();
+  const token=await getSession();
   if(!token) throw new Error("Owner session expired. Please login again.");
-  const headers = {"Authorization":"Bearer "+token, "Prefer":"return=representation"};
-  if(body !== undefined) headers["Content-Type"]="application/json";
-  const r = await supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
-  const raw = await r.text();
-  if(!r.ok){
-    let d={}; try{d=JSON.parse(raw)}catch(e){}
-    throw new Error(d.message||d.hint||d.details||raw||"Owner action failed.");
-  }
-  return raw ? JSON.parse(raw) : [];
+  const headers={"Authorization":"Bearer "+token,"Prefer":"return=representation"};
+  if(body!==undefined) headers["Content-Type"]="application/json";
+  const r=await supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
+  const raw=await r.text();
+  if(!r.ok){let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.hint||d.details||raw||"Owner action failed.");}
+  return raw?JSON.parse(raw):[];
 }
-
 async function loadOwnerCompanyRequirements(){
-  const owner = await getOwnerUser();
-  if(!owner) return;
-  const box = document.getElementById("ownerRequirementsList");
+  const box=document.getElementById("ownerRequirementsList");
   if(!box) return;
   try{
-    const token = await getSession();
-    const r = await supa("company_requirements?select=*&order=created_at.desc",{
-      headers:{"Authorization":"Bearer "+token}
-    });
-    const raw = await r.text();
+    const token=await getSession();
+    const r=await supa("company_requirements?select=*&order=created_at.desc",{headers:{"Authorization":"Bearer "+token}});
+    const raw=await r.text();
     if(!r.ok) throw new Error(raw);
-    const rows = JSON.parse(raw);
-    if(!Array.isArray(rows) || !rows.length){
-      box.innerHTML='<div class="card">No company requirements found.</div>';
-      return;
-    }
-
-    box.innerHTML = rows.map(x => `
+    const rows=JSON.parse(raw);
+    if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No company requirements found.</div>';return;}
+    box.innerHTML=rows.map(x=>`
       <article class="owner-job">
         <div class="owner-job-head">
           <div>
-            <span class="owner-badge">${x.status === "completed" ? "COMPLETED" : "ACTIVE"}</span>
+            <span class="owner-badge">${x.status==="completed"?"COMPLETED":"ACTIVE"}</span>
             <h3 style="margin:8px 0 4px">${escapeHtml(x.company_name)}</h3>
-            <div class="owner-small">${escapeHtml(x.location)} · ${escapeHtml(String(x.members_needed))} members · ${escapeHtml(x.worker_requirement)}</div>
+            <div class="owner-small">${escapeHtml(String(x.members_needed))} members · ${escapeHtml(x.worker_requirement)} · ${escapeHtml(x.location)}</div>
           </div>
-          <div class="owner-small">ID: ${escapeHtml(String(x.id))}</div>
         </div>
-        <div style="margin-top:10px">
-          <b>Calling:</b> ${escapeHtml(x.caller_role)} — ${escapeHtml(x.caller_name)}<br>
-          <b>Salary / Rate:</b> ${escapeHtml(x.salary)}<br>
-          <b>Joining:</b> ${escapeHtml(x.joining_date || "As per company")}
-          ${x.details ? `<br><b>Details:</b> ${escapeHtml(x.details)}` : ""}
+        <div class="owner-small" style="margin-top:8px">
+          ${escapeHtml(x.caller_role)} — ${escapeHtml(x.caller_name)} · ${escapeHtml(x.salary)}
         </div>
         <div class="owner-actions">
-          ${x.status !== "completed"
-            ? `<button class="btn secondary" onclick="ownerCompleteRequirement(${x.id})">Mark Complete</button>`
-            : `<button class="btn" onclick="ownerReopenRequirement(${x.id})">Re-Open</button>`}
+          ${x.status==="completed"
+            ? `<button class="btn" onclick="ownerReopenRequirement(${x.id})">Re-Open</button>`
+            : `<button class="btn secondary" onclick="ownerCompleteRequirement(${x.id})">Mark Complete</button>`}
           <button class="btn secondary" onclick="ownerEditRequirement(${x.id})">Update</button>
           <button class="btn danger" onclick="ownerDeleteRequirement(${x.id})">Delete</button>
         </div>
-      </article>
-    `).join("");
+      </article>`).join("");
   }catch(e){
     box.innerHTML='<div class="card">Could not load company requirements.</div>';
-    msg("ownerRequirementsMsg",e.message,"error");
+    const m=document.getElementById("ownerRequirementsMsg"); if(m) m.textContent=e.message;
   }
 }
-
-window.ownerCompleteRequirement = async function(id){
+window.ownerCompleteRequirement=async function(id){
   if(!confirm("Mark this company requirement as completed? It will disappear from the public website.")) return;
-  try{
-    await ownerRequirementsMutation("PATCH","company_requirements?id=eq."+encodeURIComponent(id),{status:"completed"});
-    await loadOwnerCompanyRequirements();
-    await loadCompanyRequirements();
-    showToast("Company requirement marked completed.");
-  }catch(e){msg("ownerRequirementsMsg",e.message,"error");}
+  try{await ownerRequirementsMutation("PATCH","company_requirements?id=eq."+encodeURIComponent(id),{status:"completed"});await loadOwnerCompanyRequirements();await loadCompanyRequirements();showToast("Company requirement marked completed.");}
+  catch(e){const m=document.getElementById("ownerRequirementsMsg");if(m)m.textContent=e.message;}
 };
-
-window.ownerReopenRequirement = async function(id){
-  if(!confirm("Re-open this company requirement and show it publicly again?")) return;
-  try{
-    await ownerRequirementsMutation("PATCH","company_requirements?id=eq."+encodeURIComponent(id),{status:"active"});
-    await loadOwnerCompanyRequirements();
-    await loadCompanyRequirements();
-    showToast("Company requirement re-opened.");
-  }catch(e){msg("ownerRequirementsMsg",e.message,"error");}
+window.ownerReopenRequirement=async function(id){
+  if(!confirm("Re-open this requirement and show it publicly again?")) return;
+  try{await ownerRequirementsMutation("PATCH","company_requirements?id=eq."+encodeURIComponent(id),{status:"active"});await loadOwnerCompanyRequirements();await loadCompanyRequirements();showToast("Company requirement re-opened.");}
+  catch(e){const m=document.getElementById("ownerRequirementsMsg");if(m)m.textContent=e.message;}
 };
-
-window.ownerDeleteRequirement = async function(id){
-  if(!confirm("Delete this company requirement permanently? This cannot be undone.")) return;
-  try{
-    await ownerRequirementsMutation("DELETE","company_requirements?id=eq."+encodeURIComponent(id));
-    await loadOwnerCompanyRequirements();
-    await loadCompanyRequirements();
-    showToast("Company requirement deleted permanently.");
-  }catch(e){msg("ownerRequirementsMsg",e.message,"error");}
+window.ownerDeleteRequirement=async function(id){
+  if(!confirm("Delete this company requirement permanently?")) return;
+  try{await ownerRequirementsMutation("DELETE","company_requirements?id=eq."+encodeURIComponent(id));await loadOwnerCompanyRequirements();await loadCompanyRequirements();showToast("Company requirement deleted.");}
+  catch(e){const m=document.getElementById("ownerRequirementsMsg");if(m)m.textContent=e.message;}
 };
-
-window.ownerEditRequirement = async function(id){
+window.ownerEditRequirement=async function(id){
   try{
-    const owner = await getOwnerUser();
-    if(!owner) throw new Error("Owner login required.");
-    const token = await getSession();
-    const r = await supa("company_requirements?id=eq."+encodeURIComponent(id)+"&select=*&limit=1",{
-      headers:{"Authorization":"Bearer "+token}
-    });
-    const rows = await r.json();
-    const x = Array.isArray(rows) ? rows[0] : null;
+    const token=await getSession();
+    const r=await supa("company_requirements?id=eq."+encodeURIComponent(id)+"&select=*&limit=1",{headers:{"Authorization":"Bearer "+token}});
+    const rows=await r.json(),x=Array.isArray(rows)?rows[0]:null;
     if(!x) throw new Error("Requirement not found.");
-
     document.getElementById("ownerReqEditId").value=x.id;
     document.getElementById("ownerReqEditCompany").value=x.company_name||"";
     document.getElementById("ownerReqEditMembers").value=x.members_needed||"";
@@ -1109,45 +1069,40 @@ window.ownerEditRequirement = async function(id){
     document.getElementById("ownerReqEditDetails").value=x.details||"";
     document.getElementById("ownerReqEditStatus").value=x.status||"active";
     openModal("ownerRequirementEditModal");
-  }catch(e){msg("ownerRequirementsMsg",e.message,"error");}
+  }catch(e){const m=document.getElementById("ownerRequirementsMsg");if(m)m.textContent=e.message;}
 };
-
-if(document.getElementById("ownerRequirementsManageBtn")){
-  document.getElementById("ownerRequirementsManageBtn").onclick = async function(){
-    const owner=await getOwnerUser();
-    if(!owner){showToast("Owner login required.");return;}
-    openModal("ownerRequirementsModal");
-    await loadOwnerCompanyRequirements();
-  };
-}
-
-if(document.getElementById("ownerReqSaveEdit")){
-  document.getElementById("ownerReqSaveEdit").onclick = async function(){
-    try{
-      const id=document.getElementById("ownerReqEditId").value;
-      const body={
-        company_name:document.getElementById("ownerReqEditCompany").value.trim(),
-        members_needed:Number(document.getElementById("ownerReqEditMembers").value),
-        caller_role:document.getElementById("ownerReqEditCallerRole").value,
-        caller_name:document.getElementById("ownerReqEditCallerName").value.trim(),
-        worker_requirement:document.getElementById("ownerReqEditWorker").value.trim(),
-        salary:document.getElementById("ownerReqEditSalary").value.trim(),
-        location:document.getElementById("ownerReqEditLocation").value.trim(),
-        joining_date:document.getElementById("ownerReqEditJoining").value || null,
-        details:document.getElementById("ownerReqEditDetails").value.trim(),
-        status:document.getElementById("ownerReqEditStatus").value
-      };
-      if(!body.company_name||!body.members_needed||!body.caller_name||!body.worker_requirement||!body.salary||!body.location){
-        msg("ownerReqEditMsg","Please fill all required fields.","error");return;
-      }
-      await ownerRequirementsMutation("PATCH","company_requirements?id=eq."+encodeURIComponent(id),body);
-      document.getElementById("ownerRequirementEditModal").classList.add("hidden");
-      await loadOwnerCompanyRequirements();
-      await loadCompanyRequirements();
-      showToast("Company requirement updated.");
-    }catch(e){msg("ownerReqEditMsg",e.message,"error");}
-  };
-}
+document.addEventListener("click",function(e){
+  if(e.target && e.target.id==="ownerRequirementsManageBtn"){
+    getOwnerUser().then(owner=>{
+      if(!owner){showToast("Owner login required.");return;}
+      openModal("ownerRequirementsModal");loadOwnerCompanyRequirements();
+    });
+  }
+});
+document.addEventListener("click",function(e){
+  if(e.target && e.target.id==="ownerReqSaveEdit"){
+    (async()=>{
+      try{
+        const id=document.getElementById("ownerReqEditId").value;
+        const body={
+          company_name:document.getElementById("ownerReqEditCompany").value.trim(),
+          members_needed:Number(document.getElementById("ownerReqEditMembers").value),
+          caller_role:document.getElementById("ownerReqEditCallerRole").value,
+          caller_name:document.getElementById("ownerReqEditCallerName").value.trim(),
+          worker_requirement:document.getElementById("ownerReqEditWorker").value.trim(),
+          salary:document.getElementById("ownerReqEditSalary").value.trim(),
+          location:document.getElementById("ownerReqEditLocation").value.trim(),
+          joining_date:document.getElementById("ownerReqEditJoining").value||null,
+          details:document.getElementById("ownerReqEditDetails").value.trim(),
+          status:document.getElementById("ownerReqEditStatus").value
+        };
+        await ownerRequirementsMutation("PATCH","company_requirements?id=eq."+encodeURIComponent(id),body);
+        document.getElementById("ownerRequirementEditModal").classList.add("hidden");
+        await loadOwnerCompanyRequirements();await loadCompanyRequirements();showToast("Company requirement updated.");
+      }catch(e){const m=document.getElementById("ownerReqEditMsg");if(m)m.textContent=e.message;}
+    })();
+  }
+});
 
 </script>
 
@@ -1157,45 +1112,30 @@ if(document.getElementById("ownerReqSaveEdit")){
     <button class="modal-close" data-close="ownerRequirementsModal">×</button>
     <span class="eyebrow">OWNER CONTROL</span>
     <h2>Company Hiring Requirements</h2>
-    <p class="muted">Manage every company requirement: complete, update, reopen or permanently delete.</p>
+    <p class="muted">Manage company worker requirements.</p>
     <div id="ownerRequirementsMsg"></div>
     <div id="ownerRequirementsList" class="owner-grid">
       <div class="card">Loading requirements...</div>
     </div>
   </div>
 </div>
-
 <div class="modal hidden" id="ownerRequirementEditModal">
   <div class="modal-card">
     <button class="modal-close" data-close="ownerRequirementEditModal">×</button>
     <span class="eyebrow">OWNER CONTROL</span>
     <h2>Update Company Requirement</h2>
     <input type="hidden" id="ownerReqEditId">
-    <label>Company Name</label>
-    <input class="input" id="ownerReqEditCompany">
-    <label>Members Required</label>
-    <input class="input" id="ownerReqEditMembers" type="number" min="1">
+    <label>Company Name</label><input class="input" id="ownerReqEditCompany">
+    <label>Members Required</label><input class="input" id="ownerReqEditMembers" type="number" min="1">
     <label>Who Is Calling</label>
-    <select class="input" id="ownerReqEditCallerRole">
-      <option>HR</option><option>Owner</option><option>Company Representative</option><option>Contractor</option>
-    </select>
-    <label>Contact Person</label>
-    <input class="input" id="ownerReqEditCallerName">
-    <label>Worker / Requirement</label>
-    <input class="input" id="ownerReqEditWorker">
-    <label>Salary / Rate</label>
-    <input class="input" id="ownerReqEditSalary">
-    <label>Work Location</label>
-    <input class="input" id="ownerReqEditLocation">
-    <label>Joining Date</label>
-    <input class="input" id="ownerReqEditJoining" type="date">
-    <label>Full Requirement / Other Details</label>
-    <textarea class="input" id="ownerReqEditDetails" rows="5"></textarea>
-    <label>Status</label>
-    <select class="input" id="ownerReqEditStatus">
-      <option value="active">Active</option>
-      <option value="completed">Completed</option>
-    </select>
+    <select class="input" id="ownerReqEditCallerRole"><option>HR</option><option>Owner</option><option>Company Representative</option><option>Contractor</option></select>
+    <label>Contact Person</label><input class="input" id="ownerReqEditCallerName">
+    <label>Worker / Requirement</label><input class="input" id="ownerReqEditWorker">
+    <label>Salary / Rate</label><input class="input" id="ownerReqEditSalary">
+    <label>Work Location</label><input class="input" id="ownerReqEditLocation">
+    <label>Joining Date</label><input class="input" id="ownerReqEditJoining" type="date">
+    <label>Full Requirement / Other Details</label><textarea class="input" id="ownerReqEditDetails" rows="5"></textarea>
+    <label>Status</label><select class="input" id="ownerReqEditStatus"><option value="active">Active</option><option value="completed">Completed</option></select>
     <div id="ownerReqEditMsg"></div>
     <button class="btn" id="ownerReqSaveEdit">Save Changes</button>
   </div>

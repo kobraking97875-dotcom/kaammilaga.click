@@ -36,6 +36,8 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 .danger{background:#dc2626!important;color:#fff!important}
 .owner-login-note{font-size:12px;color:#64748b;margin-top:8px}
 .owner-hidden{display:none!important}
+
+.requirement-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.requirement-card{border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff;box-shadow:0 8px 24px rgba(15,35,63,.06)}.requirement-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.requirement-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.requirement-meta div{background:#f8fafc;border-radius:10px;padding:10px}.requirement-label{font-size:11px;text-transform:uppercase;color:#64748b;font-weight:800;letter-spacing:.4px}.requirement-value{font-weight:700;color:#10233f;margin-top:3px}.requirement-owner{font-size:12px;color:#64748b;margin-top:12px}.requirement-status{display:inline-block;padding:6px 9px;border-radius:999px;background:#ecfdf5;color:#166534;font-size:12px;font-weight:800}.
 </style>
 </head>
 <body><div id="toast" class="toast"></div>
@@ -73,6 +75,11 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <section class="section">
 <div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2>Latest Jobs</h2><button class="btn secondary" data-open="jobModal">Post a Job</button></div>
 <div id="jobs" class="cards"><div class="card">Loading jobs...</div></div>
+</section>
+
+<section class="section" id="companyRequirementsSection">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">COMPANY HIRING REQUIREMENTS</span><h2 style="margin:5px 0">Workers Required by Companies</h2><p class="muted" style="margin:0">Company requirements posted through KaamMilega. Contact the support team for current verification.</p></div><button class="btn" id="ownerRequirementBtn" data-open="ownerRequirementModal">Post Company Requirement</button></div>
+<div id="companyRequirements" class="requirement-grid" style="margin-top:18px"><div class="card">Loading company requirements...</div></div>
 </section>
 
 <section class="section trust-section">
@@ -338,6 +345,22 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div class="row"><div class="formgroup"><label>Salary / Rate</label><input id="uSalary" class="input"></div><div class="formgroup"><label>Joining Date</label><input id="uDate" class="input" type="date"></div></div>
 <div class="formgroup"><label>Requirement Details</label><textarea id="uDetails" rows="4"></textarea></div>
 <button class="btn" id="submitUrgent">Send Requirement</button><div id="urgentMsg"></div>
+</div></div>
+
+
+<!-- OWNER COMPANY REQUIREMENT -->
+<div id="ownerRequirementModal" class="modal hidden"><div class="modalbox" style="max-width:850px">
+<button class="close" data-close>×</button>
+<span class="eyebrow">OWNER HIRING DESK</span>
+<h2>Post Company Requirement</h2>
+<p class="muted">Use this when a company/HR contacts you and asks KaamMilega to arrange workers.</p>
+<div class="row"><div class="formgroup"><label>Company Name *</label><input id="reqCompany" class="input" placeholder="Company name"></div><div class="formgroup"><label>Members Required *</label><input id="reqMembers" class="input" type="number" min="1" placeholder="e.g. 20"></div></div>
+<div class="row"><div class="formgroup"><label>Who Is Calling? *</label><select id="reqCallerRole" class="input"><option value="HR">HR</option><option value="Owner">Owner</option><option value="Company Representative">Company Representative</option><option value="Contractor">Contractor</option></select></div><div class="formgroup"><label>Contact Person *</label><input id="reqCallerName" class="input" placeholder="Name of HR / Owner / Representative"></div></div>
+<div class="row"><div class="formgroup"><label>Worker / Requirement *</label><input id="reqWorker" class="input" placeholder="MiG Welder / Helper / Electrician / Any requirement"></div><div class="formgroup"><label>Salary / Rate *</label><input id="reqSalary" class="input" placeholder="₹30,000–₹35,000 / month"></div></div>
+<div class="row"><div class="formgroup"><label>Work Location *</label><input id="reqLocation" class="input" placeholder="Ahmedabad, Gujarat"></div><div class="formgroup"><label>Joining Date</label><input id="reqJoining" class="input" type="date"></div></div>
+<div class="formgroup"><label>Full Requirement / Other Details</label><textarea id="reqDetails" class="input" rows="5" placeholder="Experience, shift, accommodation, documents, transport, interview details, etc."></textarea></div>
+<div id="reqMsg"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="saveRequirement">Publish Requirement</button><button class="btn secondary" data-close>Cancel</button></div>
 </div></div>
 
 <script>
@@ -888,6 +911,51 @@ $("ownerLogout").onclick=async()=>{
   clearLocalAuth(); ownerUser=null; $("ownerPanelModal").classList.add("hidden"); await updateOwnerUI(); showToast("Owner logged out.");
 };
 
+
+
+async function loadCompanyRequirements(){
+  const box=$("companyRequirements");
+  if(!box)return;
+  try{
+    const r=await supa("company_requirements?select=*&status=eq.active&order=created_at.desc",{headers:{"Prefer":"return=representation"}});
+    if(!r.ok)throw new Error(await r.text());
+    const rows=await r.json();
+    if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No active company requirements yet.</div>';return;}
+    box.innerHTML=rows.map(x=>`<article class="requirement-card">
+      <div class="requirement-top"><div><span class="eyebrow">HIRING REQUIREMENT</span><h3 style="margin:5px 0">${escapeHtml(x.company_name)}</h3></div><span class="requirement-status">ACTIVE</span></div>
+      <div class="requirement-meta">
+        <div><div class="requirement-label">Members Needed</div><div class="requirement-value">${escapeHtml(String(x.members_needed))}</div></div>
+        <div><div class="requirement-label">Worker Required</div><div class="requirement-value">${escapeHtml(x.worker_requirement)}</div></div>
+        <div><div class="requirement-label">Calling</div><div class="requirement-value">${escapeHtml(x.caller_role)} — ${escapeHtml(x.caller_name)}</div></div>
+        <div><div class="requirement-label">Salary / Rate</div><div class="requirement-value">${escapeHtml(x.salary)}</div></div>
+        <div><div class="requirement-label">Location</div><div class="requirement-value">${escapeHtml(x.location)}</div></div>
+        <div><div class="requirement-label">Joining</div><div class="requirement-value">${escapeHtml(x.joining_date||"As per company")}</div></div>
+      </div>
+      ${x.details?`<p style="margin:14px 0 0">${escapeHtml(x.details)}</p>`:""}
+      <div class="requirement-owner">Posted through KaamMilega Owner Hiring Desk</div>
+    </article>`).join('');
+  }catch(e){box.innerHTML='<div class="card">Company requirements are temporarily unavailable.</div>';console.error(e);}
+}
+
+function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[c]));}
+
+$("saveRequirement").onclick=async()=>{
+  const owner=await getOwnerUser();
+  if(!owner){msg("reqMsg","Owner login required. Only the business owner can publish company requirements.","error");return;}
+  const body={company_name:$("reqCompany").value.trim(),members_needed:Number($("reqMembers").value),caller_role:$("reqCallerRole").value,caller_name:$("reqCallerName").value.trim(),worker_requirement:$("reqWorker").value.trim(),salary:$("reqSalary").value.trim(),location:$("reqLocation").value.trim(),joining_date:$("reqJoining").value||null,details:$("reqDetails").value.trim(),status:"active"};
+  if(!body.company_name||!body.members_needed||!body.caller_name||!body.worker_requirement||!body.salary||!body.location){msg("reqMsg","Please fill all fields marked *.","error");return;}
+  try{
+    const token=await getSession();
+    const r=await supa("company_requirements",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=representation"},body:JSON.stringify(body)});
+    if(!r.ok){const raw=await r.text();throw new Error(raw||"Could not publish requirement.");}
+    ["reqCompany","reqMembers","reqCallerName","reqWorker","reqSalary","reqLocation","reqJoining","reqDetails"].forEach(id=>$(id).value="");
+    $("ownerRequirementModal").classList.add("hidden");
+    await loadCompanyRequirements();
+    showToast("Company requirement published.");
+  }catch(e){msg("reqMsg",e.message,"error");}
+};
+
+loadCompanyRequirements();
 
 restoreLoginState();
 updateOwnerUI();

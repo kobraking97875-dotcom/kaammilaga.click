@@ -23,6 +23,19 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 .company-info h3{margin:5px 0 4px}
 .company-info .notice{display:inline-block;margin:8px 0}
 @media(max-width:650px){.company-card{flex-direction:column}.company-logo{width:72px;height:72px;flex-basis:72px;font-size:25px}}
+
+.owner-badge{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;background:#fff7ed;color:#9a3412;font-size:12px;font-weight:800}
+.owner-grid{display:grid;grid-template-columns:1fr;gap:12px}
+.owner-job{border:1px solid #e5e7eb;border-radius:12px;padding:14px;background:#fff}
+.owner-job-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.owner-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.status-pending{color:#92400e;background:#fffbeb}
+.status-active{color:#166534;background:#ecfdf5}
+.status-completed{color:#475569;background:#f1f5f9}
+.owner-small{font-size:12px;color:#64748b}
+.danger{background:#dc2626!important;color:#fff!important}
+.owner-login-note{font-size:12px;color:#64748b;margin-top:8px}
+.owner-hidden{display:none!important}
 </style>
 </head>
 <body><div id="toast" class="toast"></div>
@@ -32,6 +45,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <button class="btn secondary" id="authNavBtn" data-open="loginModal">Login / Sign Up</button>
 <button class="btn ghost" data-open="supportModal">Customer Support</button>
 <button class="btn orange" data-open="urgentModal">Need Workers Urgently</button>
+<button class="btn ghost" id="ownerLoginBtn" data-open="ownerLoginModal">Owner Login</button>
 <button class="btn" data-open="jobModal">Post a Job</button>
 </div>
 </div></header>
@@ -210,6 +224,49 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
   <div class="card"><div class="trust-icon">SK</div><h3>Suraj Kumar Sha</h3><p class="muted">Assistant</p></div>
 </div>
 <div class="support-contact"><div><b>Team Support</b><span>kaammilaga.official@gmail.com</span></div><a class="btn orange" href="mailto:kaammilaga.official@gmail.com?subject=KaamMilega%20Team%20Support">Email Support</a></div>
+</div></div>
+
+
+<!-- OWNER LOGIN -->
+<div id="ownerLoginModal" class="modal hidden"><div class="modalbox">
+<button class="close" data-close>×</button>
+<div class="support-logo">O</div>
+<span class="eyebrow">KAAMMILEGA OWNER ACCESS</span>
+<h2>Owner Login</h2>
+<p class="muted">This login is restricted to the authorized KaamMilega business-owner account.</p>
+<div class="formgroup"><label>Owner Email</label><input id="ownerEmail" class="input" type="email" value="kaammilaga.official@gmail.com" readonly></div>
+<div class="formgroup"><label>Password</label><input id="ownerPassword" class="input" type="password" placeholder="Owner account password"></div>
+<button class="btn orange" id="ownerLoginSubmit">Login as Owner</button>
+<div id="ownerLoginMsg"></div>
+<div class="owner-login-note">Only the authorized owner email can open the owner panel. Create the single owner account in Supabase Auth before first login.</div>
+</div></div>
+
+<!-- OWNER PANEL -->
+<div id="ownerPanelModal" class="modal hidden"><div class="modalbox" style="max-width:900px">
+<button class="close" data-close>×</button>
+<div style="display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap">
+  <div><span class="owner-badge">OWNER ACCESS</span><h2 style="margin:8px 0 4px">Business Owner Panel</h2><p class="muted" style="margin:0">Full control over job posts: confirm, update, complete or delete.</p></div>
+  <button class="btn ghost" id="ownerRefresh">Refresh</button>
+</div>
+<div class="notice" style="margin-top:18px"><b>Owner:</b> Virjul Kumar Yadav · <b>Email:</b> kaammilaga.official@gmail.com</div>
+<div id="ownerPanelMsg"></div>
+<div id="ownerJobs" class="owner-grid"><div class="card">Loading owner jobs...</div></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
+  <button class="btn danger" id="ownerLogout">Owner Logout</button>
+  <button class="btn secondary" data-close>Close Panel</button>
+</div>
+</div></div>
+
+<!-- OWNER EDIT -->
+<div id="ownerEditModal" class="modal hidden"><div class="modalbox">
+<button class="close" data-close>×</button><span class="eyebrow">OWNER EDIT</span><h2>Update Job</h2>
+<input id="ownerEditId" type="hidden">
+<div class="row"><div class="formgroup"><label>Job Title</label><input id="ownerEditTitle" class="input"></div><div class="formgroup"><label>Category</label><input id="ownerEditCategory" class="input"></div></div>
+<div class="row"><div class="formgroup"><label>City</label><input id="ownerEditCity" class="input"></div><div class="formgroup"><label>Salary</label><input id="ownerEditSalary" class="input"></div></div>
+<div class="row"><div class="formgroup"><label>Job Type</label><select id="ownerEditType"><option>Full Time</option><option>Part Time</option><option>Contract</option><option>Daily Wage</option></select></div><div class="formgroup"><label>Contact Phone</label><input id="ownerEditPhone" class="input"></div></div>
+<div class="formgroup"><label>Description</label><textarea id="ownerEditDescription" class="input" rows="4"></textarea></div>
+<div class="formgroup"><label>Status</label><select id="ownerEditStatus"><option value="pending_owner">Pending Owner</option><option value="active">Confirmed / Active</option><option value="completed">Completed</option></select></div>
+<button class="btn" id="ownerSaveEdit">Save Changes</button><div id="ownerEditMsg"></div>
 </div></div>
 
 <!-- PROFILE -->
@@ -575,7 +632,7 @@ $("submitJob").onclick=async()=>{
     const employerSkills=Array.isArray(profile.skills)?profile.skills:[];
     const employerAvatar=profile.avatar_url||null;
     await supa("profiles",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"resolution=merge-duplicates,return=minimal"},body:JSON.stringify({id:user.id,name:employerName,phone:user.phone||$("jobPhone").value,role:"employer",city,skills:employerSkills,avatar_url:employerAvatar})});
-    const r=await supa("jobs",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=minimal"},body:JSON.stringify({employer_id:user.id,title,category,city,salary:$("jobSalary").value.trim(),job_type:$("jobType").value,description:$("jobDescription").value.trim(),contact_phone:($("jobPhone").value.trim()||user.phone||""),status:"active"})});
+    const r=await supa("jobs",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=minimal"},body:JSON.stringify({employer_id:user.id,title,category,city,salary:$("jobSalary").value.trim(),job_type:$("jobType").value,description:$("jobDescription").value.trim(),contact_phone:($("jobPhone").value.trim()||user.phone||""),status:"pending_owner"})});
     if(!r.ok){
       const raw=await r.text();
       let detail=raw; try{ const jd=JSON.parse(raw); detail=jd.message||jd.hint||jd.details||jd.error||raw; }catch(e){}
@@ -702,7 +759,138 @@ Details: ${$("uDetails").value}`);
   location.href=`mailto:kaammilaga.official@gmail.com?subject=${subject}&body=${body}`;
 };
 
+
+const OWNER_EMAIL = "kaammilaga.official@gmail.com";
+let ownerUser = null;
+
+function isOwnerUser(user){
+  return !!(user && String(user.email||"").toLowerCase()===OWNER_EMAIL.toLowerCase());
+}
+async function getOwnerUser(){
+  const token=await getSession();
+  if(!token)return null;
+  try{
+    const r=await fetch(SUPABASE_URL+"/auth/v1/user",{headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
+    if(!r.ok)return null;
+    const u=await r.json();
+    return isOwnerUser(u)?u:null;
+  }catch(e){return null}
+}
+
+async function updateOwnerUI(){
+  const btn=$("ownerLoginBtn");
+  const owner=await getOwnerUser();
+  ownerUser=owner;
+  if(owner){
+    if(btn){btn.textContent="Owner Panel";btn.dataset.open="ownerPanelModal";btn.classList.remove("ghost");btn.classList.add("orange");}
+    const normal=$("authNavBtn");
+    if(normal){normal.classList.add("owner-hidden");}
+  }else{
+    if(btn){btn.textContent="Owner Login";btn.dataset.open="ownerLoginModal";btn.classList.remove("orange");btn.classList.add("ghost");}
+    const normal=$("authNavBtn");
+    if(normal)normal.classList.remove("owner-hidden");
+  }
+  return owner;
+}
+
+$("ownerLoginSubmit").onclick=async()=>{
+  const email=OWNER_EMAIL;
+  const password=$("ownerPassword").value;
+  if(!password){msg("ownerLoginMsg","Enter the owner password.","error");return}
+  try{
+    const r=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=password",{
+      method:"POST",headers:{"apikey":SUPABASE_ANON_KEY,"Content-Type":"application/json"},body:JSON.stringify({email,password})
+    });
+    const d=await r.json();
+    if(!r.ok||!d.access_token)throw new Error(d.error_description||d.msg||"Owner login failed.");
+    if(String(d.user?.email||email).toLowerCase()!==OWNER_EMAIL.toLowerCase()){
+      throw new Error("This account is not authorized for Owner access.");
+    }
+    localStorage.setItem("km_access_token",d.access_token);
+    if(d.refresh_token)localStorage.setItem("km_refresh_token",d.refresh_token);
+    ownerUser=d.user;
+    await updateOwnerUI();
+    $("ownerLoginModal").classList.add("hidden");
+    $("ownerPassword").value="";
+    msg("ownerLoginMsg","Owner login successful.","success");
+    await loadOwnerJobs();
+    openModal("ownerPanelModal");
+  }catch(e){msg("ownerLoginMsg",e.message||"Owner login failed.","error")}
+};
+
+async function loadOwnerJobs(){
+  const box=$("ownerJobs");
+  if(!box)return;
+  const owner=await getOwnerUser();
+  if(!owner){box.innerHTML='<div class="card"><p class="muted">Owner session is not active.</p></div>';return}
+  const token=await getSession();
+  const r=await supa("jobs?select=id,title,category,city,salary,job_type,description,contact_phone,status,created_at,employer_id&order=created_at.desc&limit=1000",{headers:{"Authorization":"Bearer "+token}});
+  const data=await r.json();
+  if(!r.ok){box.innerHTML='<div class="card"><p class="error notice">Could not load owner jobs. Run the owner RLS SQL setup first.</p></div>';return}
+  if(!Array.isArray(data)||!data.length){box.innerHTML='<div class="card"><h3>No job posts</h3><p class="muted">No jobs are currently stored.</p></div>';return}
+  box.innerHTML=data.map(j=>{
+    const st=String(j.status||"pending_owner");
+    const cls=st==="active"?"status-active":st==="completed"?"status-completed":"status-pending";
+    const label=st==="active"?"CONFIRMED / ACTIVE":st==="completed"?"COMPLETED":"PENDING OWNER";
+    return `<div class="owner-job"><div class="owner-job-head"><div><span class="tag">${escapeHtml(j.category||"Job")}</span><h3 style="margin:7px 0">${escapeHtml(j.title||"Untitled")}</h3><div class="owner-small">${escapeHtml(j.city||"")} · ${escapeHtml(j.salary||"Salary not specified")} · ${escapeHtml(j.job_type||"")}</div><div class="owner-small" style="margin-top:5px">ID: ${escapeHtml(j.id||"")}</div></div><span class="notice ${cls}" style="margin:0">${label}</span></div><p>${escapeHtml(j.description||"")}</p><div class="owner-actions"><button class="btn" onclick="ownerSetStatus('${j.id}','active')">Confirm / Activate</button><button class="btn secondary" onclick="ownerSetStatus('${j.id}','completed')">Mark Complete</button><button class="btn ghost" onclick="ownerEditJob('${j.id}')">Update</button><button class="btn danger" onclick="ownerDeleteJob('${j.id}')">Delete</button></div></div>`;
+  }).join("");
+}
+
+async function ownerMutation(method,path,body){
+  const owner=await getOwnerUser();
+  if(!owner)throw new Error("Owner login required.");
+  const token=await getSession();
+  const headers={"Authorization":"Bearer "+token,"Prefer":"return=minimal"};
+  if(body!==undefined)headers["Content-Type"]="application/json";
+  const r=await supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
+  if(!r.ok){const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.hint||d.details||raw||"Owner action failed.")}
+  return r;
+}
+
+window.ownerSetStatus=async function(id,status){
+  if(!confirm(status==="completed"?"Mark this job as completed? It will disappear from public listings.":"Confirm/activate this job and make it visible publicly?"))return;
+  try{
+    await ownerMutation("PATCH","jobs?id=eq."+encodeURIComponent(id),{status});
+    await loadOwnerJobs(); await loadJobs(); showToast(status==="completed"?"Job marked completed.":"Job confirmed and published.");
+  }catch(e){msg("ownerPanelMsg",e.message,"error")}
+};
+
+window.ownerDeleteJob=async function(id){
+  if(!confirm("Delete this job permanently? This cannot be undone."))return;
+  try{
+    await ownerMutation("DELETE","jobs?id=eq."+encodeURIComponent(id));
+    await loadOwnerJobs(); await loadJobs(); showToast("Job deleted permanently.");
+  }catch(e){msg("ownerPanelMsg",e.message,"error")}
+};
+
+window.ownerEditJob=async function(id){
+  const owner=await getOwnerUser(); if(!owner){msg("ownerPanelMsg","Owner login required.","error");return}
+  const token=await getSession();
+  const r=await supa("jobs?id=eq."+encodeURIComponent(id)+"&select=id,title,category,city,salary,job_type,description,contact_phone,status&limit=1",{headers:{"Authorization":"Bearer "+token}});
+  const rows=await r.json();
+  const j=Array.isArray(rows)?rows[0]:null;
+  if(!j){msg("ownerPanelMsg","Job not found.","error");return}
+  $("ownerEditId").value=j.id; $("ownerEditTitle").value=j.title||""; $("ownerEditCategory").value=j.category||""; $("ownerEditCity").value=j.city||""; $("ownerEditSalary").value=j.salary||""; $("ownerEditType").value=j.job_type||"Full Time"; $("ownerEditPhone").value=j.contact_phone||""; $("ownerEditDescription").value=j.description||""; $("ownerEditStatus").value=j.status||"pending_owner";
+  openModal("ownerEditModal");
+};
+
+$("ownerSaveEdit").onclick=async()=>{
+  const id=$("ownerEditId").value;
+  const body={title:$("ownerEditTitle").value.trim(),category:$("ownerEditCategory").value.trim(),city:$("ownerEditCity").value.trim(),salary:$("ownerEditSalary").value.trim(),job_type:$("ownerEditType").value,contact_phone:$("ownerEditPhone").value.trim(),description:$("ownerEditDescription").value.trim(),status:$("ownerEditStatus").value};
+  if(!body.title||!body.category||!body.city){msg("ownerEditMsg","Title, category and city are required.","error");return}
+  try{await ownerMutation("PATCH","jobs?id=eq."+encodeURIComponent(id),body);$("ownerEditModal").classList.add("hidden");msg("ownerPanelMsg","Job updated successfully.","success");await loadOwnerJobs();await loadJobs();showToast("Job updated successfully.");}catch(e){msg("ownerEditMsg",e.message,"error")}
+};
+
+$("ownerRefresh").onclick=loadOwnerJobs;
+$("ownerLogout").onclick=async()=>{
+  const token=await getSession();
+  try{if(token)await fetch(SUPABASE_URL+"/auth/v1/logout",{method:"POST",headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}})}catch(e){}
+  clearLocalAuth(); ownerUser=null; $("ownerPanelModal").classList.add("hidden"); await updateOwnerUI(); showToast("Owner logged out.");
+};
+
+
 restoreLoginState();
+updateOwnerUI();
 loadJobs();
 </script>
 

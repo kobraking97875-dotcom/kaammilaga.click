@@ -46,6 +46,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 .requirement-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.requirement-card{border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff;box-shadow:0 8px 24px rgba(15,35,63,.06)}.requirement-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.requirement-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.requirement-meta div{background:#f8fafc;border-radius:10px;padding:10px}.requirement-label{font-size:11px;text-transform:uppercase;color:#64748b;font-weight:800;letter-spacing:.4px}.requirement-value{font-weight:700;color:#10233f;margin-top:3px}.requirement-owner{font-size:12px;color:#64748b;margin-top:12px}.requirement-status{display:inline-block;padding:6px 9px;border-radius:999px;background:#ecfdf5;color:#166534;font-size:12px;font-weight:800}.
 
 .content-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.content-nav a{background:#eef4ff;color:#0b63ce;text-decoration:none;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:800}.info-section{max-width:1150px;margin:auto;padding:42px 18px}.info-section h2{margin:0 0 10px}.info-section h3{margin:22px 0 8px}.info-section p,.info-section li{line-height:1.7;color:#475569}.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}.info-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px}.info-card h3{margin-top:0}.faq-item{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px 18px;margin:10px 0}.faq-item h3{font-size:17px;margin:0 0 7px}.policy-box{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;margin-top:14px}.policy-box p,.policy-box li{font-size:14px}.anchor-offset{scroll-margin-top:90px}@media(max-width:800px){.info-grid{grid-template-columns:1fr}}
+.modal-card{background:#fff;border-radius:16px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:22px;position:relative}.modal-close{float:right;background:#eef2f7;border:0;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:20px}.modal-card label{display:block;font-weight:700;margin:10px 0 6px}.modal-card .input{margin-bottom:4px}
 </style>
 </head>
 <body><div id="toast" class="toast"></div>
@@ -328,6 +329,12 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
   <button class="btn ghost" id="ownerRefresh">Refresh</button>
 </div>
 <div class="notice" style="margin-top:18px"><b>Owner:</b> Virjul Kumar Yadav · <b>Email:</b> kaammilaga.official@gmail.com</div>
+<div class="card" style="margin:16px 0;background:#f8fbff;border-color:#cfe0f5">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <div><span class="owner-badge">COMPANY REQUIREMENTS</span><h3 style="margin:8px 0 4px">Company Hiring Requirements</h3><p class="owner-small" style="margin:0">Handle company worker requests posted from the hiring desk. Update details, reopen active requirements, mark them complete, or delete them.</p></div>
+    <button class="btn orange" id="ownerRequirementsManageBtn" type="button">Manage Company Requirements</button>
+  </div>
+</div>
 <div id="ownerPanelMsg"></div>
 <div id="ownerJobs" class="owner-grid"><div class="card">Loading owner jobs...</div></div>
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">

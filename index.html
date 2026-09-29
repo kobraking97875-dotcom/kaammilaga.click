@@ -2753,5 +2753,120 @@ if(document.getElementById("ownerReqSaveEdit")){
 })();
 </script>
 
+
+<script id="kaammilega-v15-final-action-fix">
+(function(){
+  const $=id=>document.getElementById(id);
+  const clean=v=>String(v??'').trim();
+  const esc=window.escapeHtml||((v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])));
+  const OWNER='kaammilaga.official@gmail.com';
+  const timeout=async(p,ms=10000)=>{let t;try{return await Promise.race([p,new Promise((_,rej)=>t=setTimeout(()=>rej(new Error('Request timed out. Please check Supabase connection/RLS settings.')),ms))])}finally{clearTimeout(t)}};
+  const msg=(id,text,type='error')=>{const x=$(id);if(x)x.innerHTML='<div class="notice '+type+'">'+esc(text)+'</div>'};
+  const modalField=(btn,id)=>{const modal=btn?.closest('.modal');return modal?.querySelector('#'+CSS.escape(id))||$(id)};
+  const modalMsg=(btn,id)=>{const modal=btn?.closest('.modal');return modal?.querySelector('#'+CSS.escape(id))||$(id)};
+
+  // IMPORTANT: use fields from the opened modal, not document.getElementById().
+  // The older page contains duplicate IDs in legacy/hidden markup.
+  function bindUrgentFinal(){
+    const old=$('submitUrgent'); if(!old)return;
+    const b=old.cloneNode(true); old.replaceWith(b);
+    b.addEventListener('click',e=>{
+      e.preventDefault(); e.stopImmediatePropagation();
+      const c=clean(modalField(b,'uCompany')?.value), p=clean(modalField(b,'uContact')?.value), m=clean(modalField(b,'uMobile')?.value), w=clean(modalField(b,'uWorker')?.value), n=clean(modalField(b,'uCount')?.value), city=clean(modalField(b,'uCity')?.value);
+      const missing=[]; if(!c)missing.push('Company');if(!p)missing.push('Contact Person');if(!m)missing.push('Mobile');if(!w)missing.push('Worker Type');if(!n)missing.push('Number of Workers');if(!city)missing.push('Work Location');
+      if(missing.length){msg('urgentMsg','Please fill: '+missing.join(', ')+'.','error');return;}
+      const salary=clean(modalField(b,'uSalary')?.value), date=clean(modalField(b,'uDate')?.value), details=clean(modalField(b,'uDetails')?.value);
+      const text=`KaamMilega Urgent Worker Requirement\nCompany: ${c}\nContact: ${p}\nMobile: ${m}\nWorker: ${w}\nNumber of workers: ${n}\nLocation: ${city}\nSalary: ${salary}\nJoining: ${date}\nDetails: ${details}`;
+      msg('urgentMsg','Opening WhatsApp...','success');
+      window.location.href='https://wa.me/916206085383?text='+encodeURIComponent(text);
+    },false);
+  }
+
+  function bindPayUFinal(){
+    const old=$('payFeatured'); if(!old)return;
+    const b=old.cloneNode(true); old.replaceWith(b);
+    b.addEventListener('click',async e=>{
+      e.preventDefault();e.stopImmediatePropagation();
+      const token=await (window.getSession?window.getSession():null);
+      if(!token){msg('featuredMsg','Please login first.','error');return;}
+      const confirm=modalField(b,'fConfirm');
+      if(!confirm?.checked){msg('featuredMsg','Please confirm the details first.','error');return;}
+      const val=id=>clean(modalField(b,id)?.value);
+      const body={company_name:val('fCompany'),contact_person:val('fContact'),mobile:val('fMobile'),phone:val('fMobile'),job_title:val('fTitle'),category:val('fCategory'),city:val('fCity'),salary:val('fSalary'),job_type:'Full Time',description:val('fDescription'),plan_days:Number(modalField(b,'fPlan')?.value||0)};
+      const required=['company_name','contact_person','mobile','job_title','category','city','salary'];
+      const missing=required.filter(k=>!clean(body[k]));
+      if(missing.length){msg('featuredMsg','Please fill: '+missing.join(', ')+'.','error');return;}
+      b.disabled=true;b.textContent='Connecting to PayU...';
+      try{
+        const send=t=>timeout(fetch(PAYMENT_FN,{method:'POST',headers:{Authorization:'Bearer '+t,apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(body)}),15000);
+        let r=await send(token); if(r.status===401&&window.refreshTokenOnce){const ft=await window.refreshTokenOnce();if(ft)r=await send(ft)}
+        const raw=await r.text();let d={};try{d=raw?JSON.parse(raw):{}}catch(_){}
+        if(!r.ok)throw new Error('PayU server: '+(d.error||d.message||d.msg||raw||('HTTP '+r.status)));
+        if(!(d.success===true||d.ok===true))throw new Error(d.error||d.message||d.msg||'PayU did not return a valid response.');
+        const url=d.paymentUrl||d.payment_url;if(!url||!d.params)throw new Error('PayU configuration is incomplete in the payu-payment function.');
+        const form=document.createElement('form');form.method='POST';form.action=url;
+        Object.entries(d.params).forEach(([k,v])=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v??'';form.appendChild(i)});
+        document.body.appendChild(form);form.submit();
+      }catch(err){console.error('PayU v15',err);msg('featuredMsg',err.message||'PayU payment could not be started.','error')}
+      finally{b.disabled=false;b.textContent='Continue to PayU'}
+    },false);
+  }
+
+  // Public company requirements: never stay on an infinite loading state.
+  window.loadCompanyRequirementsFinal=async function(){
+    const box=$('companyRequirements');if(!box)return;box.innerHTML='<div class="card">Loading company requirements...</div>';
+    try{
+      const r=await timeout(supa('company_requirements?select=*&status=eq.active&order=created_at.desc'),10000);
+      const raw=await r.text();let rows=[];try{rows=raw?JSON.parse(raw):[]}catch(_){rows=[]}
+      if(!r.ok)throw new Error(rows?.message||rows?.hint||raw||'Could not load company requirements.');
+      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No active company requirements yet.</div>';return}
+      box.innerHTML=rows.map(x=>`<article class="requirement-card"><div class="requirement-top"><div><span class="eyebrow">HIRING REQUIREMENT</span><h3 style="margin:5px 0">${esc(x.company_name)}</h3></div><span class="requirement-status">ACTIVE</span></div><div class="requirement-meta"><div><div class="requirement-label">Members Needed</div><div class="requirement-value">${esc(x.members_needed)}</div></div><div><div class="requirement-label">Worker Required</div><div class="requirement-value">${esc(x.worker_requirement)}</div></div><div><div class="requirement-label">Calling</div><div class="requirement-value">${esc(x.caller_role)} — ${esc(x.caller_name)}</div></div><div><div class="requirement-label">Salary / Rate</div><div class="requirement-value">${esc(x.salary)}</div></div><div><div class="requirement-label">Location</div><div class="requirement-value">${esc(x.location)}</div></div><div><div class="requirement-label">Joining</div><div class="requirement-value">${esc(x.joining_date||'As per company')}</div></div></div>${x.details?'<p style="margin:14px 0 0">'+esc(x.details)+'</p>':''}<div class="requirement-owner">Posted through KaamMilega Owner Hiring Desk</div></article>`).join('');
+    }catch(e){box.innerHTML='<div class="card"><div class="notice error">'+esc(e.message||'Company requirements are temporarily unavailable.')+'</div></div>'}
+  };
+
+  // Owner managers are explicitly exposed globally so later scripts cannot report them as unavailable.
+  window.loadOwnerReviews=async function(){
+    const box=$('ownerReviews');if(!box)return;box.innerHTML='<div class="card">Loading reviews...</div>';
+    try{
+      const u=window.getOwnerUser?await window.getOwnerUser():null;if(!u)throw new Error('Owner session is not active. Please login again.');
+      const token=window.getSession?await window.getSession():null;if(!token)throw new Error('Owner session is not active. Please login again.');
+      const r=await timeout(supa('job_reviews?select=*&order=created_at.desc&limit=500',{headers:{Authorization:'Bearer '+token}}),10000);
+      const raw=await r.text();let rows=[];try{rows=raw?JSON.parse(raw):[]}catch(_){rows=[]}
+      if(!r.ok)throw new Error(rows?.message||rows?.hint||raw||'Could not load reviews.');
+      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No reviews yet.</div>';return}
+      box.innerHTML=rows.map(x=>`<article class="owner-job"><div class="review-stars">${'★'.repeat(Math.min(5,Math.max(0,Number(x.rating)||0)))}${'☆'.repeat(Math.max(0,5-(Number(x.rating)||0)))}</div><h3>${esc(x.job_title_snapshot||'Job Review')}</h3><p>${esc(x.comment||'')}</p><div class="owner-small">${esc(x.reviewer_id||'')} · ${x.created_at?new Date(x.created_at).toLocaleString():''}</div></article>`).join('');
+    }catch(e){box.innerHTML='<div class="card"><div class="notice error">'+esc(e.message||'Could not load reviews.')+'</div></div>';msg('ownerReviewsMsg',e.message||'Could not load reviews.','error')}
+  };
+
+  window.loadOwnerVideos=async function(){
+    const box=$('ownerVideosList');if(!box)return;box.innerHTML='<div class="card">Loading videos...</div>';
+    try{
+      const u=window.getOwnerUser?await window.getOwnerUser():null;if(!u)throw new Error('Owner session is not active. Please login again.');
+      const token=window.getSession?await window.getSession():null;if(!token)throw new Error('Owner session is not active. Please login again.');
+      const r=await timeout(supa('work_result_videos?select=*&order=created_at.desc&limit=500',{headers:{Authorization:'Bearer '+token}}),10000);
+      const raw=await r.text();let rows=[];try{rows=raw?JSON.parse(raw):[]}catch(_){rows=[]}
+      if(!r.ok)throw new Error(rows?.message||rows?.hint||raw||'Could not load videos.');
+      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No user videos found.</div>';return}
+      box.innerHTML=rows.map(v=>{const label=v.result==='work_got'?'Kaam Mila':v.result==='work_not_got'?'Kaam Nahi Mila':'Abhi Job Search Kar Raha Hoon';return `<article class="owner-video"><div class="owner-job-head"><div><span class="owner-badge">${esc(v.status||'pending').toUpperCase()}</span><h3 style="margin:8px 0 4px">${esc(v.title||'User video')}</h3><div class="owner-small">${esc(label)} · ${v.created_at?new Date(v.created_at).toLocaleString():''}</div></div></div>${v.note?'<p>'+esc(v.note)+'</p>':''}${v.public_url?'<video controls preload="metadata" style="width:100%;max-height:300px;margin-top:10px;border-radius:12px;background:#000" src="'+esc(v.public_url)+'"></video>':''}<div class="owner-actions"><button class="btn" data-v15-video="active" data-id="${esc(v.id)}">Keep Active</button><button class="btn danger" data-v15-video="delete" data-id="${esc(v.id)}">Delete</button></div></article>`}).join('');
+    }catch(e){box.innerHTML='<div class="card"><div class="notice error">'+esc(e.message||'Could not load videos.')+'</div></div>';msg('ownerVideosMsg',e.message||'Could not load videos.','error')}
+  };
+  window.ownerSetVideoStatus=async function(id,status){try{const t=await window.getSession();const r=await timeout(supa('work_result_videos?id=eq.'+encodeURIComponent(id),{method:'PATCH',headers:{Authorization:'Bearer '+t,Prefer:'return=minimal'},body:JSON.stringify({status})}),10000);if(!r.ok)throw new Error(await r.text());await window.loadOwnerVideos();showToast('Video activated.')}catch(e){msg('ownerVideosMsg',e.message,'error')}};
+  window.ownerDeleteVideo=async function(id){if(!confirm('Delete this video permanently from the website?'))return;try{const t=await window.getSession();const r=await timeout(supa('work_result_videos?id=eq.'+encodeURIComponent(id),{method:'DELETE',headers:{Authorization:'Bearer '+t,Prefer:'return=minimal'}}),10000);if(!r.ok)throw new Error(await r.text());await window.loadOwnerVideos();showToast('Video deleted.')}catch(e){msg('ownerVideosMsg',e.message,'error')}};
+
+  function bindManagerButtons(){
+    for(const [id,modal,loader] of [['ownerReviewsManageBtn','ownerReviewsModal',window.loadOwnerReviews],['ownerVideosManageBtn','ownerVideosModal',window.loadOwnerVideos]]){
+      const old=$(id);if(!old)continue;const b=old.cloneNode(true);old.replaceWith(b);b.addEventListener('click',async e=>{e.preventDefault();e.stopImmediatePropagation();const u=window.getOwnerUser?await window.getOwnerUser():null;if(!u){openModal('ownerLoginModal');return}openModal(modal);await loader()},false);
+    }
+    const rr=$('ownerReviewsRefresh');if(rr){const b=rr.cloneNode(true);rr.replaceWith(b);b.addEventListener('click',e=>{e.preventDefault();window.loadOwnerReviews()})}
+    const rv=$('ownerVideosRefresh');if(rv){const b=rv.cloneNode(true);rv.replaceWith(b);b.addEventListener('click',e=>{e.preventDefault();window.loadOwnerVideos()})}
+    const list=$('ownerVideosList');if(list){list.addEventListener('click',e=>{const b=e.target.closest('[data-v15-video]');if(!b)return;const id=b.dataset.id;return b.dataset.v15Video==='delete'?window.ownerDeleteVideo(id):window.ownerSetVideoStatus(id,'active')})}
+  }
+
+  // Rebind the public requirement renderer and action buttons after legacy scripts.
+  bindUrgentFinal();bindPayUFinal();bindManagerButtons();
+  window.loadCompanyRequirements=window.loadCompanyRequirementsFinal;
+  setTimeout(()=>window.loadCompanyRequirementsFinal(),0);
+})();
+</script>
 </body>
 </html>

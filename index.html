@@ -275,7 +275,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <button class="close" data-close>×</button>
 <span class="owner-badge">OWNER ONLY</span>
 <h2 style="margin:8px 0 4px">Website Content Manager</h2>
-<p class="muted">Changes made here are saved in Supabase and shown on the public website. Add, edit or delete content, then press Save Changes.</p>
+<p class="muted">Changes made here are saved in Supabase and shown on the public website. Add, edit or delete content, then press Save Changes.</p><div style="display:flex;gap:10px;flex-wrap:wrap;margin:10px 0"><button type="button" class="btn orange" onclick="selectContentSection('custom')">+ Add Content / Announcement / Image / File</button></div>
 <div id="websiteContentMsg"></div>
 <div class="content-manager-tabs" id="contentManagerTabs"></div>
 <div id="contentManagerEditor"></div>
@@ -1237,10 +1237,10 @@ window.uploadContentMedia=async function(){
     const file=$('contentUploadFile')?.files?.[0]; if(!file) throw new Error('Please choose an image or file first.');
     if(file.size>6*1024*1024) throw new Error('Please keep the file under 6 MB for this upload.');
     const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_'); const path=`owner/${Date.now()}_${safe}`;
-    const uploadUrl=`${SUPABASE_URL}/storage/v1/object/site-media/${encodeURIComponent(path).replace(/%2F/g,'/')}`;
+    const uploadUrl=`${SUPABASE_URL}/storage/v1/object/kaammilega-content/${encodeURIComponent(path).replace(/%2F/g,'/')}`;
     const r=await fetch(uploadUrl,{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token,'Content-Type':file.type||'application/octet-stream','x-upsert':'false'},body:file});
     if(!r.ok){const raw=await r.text();throw new Error(raw||'File upload failed.');}
-    const url=`${SUPABASE_URL}/storage/v1/object/public/site-media/${path}`;
+    const url=`${SUPABASE_URL}/storage/v1/object/public/kaammilega-content/${path}`;
     captureContentEditor();
     const items=siteContent.custom.items; if(items.length){items[items.length-1].url=url;} else {items.push({type:file.type.startsWith('image/')?'image':'file',title:file.name,text:'',url,linkText:'Open File',linkUrl:'',published:true,createdAt:new Date().toLocaleDateString('en-IN')});}
     renderContentEditor();
@@ -1248,19 +1248,66 @@ window.uploadContentMedia=async function(){
   }catch(e){msg('contentUploadMsg',e.message||'Upload failed.','error');}
 };
 
+function deepMergeContent(base, incoming){
+  if(!incoming || typeof incoming!=='object') return JSON.parse(JSON.stringify(base));
+  const out=Array.isArray(base)?base.slice():{...base};
+  Object.keys(incoming).forEach(k=>{
+    const v=incoming[k];
+    if(v && typeof v==='object' && !Array.isArray(v) && out[k] && typeof out[k]==='object' && !Array.isArray(out[k])){
+      out[k]=deepMergeContent(out[k],v);
+    }else if(v!==undefined){
+      out[k]=v;
+    }
+  });
+  return out;
+}
 async function loadSiteContent(){
-  try{const r=await supa('site_content?content_key=eq.site&select=content&limit=1'); if(r.ok){const rows=await r.json(); if(Array.isArray(rows)&&rows[0]?.content)siteContent=Object.assign(cloneSiteDefaults(),rows[0].content);}}catch(e){console.warn('site content load failed',e)}
+  siteContent=cloneSiteDefaults();
   renderSiteContent();
+  try{
+    const r=await supa('site_content_store?content_key=eq.site&select=content&limit=1');
+    if(r.ok){
+      const rows=await r.json();
+      if(Array.isArray(rows)&&rows[0]?.content){
+        siteContent=deepMergeContent(SITE_DEFAULTS,rows[0].content);
+        renderSiteContent();
+      }
+    }
+  }catch(e){
+    console.warn('site content load failed; keeping built-in content',e);
+  }
 }
 async function saveSiteContent(){
   captureContentEditor();
-  const owner=await getOwnerUser(); if(!owner)throw new Error('Owner login required.');
-  const token=await getSession(); if(!token)throw new Error('Owner session expired.');
-  const r=await supa('site_content?on_conflict=content_key',{method:'POST',headers:{'Authorization':'Bearer '+token,'Prefer':'resolution=merge-duplicates,return=representation'},body:JSON.stringify({content_key:'site',content:siteContent,updated_at:new Date().toISOString()})});
-  if(!r.ok){const raw=await r.text();throw new Error(raw||'Could not save website content.');}
-  renderSiteContent(); showToast('Website content saved successfully.');
+  const owner=await getOwnerUser();
+  if(!owner)throw new Error('Owner login required.');
+  const token=await getSession();
+  if(!token)throw new Error('Owner session expired.');
+  const r=await supa('site_content_store?on_conflict=content_key',{
+    method:'POST',
+    headers:{
+      'Authorization':'Bearer '+token,
+      'Prefer':'resolution=merge-duplicates,return=representation'
+    },
+    body:JSON.stringify({
+      content_key:'site',
+      content:siteContent,
+      updated_at:new Date().toISOString()
+    })
+  });
+  if(!r.ok){
+    const raw=await r.text();
+    throw new Error(raw||'Could not save website content.');
+  }
+  renderSiteContent();
+  showToast('Website content saved successfully.');
 }
-$('websiteContentManageBtn')?.addEventListener('click',async()=>{const owner=await getOwnerUser();if(!owner){showToast('Owner login required.');return;}contentSection='hero';renderContentTabs();renderContentEditor();openModal('websiteContentModal');});
+$('websiteContentManageBtn')?.addEventListener('click',()=>{
+  contentSection='hero';
+  renderContentTabs();
+  renderContentEditor();
+  openModal('websiteContentModal');
+});
 $('saveWebsiteContent')?.addEventListener('click',async()=>{try{await saveSiteContent();}catch(e){msg('websiteContentMsg',e.message,'error');}});
 $('resetWebsiteContent')?.addEventListener('click',()=>{if(!confirm('Reset this section to the built-in default content?'))return;siteContent[contentSection]=JSON.parse(JSON.stringify(SITE_DEFAULTS[contentSection]));renderContentEditor();showToast('This section was reset. Press Save Changes to publish it.');});
 

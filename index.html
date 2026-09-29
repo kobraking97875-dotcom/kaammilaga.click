@@ -144,6 +144,73 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </style>
 
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Crect width=%2764%27 height=%2764%27 rx=%2714%27 fill=%27%23111%27/%3E%3Ctext x=%2732%27 y=%2742%27 text-anchor=%27middle%27 font-size=%2730%27 font-family=%27Arial%27 fill=%27white%27%3EKM%3C/text%3E%3C/svg%3E">
+
+<style id="kaammilega-unique-features">
+.km-unique-wrap{margin:18px auto 0;max-width:1200px}
+.km-unique-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.km-unique-card{border:1px solid rgba(127,127,127,.22);border-radius:16px;padding:18px;background:rgba(127,127,127,.055)}
+.km-unique-card h3{margin:4px 0 7px}
+.km-unique-card p{margin:0 0 12px}
+.km-meter{height:9px;border-radius:99px;background:rgba(127,127,127,.18);overflow:hidden;margin:9px 0}
+.km-meter i{display:block;height:100%;width:92%;background:currentColor;border-radius:99px}
+.km-pill{display:inline-block;padding:5px 9px;border-radius:999px;background:rgba(127,127,127,.12);font-size:12px;margin:3px}
+.km-radar{display:flex;gap:8px;flex-wrap:wrap}
+.km-radar input,.km-radar select{min-width:0;flex:1;padding:11px;border:1px solid rgba(127,127,127,.25);border-radius:10px;background:inherit;color:inherit}
+.km-voice-note{font-size:12px;margin-top:7px}
+.km-result{margin-top:10px;font-size:13px}
+.km-timeline{display:flex;gap:10px;overflow:auto;padding:8px 0}
+.km-timeline .km-step{min-width:150px;border-left:3px solid currentColor;padding-left:10px}
+@media(max-width:650px){.km-radar{display:grid;grid-template-columns:1fr}.km-radar input,.km-radar select{width:100%}}
+</style>
+
+
+<style id="kaammilega-complete-features">
+.km-tools-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+.km-tool-card{border:1px solid rgba(127,127,127,.22);border-radius:16px;padding:18px;background:rgba(127,127,127,.05)}
+.km-tool-card h3{margin:4px 0 8px}.km-tool-card p{margin:0 0 12px}
+.km-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.km-form-grid input,.km-form-grid select{width:100%;box-sizing:border-box}
+.km-skill-card{border:1px solid rgba(127,127,127,.25);border-radius:14px;padding:15px;margin-top:12px}
+.km-skill-card .km-skill-title{font-size:18px;font-weight:700}
+.km-mini{font-size:12px}.km-chip{display:inline-block;border-radius:999px;padding:5px 9px;margin:3px;background:rgba(127,127,127,.12);font-size:12px}
+.km-saved-list{max-height:190px;overflow:auto}.km-saved-item{padding:9px 0;border-bottom:1px solid rgba(127,127,127,.16)}
+.km-job-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.km-expired{opacity:.6;filter:grayscale(.3)}.km-expiry{font-size:12px;font-weight:600}
+@media(max-width:650px){.km-form-grid{grid-template-columns:1fr}}
+</style>
+
+
+<style id="km-next-level-css">
+.km-next-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+.km-next-card{border:1px solid rgba(127,127,127,.22);border-radius:16px;padding:18px;background:rgba(127,127,127,.05)}
+.km-next-card h3{margin:4px 0 8px}.km-next-card p{margin:0 0 12px}
+.km-next-fields{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.km-next-fields input,.km-next-fields textarea,.km-next-fields select{width:100%;box-sizing:border-box}
+.km-track{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.km-track span{padding:7px 10px;border-radius:999px;background:rgba(127,127,127,.12);font-size:12px}
+.km-track .active{font-weight:700;outline:2px solid currentColor}
+.km-chat{height:120px;overflow:auto;border:1px solid rgba(127,127,127,.18);border-radius:10px;padding:9px;margin-bottom:8px}
+.km-msg{padding:6px 8px;margin:5px 0;border-radius:8px;background:rgba(127,127,127,.1)}
+.km-verified{display:inline-block;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:700;background:rgba(30,130,80,.12)}
+.km-mapbox{min-height:130px;border-radius:12px;padding:14px;background:rgba(127,127,127,.08)}
+.km-cv-preview{border:1px solid rgba(127,127,127,.25);padding:16px;border-radius:12px;margin-top:10px}
+@media(max-width:650px){.km-next-fields{grid-template-columns:1fr}}
+</style>
+
+
+<style id="km-ultimate-css">
+.km-ultimate-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:14px}
+.km-ultimate-card{border:1px solid rgba(127,127,127,.22);border-radius:16px;padding:18px;background:rgba(127,127,127,.05)}
+.km-ultimate-card h3{margin:4px 0 8px}.km-ultimate-card p{margin:0 0 12px}
+.km-quiz-q{padding:12px;border:1px solid rgba(127,127,127,.18);border-radius:12px;margin:8px 0}
+.km-progress{height:9px;border-radius:99px;background:rgba(127,127,127,.18);overflow:hidden;margin:9px 0}.km-progress i{display:block;height:100%;width:0;background:currentColor}
+.km-badges{display:flex;gap:7px;flex-wrap:wrap}.km-badge{padding:7px 10px;border-radius:999px;background:rgba(127,127,127,.12);font-size:12px}
+.km-callback-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.km-callback-grid input,.km-callback-grid select,.km-callback-grid textarea{width:100%;box-sizing:border-box}
+.km-emergency{border-left:4px solid currentColor;padding-left:12px}
+@media(max-width:650px){.km-callback-grid{grid-template-columns:1fr}}
+</style>
+
 </head>
 <body><div id="toast" class="toast"></div>
 <header><div class="nav">
@@ -703,8 +770,8 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div class="row"><div class="formgroup"><label>Worker / Requirement *</label><input id="reqWorker" class="input" placeholder="MiG Welder / Helper / Electrician / Any requirement"></div><div class="formgroup"><label>Salary / Rate *</label><input id="reqSalary" class="input" placeholder="₹30,000–₹35,000 / month"></div></div>
 <div class="row"><div class="formgroup"><label>Work Location *</label><input id="reqLocation" class="input" placeholder="Ahmedabad, Gujarat"></div><div class="formgroup"><label>Joining Date</label><input id="reqJoining" class="input" type="date"></div></div>
 <div class="formgroup"><label>Full Requirement / Other Details</label><textarea id="reqDetails" class="input" rows="5" placeholder="Experience, shift, accommodation, documents, transport, interview details, etc."></textarea></div>
-<div id="reqMsg"></div>
-<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="saveRequirement">Publish Requirement</button><button class="btn secondary" data-close>Cancel</button></div>
+<div id="reqMsg" style="margin-top:10px"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn" id="saveRequirement">Publish Requirement</button><div id="reqPublishHelp" class="muted" style="font-size:12px;margin-top:6px;width:100%">Owner login is required. If publishing fails, the exact Supabase error will appear here.</div><button class="btn secondary" data-close>Cancel</button></div>
 </div></div>
 
 <script>
@@ -1285,19 +1352,82 @@ async function loadCompanyRequirements(){
 function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[c]));}
 
 $("saveRequirement").onclick=async()=>{
-  const owner=await getOwnerUser();
-  if(!owner){msg("reqMsg","Owner login required. Only the business owner can publish company requirements.","error");return;}
-  const body={company_name:$("reqCompany").value.trim(),members_needed:Number($("reqMembers").value),caller_role:$("reqCallerRole").value,caller_name:$("reqCallerName").value.trim(),worker_requirement:$("reqWorker").value.trim(),salary:$("reqSalary").value.trim(),location:$("reqLocation").value.trim(),joining_date:$("reqJoining").value||null,details:$("reqDetails").value.trim(),status:"active"};
-  if(!body.company_name||!body.members_needed||!body.caller_name||!body.worker_requirement||!body.salary||!body.location){msg("reqMsg","Please fill all fields marked *.","error");return;}
+  const btn=$("saveRequirement");
+  if(btn) btn.disabled=true;
   try{
-    const token=await getSession();
-    const r=await supa("company_requirements",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=representation"},body:JSON.stringify(body)});
-    if(!r.ok){const raw=await r.text();throw new Error(raw||"Could not publish requirement.");}
+    const owner=await getOwnerUser();
+    if(!owner){
+      msg("reqMsg","Owner session is not active. Please close this window, open Owner Panel and login again.","error");
+      return;
+    }
+
+    const body={
+      company_name:$("reqCompany").value.trim(),
+      members_needed:Number($("reqMembers").value),
+      caller_role:$("reqCallerRole").value,
+      caller_name:$("reqCallerName").value.trim(),
+      worker_requirement:$("reqWorker").value.trim(),
+      salary:$("reqSalary").value.trim(),
+      location:$("reqLocation").value.trim(),
+      joining_date:$("reqJoining").value||null,
+      details:$("reqDetails").value.trim(),
+      status:"active"
+    };
+
+    if(!body.company_name||!body.members_needed||!body.caller_name||!body.worker_requirement||!body.salary||!body.location){
+      msg("reqMsg","Please fill all fields marked *.","error");
+      return;
+    }
+
+    let token=await getSession();
+    if(!token) throw new Error("Owner session expired. Please login again.");
+
+    let r=await supa("company_requirements",{
+      method:"POST",
+      headers:{
+        "Authorization":"Bearer "+token,
+        "Prefer":"return=representation"
+      },
+      body:JSON.stringify(body)
+    });
+
+    // If the access token expired between checks, refresh once and retry.
+    if(r.status===401){
+      const refreshed=await refreshStoredSession();
+      if(refreshed){
+        r=await supa("company_requirements",{
+          method:"POST",
+          headers:{
+            "Authorization":"Bearer "+refreshed,
+            "Prefer":"return=representation"
+          },
+          body:JSON.stringify(body)
+        });
+      }
+    }
+
+    if(!r.ok){
+      const raw=await r.text();
+      let detail=raw;
+      try{
+        const d=JSON.parse(raw);
+        detail=d.message||d.error_description||d.hint||d.details||raw;
+      }catch(_){}
+      if(r.status===401) detail="Owner authentication expired. Please login again.";
+      if(r.status===403) detail="Supabase permission denied. Check the company_requirements INSERT policy for the owner.";
+      throw new Error(detail||"Could not publish requirement.");
+    }
+
     ["reqCompany","reqMembers","reqCallerName","reqWorker","reqSalary","reqLocation","reqJoining","reqDetails"].forEach(id=>$(id).value="");
     $("ownerRequirementModal").classList.add("hidden");
     await loadCompanyRequirements();
-    showToast("Company requirement published.");
-  }catch(e){msg("reqMsg",e.message,"error");}
+    showToast("✓ Company requirement published successfully.");
+  }catch(e){
+    msg("reqMsg",e.message||"Could not publish requirement.","error");
+    console.error("Company requirement publish error:",e);
+  }finally{
+    if(btn) btn.disabled=false;
+  }
 };
 
 loadCompanyRequirements();
@@ -3173,5 +3303,656 @@ if(document.getElementById("ownerReqSaveEdit")){
   window.addEventListener('appinstalled',function(){if(btn)btn.hidden=true;if(hint)hint.textContent='KaamMilega was added to your device.';});
 })();
 </script>
+
+<section class="section km-unique-wrap" id="kaamMilegaUniqueFeatures">
+  <div class="trust-head">
+    <div>
+      <span class="eyebrow">KAAMMILEGA SMART TOOLS</span>
+      <h2>Find the Right Work Faster</h2>
+      <p class="muted">Optional tools to help workers discover relevant opportunities and help employers understand worker availability.</p>
+    </div>
+  </div>
+
+  <div class="km-unique-grid">
+    <article class="km-unique-card">
+      <span class="eyebrow">JOB MATCH</span>
+      <h3>⚡ Job Match Meter</h3>
+      <p class="muted">Example matching based on skill, location and experience. Actual match can be calculated when profile/job data is available.</p>
+      <div><span class="km-pill">MIG Welder</span><span class="km-pill">Ahmedabad</span></div>
+      <div class="km-meter" aria-label="Example 92 percent match"><i></i></div>
+      <strong>92% example match</strong>
+    </article>
+
+    <article class="km-unique-card">
+      <span class="eyebrow">SKILL PASSPORT</span>
+      <h3>🧑‍🔧 Worker Skill Passport</h3>
+      <p class="muted">A profile can present skills, experience, preferred location, expected salary and availability in one place.</p>
+      <div><span class="km-pill">Skills</span><span class="km-pill">Experience</span><span class="km-pill">Availability</span></div>
+    </article>
+
+    <article class="km-unique-card">
+      <span class="eyebrow">JOB RADAR</span>
+      <h3>📡 Job Radar</h3>
+      <p class="muted">Save a job preference and use it to check for matching listings.</p>
+      <div class="km-radar">
+        <input id="kmRadarSkill" placeholder="Skill / job title" aria-label="Skill or job title">
+        <input id="kmRadarCity" placeholder="City" aria-label="City">
+        <input id="kmRadarSalary" type="number" min="0" placeholder="Min salary ₹" aria-label="Minimum salary">
+        <button class="btn" type="button" id="kmRadarBtn">Save Radar</button>
+      </div>
+      <div class="km-result" id="kmRadarResult"></div>
+    </article>
+
+    <article class="km-unique-card">
+      <span class="eyebrow">VOICE SEARCH</span>
+      <h3>🎤 Speak Your Job Search</h3>
+      <p class="muted">On supported browsers, speak a request such as “MIG welder job in Ahmedabad”.</p>
+      <button class="btn secondary" type="button" id="kmVoiceBtn">🎤 Start Voice Search</button>
+      <div class="km-voice-note muted" id="kmVoiceResult">Voice input requires browser microphone permission.</div>
+    </article>
+
+    <article class="km-unique-card">
+      <span class="eyebrow">AVAILABILITY</span>
+      <h3>🟢 Available Now</h3>
+      <p class="muted">Workers can optionally show when they are available for new work.</p>
+      <select class="input" id="kmAvailability" aria-label="Availability">
+        <option>Available Today</option>
+        <option>Available This Week</option>
+        <option>Currently Working</option>
+        <option>Not Available</option>
+      </select>
+    </article>
+
+    <article class="km-unique-card">
+      <span class="eyebrow">CAREER TIMELINE</span>
+      <h3>🏆 Work History Timeline</h3>
+      <p class="muted">A simple way to present previous roles and locations on a worker profile.</p>
+      <div class="km-timeline">
+        <div class="km-step"><b>2024</b><br><span class="muted">Welder · Pune</span></div>
+        <div class="km-step"><b>2025</b><br><span class="muted">MIG Welder · Ahmedabad</span></div>
+        <div class="km-step"><b>2026</b><br><span class="muted">Available for work</span></div>
+      </div>
+    </article>
+
+    <article class="km-unique-card">
+      <span class="eyebrow">EMERGENCY HIRING</span>
+      <h3>🚨 Urgent Worker Request</h3>
+      <p class="muted">Companies can submit urgent requirements with worker type, quantity and location for the existing hiring workflow.</p>
+      <button class="btn" type="button" data-open="ownerRequirementModal">Request Workers</button>
+    </article>
+
+    <article class="km-unique-card">
+      <span class="eyebrow">SALARY CONTEXT</span>
+      <h3>💰 Salary Range Guide</h3>
+      <p class="muted">Show salary ranges from available listings only; avoid presenting them as guaranteed market rates.</p>
+      <div><span class="km-pill">Use current listings</span><span class="km-pill">Location matters</span><span class="km-pill">Experience matters</span></div>
+    </article>
+  </div>
+</section>
+
+<script id="kaammilega-unique-features-js">
+(function(){
+  const radarBtn=document.getElementById('kmRadarBtn');
+  const radarResult=document.getElementById('kmRadarResult');
+  const key='km_job_radar_v1';
+  function renderRadar(){
+    try{
+      const v=JSON.parse(localStorage.getItem(key)||'null');
+      if(v && (v.skill||v.city||v.salary)){
+        radarResult.textContent='Radar saved: '+[v.skill,v.city,v.salary?'₹'+v.salary+'+':''].filter(Boolean).join(' · ');
+      }
+    }catch(e){}
+  }
+  if(radarBtn){
+    radarBtn.addEventListener('click',function(){
+      const v={
+        skill:(document.getElementById('kmRadarSkill')||{}).value?.trim()||'',
+        city:(document.getElementById('kmRadarCity')||{}).value?.trim()||'',
+        salary:(document.getElementById('kmRadarSalary')||{}).value||''
+      };
+      if(!v.skill && !v.city && !v.salary){radarResult.textContent='Please enter at least one preference.';return;}
+      try{localStorage.setItem(key,JSON.stringify(v));}catch(e){}
+      radarResult.textContent='✓ Job Radar preference saved on this device.';
+    });
+    renderRadar();
+  }
+
+  const voiceBtn=document.getElementById('kmVoiceBtn');
+  const voiceResult=document.getElementById('kmVoiceResult');
+  if(voiceBtn){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){
+      voiceBtn.disabled=true;
+      voiceResult.textContent='Voice search is not supported in this browser. Try the latest Google Chrome.';
+    }else{
+      let activeRecognition=null;
+      const startRecognition=async()=>{
+        if(activeRecognition) return;
+        try{
+          // Ask for microphone permission first on browsers that require it.
+          if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+            const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+            stream.getTracks().forEach(t=>t.stop());
+          }
+
+          const r=new SR();
+          activeRecognition=r;
+          r.lang=(navigator.language||'en-IN').toLowerCase().startsWith('hi')?'hi-IN':'en-IN';
+          r.interimResults=false;
+          r.continuous=false;
+          r.maxAlternatives=3;
+          voiceBtn.disabled=true;
+          voiceResult.textContent='🎙️ Listening… Speak your job and city.';
+
+          r.onstart=function(){ voiceResult.textContent='🎙️ Listening… Speak now.'; };
+          r.onresult=function(e){
+            const text=e.results?.[0]?.[0]?.transcript||'';
+            if(!text){voiceResult.textContent='I could not hear anything. Please try again.';return;}
+            voiceResult.textContent='✓ You said: '+text;
+            const q=document.getElementById('searchSkill');
+            if(q) q.value=text;
+            const searchBtn=document.getElementById('searchBtn');
+            if(searchBtn) setTimeout(()=>searchBtn.click(),100);
+          };
+          r.onerror=function(e){
+            const code=e?.error||'unknown';
+            const messages={
+              'not-allowed':'Microphone permission was blocked. Tap the lock/site icon in the browser address bar and allow Microphone, then try again.',
+              'service-not-allowed':'Voice service is not available. Try Google Chrome and make sure internet is working.',
+              'audio-capture':'No microphone was found. Check your phone/computer microphone.',
+              'no-speech':'No speech detected. Tap again and speak clearly.',
+              'network':'Voice recognition needs an internet connection.',
+              'aborted':'Voice search was cancelled.'
+            };
+            voiceResult.textContent=messages[code]||('Voice search error: '+code+'. Please try again.');
+          };
+          r.onend=function(){
+            activeRecognition=null;
+            voiceBtn.disabled=false;
+          };
+          r.start();
+        }catch(e){
+          activeRecognition=null;
+          voiceBtn.disabled=false;
+          if(e?.name==='NotAllowedError'||e?.name==='PermissionDeniedError'){
+            voiceResult.textContent='Microphone permission is blocked. Allow Microphone for kaammilaga.click and try again.';
+          }else if(e?.name==='NotFoundError'){
+            voiceResult.textContent='No microphone found. Check your device microphone.';
+          }else{
+            voiceResult.textContent='Voice search could not start. Try Google Chrome, allow microphone access, and try again.';
+          }
+        }
+      };
+      voiceBtn.addEventListener('click',startRecognition);
+    }
+  }
+})();
+</script>
+
+
+<section class="section" id="kaammilegaJobTools">
+  <div class="trust-head">
+    <div>
+      <span class="eyebrow">KAAMMILEGA JOB TOOLS</span>
+      <h2>More tools for workers</h2>
+      <p class="muted">Save jobs, create a shareable skill card, set job preferences and report a problem.</p>
+    </div>
+  </div>
+
+  <div class="km-tools-grid">
+    <article class="km-tool-card">
+      <span class="eyebrow">DIGITAL SKILL CARD</span>
+      <h3>🪪 Create Your Skill Card</h3>
+      <p class="muted">Create a simple profile card that can be shared with employers.</p>
+      <div class="km-form-grid">
+        <input class="input" id="kmCardName" placeholder="Name">
+        <input class="input" id="kmCardSkill" placeholder="Main skill">
+        <input class="input" id="kmCardExperience" placeholder="Experience">
+        <input class="input" id="kmCardCity" placeholder="Preferred city">
+        <input class="input" id="kmCardSalary" placeholder="Expected salary">
+        <select class="input" id="kmCardAvailability">
+          <option>Available Now</option><option>Available This Week</option><option>Currently Working</option>
+        </select>
+      </div>
+      <div class="km-job-actions">
+        <button class="btn" type="button" id="kmMakeCard">Create Card</button>
+        <button class="btn secondary" type="button" id="kmShareCard">Share Card</button>
+      </div>
+      <div id="kmSkillCardPreview"></div>
+    </article>
+
+    <article class="km-tool-card">
+      <span class="eyebrow">SAVED JOBS</span>
+      <h3>❤️ My Saved Jobs</h3>
+      <p class="muted">Save jobs on this device and quickly find them again.</p>
+      <div id="kmSavedJobs" class="km-saved-list"><div class="muted">No saved jobs yet.</div></div>
+    </article>
+
+    <article class="km-tool-card">
+      <span class="eyebrow">JOB ALERT</span>
+      <h3>🔔 Job Alert Preferences</h3>
+      <p class="muted">Save your preferred skill and city for future matching jobs.</p>
+      <div class="km-form-grid">
+        <input class="input" id="kmAlertSkill" placeholder="Skill / job title">
+        <input class="input" id="kmAlertCity" placeholder="City">
+      </div>
+      <div class="km-job-actions">
+        <button class="btn" type="button" id="kmSaveAlert">Save Alert</button>
+        <button class="btn secondary" type="button" id="kmClearAlert">Clear</button>
+      </div>
+      <div id="kmAlertStatus" class="km-mini muted"></div>
+    </article>
+
+    <article class="km-tool-card">
+      <span class="eyebrow">SAFETY</span>
+      <h3>🚩 Report a Job</h3>
+      <p class="muted">Report a suspicious, incorrect or outdated vacancy to KaamMilega support.</p>
+      <input class="input" id="kmReportJob" placeholder="Job title / company">
+      <textarea class="input" id="kmReportReason" rows="3" placeholder="What is wrong with this vacancy?"></textarea>
+      <button class="btn" type="button" id="kmReportBtn">Report by Email</button>
+    </article>
+
+    <article class="km-tool-card">
+      <span class="eyebrow">JOB STATUS</span>
+      <h3>⏰ Job Expiry</h3>
+      <p class="muted">Vacancies with a valid expiry date can be marked automatically when their date has passed.</p>
+      <div class="km-chip">Expired jobs should not receive new applications</div>
+      <div class="km-chip">Employer can repost when still needed</div>
+    </article>
+
+    <article class="km-tool-card">
+      <span class="eyebrow">QUICK SHARE</span>
+      <h3>📲 Share a Job</h3>
+      <p class="muted">Job cards can use the device share menu where supported, or copy their link.</p>
+      <button class="btn secondary" type="button" id="kmSharePage">Share KaamMilega</button>
+    </article>
+  </div>
+</section>
+
+<script id="kaammilega-complete-features-js">
+(function(){
+  const SUPPORT='kaammilaga.official@gmail.com';
+  const savedKey='km_saved_jobs_v2', alertKey='km_job_alert_v2', cardKey='km_skill_card_v2';
+
+  function getSaved(){try{return JSON.parse(localStorage.getItem(savedKey)||'[]')}catch(e){return[]}}
+  function setSaved(v){try{localStorage.setItem(savedKey,JSON.stringify(v))}catch(e){}}
+
+  function renderSaved(){
+    const box=document.getElementById('kmSavedJobs'); if(!box)return;
+    const arr=getSaved();
+    if(!arr.length){box.innerHTML='<div class="muted">No saved jobs yet.</div>';return}
+    box.innerHTML=arr.map((x,i)=>'<div class="km-saved-item"><b>'+esc(x.title)+'</b><div class="km-mini muted">'+esc(x.meta||'')+'</div><button class="btn secondary" type="button" data-km-remove="'+i+'">Remove</button></div>').join('');
+    box.querySelectorAll('[data-km-remove]').forEach(b=>b.onclick=()=>{const a=getSaved();a.splice(+b.dataset.kmRemove,1);setSaved(a);renderSaved()});
+  }
+  function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+  function addJobButtons(){
+    const jobs=document.getElementById('jobs'); if(!jobs)return;
+    jobs.querySelectorAll('.card').forEach((card,idx)=>{
+      if(card.dataset.kmEnhanced==='1')return;
+      const text=(card.innerText||'').trim();
+      if(!text || /loading jobs/i.test(text))return;
+      card.dataset.kmEnhanced='1';
+      const title=(card.querySelector('h3,h4,h2')?.textContent||text.split('\n')[0]||'KaamMilega Job').trim();
+      const actions=document.createElement('div'); actions.className='km-job-actions';
+      const save=document.createElement('button'); save.type='button';save.className='btn secondary';save.textContent='❤️ Save Job';
+      save.onclick=()=>{
+        const a=getSaved();
+        if(!a.some(x=>x.title===title)){a.push({title:title,meta:text.slice(0,180),savedAt:new Date().toISOString()});setSaved(a);renderSaved();save.textContent='✓ Saved'}
+        else save.textContent='✓ Already Saved';
+      };
+      const report=document.createElement('button');report.type='button';report.className='btn secondary';report.textContent='🚩 Report';
+      report.onclick=()=>{
+        const subject=encodeURIComponent('Job Report - '+title);
+        const body=encodeURIComponent('Job: '+title+'\n\nPlease describe the issue:\n');
+        location.href='mailto:'+SUPPORT+'?subject='+subject+'&body='+body;
+      };
+      actions.append(save,report);card.appendChild(actions);
+    });
+  }
+
+  const jobs=document.getElementById('jobs');
+  if(jobs){
+    addJobButtons();
+    new MutationObserver(addJobButtons).observe(jobs,{childList:true,subtree:true});
+  }
+
+  const make=document.getElementById('kmMakeCard'), share=document.getElementById('kmShareCard'), preview=document.getElementById('kmSkillCardPreview');
+  function cardData(){return{
+    name:document.getElementById('kmCardName')?.value.trim()||'Worker',
+    skill:document.getElementById('kmCardSkill')?.value.trim()||'Skilled Worker',
+    experience:document.getElementById('kmCardExperience')?.value.trim()||'Not specified',
+    city:document.getElementById('kmCardCity')?.value.trim()||'India',
+    salary:document.getElementById('kmCardSalary')?.value.trim()||'Contact for details',
+    availability:document.getElementById('kmCardAvailability')?.value||'Available Now'
+  }}
+  function renderCard(d){
+    preview.innerHTML='<div class="km-skill-card"><div class="km-skill-title">'+esc(d.name)+' — '+esc(d.skill)+'</div><div class="km-mini muted">KaamMilega Digital Skill Card</div><p><span class="km-chip">Experience: '+esc(d.experience)+'</span><span class="km-chip">City: '+esc(d.city)+'</span><span class="km-chip">'+esc(d.availability)+'</span><span class="km-chip">Expected: '+esc(d.salary)+'</span></p></div>';
+  }
+  if(make)make.onclick=()=>{const d=cardData();try{localStorage.setItem(cardKey,JSON.stringify(d))}catch(e){}renderCard(d)};
+  if(share)share.onclick=async()=>{
+    const d=cardData(); renderCard(d);
+    const txt='KaamMilega Skill Card\n'+d.name+'\nSkill: '+d.skill+'\nExperience: '+d.experience+'\nPreferred City: '+d.city+'\nAvailability: '+d.availability+'\nExpected Salary: '+d.salary;
+    if(navigator.share){try{await navigator.share({title:'KaamMilega Skill Card',text:txt})}catch(e){}}
+    else if(navigator.clipboard){await navigator.clipboard.writeText(txt);alert('Skill Card copied. You can paste it in WhatsApp or another app.')}
+  };
+
+  const saveAlert=document.getElementById('kmSaveAlert'), clearAlert=document.getElementById('kmClearAlert'), status=document.getElementById('kmAlertStatus');
+  function showAlert(){try{const a=JSON.parse(localStorage.getItem(alertKey)||'null');if(a){document.getElementById('kmAlertSkill').value=a.skill||'';document.getElementById('kmAlertCity').value=a.city||'';status.textContent='✓ Alert preference saved on this device.'}}catch(e){}}
+  if(saveAlert)saveAlert.onclick=()=>{const a={skill:document.getElementById('kmAlertSkill').value.trim(),city:document.getElementById('kmAlertCity').value.trim()};if(!a.skill&&!a.city){status.textContent='Enter a skill or city first.';return}try{localStorage.setItem(alertKey,JSON.stringify(a))}catch(e){}status.textContent='✓ Preference saved. Matching alerts can be connected to notifications later.'};
+  if(clearAlert)clearAlert.onclick=()=>{try{localStorage.removeItem(alertKey)}catch(e){}document.getElementById('kmAlertSkill').value='';document.getElementById('kmAlertCity').value='';status.textContent='Alert preference cleared.'};
+  showAlert();
+
+  const reportBtn=document.getElementById('kmReportBtn');
+  if(reportBtn)reportBtn.onclick=()=>{
+    const job=document.getElementById('kmReportJob').value.trim()||'Unspecified job';
+    const reason=document.getElementById('kmReportReason').value.trim()||'No reason provided';
+    location.href='mailto:'+SUPPORT+'?subject='+encodeURIComponent('Report Job - '+job)+'&body='+encodeURIComponent('Job: '+job+'\nReason: '+reason);
+  };
+
+  const sharePage=document.getElementById('kmSharePage');
+  if(sharePage)sharePage.onclick=async()=>{
+    const data={title:'KaamMilega — Jobs & Workers',text:'Find jobs and workers on KaamMilega.',url:location.href};
+    if(navigator.share){try{await navigator.share(data)}catch(e){}}
+    else if(navigator.clipboard){await navigator.clipboard.writeText(location.href);alert('Website link copied.')}
+  };
+
+  try{const d=JSON.parse(localStorage.getItem(cardKey)||'null');if(d&&preview)renderCard(d)}catch(e){}
+  renderSaved();
+})();
+</script>
+
+
+<section class="section" id="kmNextLevelFeatures">
+  <div class="trust-head">
+    <div>
+      <span class="eyebrow">NEXT-LEVEL JOB TOOLS</span>
+      <h2>Worker & Employer Tools</h2>
+      <p class="muted">Practical tools for profiles, applications, CVs, location discovery and communication.</p>
+    </div>
+  </div>
+
+  <div class="km-next-grid">
+    <article class="km-next-card">
+      <span class="eyebrow">CV BUILDER</span>
+      <h3>📄 Free CV Builder</h3>
+      <p class="muted">Create a simple professional CV from your details.</p>
+      <div class="km-next-fields">
+        <input class="input" id="kmCvName" placeholder="Full name">
+        <input class="input" id="kmCvPhone" placeholder="Phone / Email">
+        <input class="input" id="kmCvSkill" placeholder="Main skill">
+        <input class="input" id="kmCvExp" placeholder="Experience">
+      </div>
+      <textarea class="input" id="kmCvSummary" rows="3" placeholder="Short professional summary"></textarea>
+      <button class="btn" type="button" id="kmCvCreate">Create CV</button>
+      <button class="btn secondary" type="button" id="kmCvPrint">Print / Save PDF</button>
+      <div id="kmCvPreview"></div>
+    </article>
+
+    <article class="km-next-card">
+      <span class="eyebrow">APPLICATION TRACKER</span>
+      <h3>📋 My Applications</h3>
+      <p class="muted">Track your own application progress on this device.</p>
+      <select class="input" id="kmTrackStatus">
+        <option>Applied</option><option>Shortlisted</option><option>Interview</option><option>Selected</option><option>Rejected</option>
+      </select>
+      <input class="input" id="kmTrackJob" placeholder="Job / company name">
+      <button class="btn" type="button" id="kmTrackSave">Save Status</button>
+      <div id="kmTrackList"></div>
+    </article>
+
+    <article class="km-next-card">
+      <span class="eyebrow">PROFILE</span>
+      <h3>🪪 Verified Worker Profile</h3>
+      <p class="muted">Prepare a profile with optional verification fields. Verification is only shown when the platform actually verifies the information.</p>
+      <input class="input" id="kmProfileSkill" placeholder="Skill">
+      <input class="input" id="kmProfileExp" placeholder="Experience">
+      <select class="input" id="kmProfileVerify">
+        <option value="unverified">Not verified</option>
+        <option value="pending">Verification requested</option>
+      </select>
+      <button class="btn" type="button" id="kmProfileSave">Save Profile</button>
+      <div id="kmProfileStatus" class="km-mini muted"></div>
+    </article>
+
+    <article class="km-next-card">
+      <span class="eyebrow">NEARBY JOBS</span>
+      <h3>📍 Nearby Jobs</h3>
+      <p class="muted">Use your browser location to help find nearby listings when location data is available.</p>
+      <button class="btn" type="button" id="kmLocationBtn">Use My Location</button>
+      <div id="kmLocationResult" class="km-mapbox km-mini">Location has not been requested.</div>
+    </article>
+
+    <article class="km-next-card">
+      <span class="eyebrow">SECURE CONTACT</span>
+      <h3>💬 Employer–Worker Chat</h3>
+      <p class="muted">A chat interface is prepared here. Real-time private messaging requires a connected backend/auth system.</p>
+      <div class="km-chat" id="kmChatBox"><div class="km-msg">Chat is ready for backend connection.</div></div>
+      <input class="input" id="kmChatMessage" placeholder="Type a message">
+      <button class="btn secondary" type="button" id="kmChatSend">Send Demo Message</button>
+    </article>
+
+    <article class="km-next-card">
+      <span class="eyebrow">SALARY INSIGHTS</span>
+      <h3>📊 Listing Salary Insights</h3>
+      <p class="muted">A future live insight can be calculated from current KaamMilega listings. It should not be presented as a guaranteed market rate.</p>
+      <div class="km-track">
+        <span>Current listings</span><span>City-based</span><span>Skill-based</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<script id="km-next-level-js">
+(function(){
+  const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+  const cvCreate=document.getElementById('kmCvCreate'), cvPreview=document.getElementById('kmCvPreview');
+  function makeCV(){
+    const d={
+      name:document.getElementById('kmCvName')?.value.trim()||'Your Name',
+      phone:document.getElementById('kmCvPhone')?.value.trim()||'Contact details',
+      skill:document.getElementById('kmCvSkill')?.value.trim()||'Skilled Worker',
+      exp:document.getElementById('kmCvExp')?.value.trim()||'Experience not specified',
+      summary:document.getElementById('kmCvSummary')?.value.trim()||'Professional summary'
+    };
+    cvPreview.innerHTML='<div class="km-cv-preview"><h2>'+esc(d.name)+'</h2><p>'+esc(d.phone)+'</p><h3>'+esc(d.skill)+'</h3><p><b>Experience:</b> '+esc(d.exp)+'</p><p>'+esc(d.summary)+'</p></div>';
+  }
+  if(cvCreate) cvCreate.onclick=makeCV;
+  const cvPrint=document.getElementById('kmCvPrint');
+  if(cvPrint) cvPrint.onclick=()=>{makeCV();setTimeout(()=>window.print(),100)};
+
+  const trackKey='km_application_tracker_v1', trackList=document.getElementById('kmTrackList');
+  function renderTrack(){
+    let a=[];try{a=JSON.parse(localStorage.getItem(trackKey)||'[]')}catch(e){}
+    if(!a.length){trackList.innerHTML='<div class="muted km-mini">No applications saved yet.</div>';return}
+    trackList.innerHTML=a.map(x=>'<div class="km-skill-card"><b>'+esc(x.job)+'</b><div class="km-track"><span class="active">'+esc(x.status)+'</span></div></div>').join('');
+  }
+  const trackSave=document.getElementById('kmTrackSave');
+  if(trackSave)trackSave.onclick=()=>{
+    const job=document.getElementById('kmTrackJob').value.trim();
+    const status=document.getElementById('kmTrackStatus').value;
+    if(!job)return;
+    let a=[];try{a=JSON.parse(localStorage.getItem(trackKey)||'[]')}catch(e){}
+    a.unshift({job,status,date:new Date().toISOString()});a=a.slice(0,20);
+    try{localStorage.setItem(trackKey,JSON.stringify(a))}catch(e){}
+    document.getElementById('kmTrackJob').value='';renderTrack();
+  };
+  renderTrack();
+
+  const pSave=document.getElementById('kmProfileSave'), pStatus=document.getElementById('kmProfileStatus');
+  if(pSave)pSave.onclick=()=>{
+    const skill=document.getElementById('kmProfileSkill').value.trim();
+    const exp=document.getElementById('kmProfileExp').value.trim();
+    const state=document.getElementById('kmProfileVerify').value;
+    if(!skill&&!exp){pStatus.textContent='Add a skill or experience first.';return}
+    pStatus.textContent=state==='pending'?'✓ Verification request prepared. Actual verification must be completed by the platform.':'Profile saved on this device.';
+  };
+
+  const locBtn=document.getElementById('kmLocationBtn'), locResult=document.getElementById('kmLocationResult');
+  if(locBtn)locBtn.onclick=()=>{
+    if(!navigator.geolocation){locResult.textContent='Location is not supported by this browser.';return}
+    locResult.textContent='Requesting location permission…';
+    navigator.geolocation.getCurrentPosition(
+      p=>{locResult.textContent='Location available. Nearby-job filtering can now use your current area when the job data includes locations.'},
+      e=>{locResult.textContent='Location was not shared. Please allow location permission if you want nearby-job features.'},
+      {enableHighAccuracy:false,timeout:10000,maximumAge:300000}
+    );
+  };
+
+  const chatSend=document.getElementById('kmChatSend');
+  if(chatSend)chatSend.onclick=()=>{
+    const input=document.getElementById('kmChatMessage'), box=document.getElementById('kmChatBox');
+    const msg=input.value.trim();if(!msg)return;
+    box.insertAdjacentHTML('beforeend','<div class="km-msg"><b>You:</b> '+esc(msg)+'</div>');
+    input.value='';box.scrollTop=box.scrollHeight;
+  };
+})();
+</script>
+
+
+<section class="section" id="kmUltimateFeatures">
+  <div class="trust-head">
+    <div>
+      <span class="eyebrow">KAAMMILEGA ULTIMATE TOOLS</span>
+      <h2>Skills, Profile & Hiring Support</h2>
+      <p class="muted">Extra tools for workers and employers. Test results and badges are informational unless KaamMilega verifies them.</p>
+    </div>
+  </div>
+
+  <div class="km-ultimate-grid">
+    <article class="km-ultimate-card">
+      <span class="eyebrow">SKILL TEST</span>
+      <h3>🧠 Quick Skill Test</h3>
+      <p class="muted">Take a short sample test. This demo does not replace professional certification.</p>
+      <div id="kmQuiz">
+        <div class="km-quiz-q"><b>1. Before MIG welding, what should be checked first?</b><br>
+          <label><input type="radio" name="kmq1" value="a"> Paint only</label><br>
+          <label><input type="radio" name="kmq1" value="b"> Safety equipment and machine setup</label><br>
+          <label><input type="radio" name="kmq1" value="c"> Phone battery</label>
+        </div>
+        <div class="km-quiz-q"><b>2. Why is proper PPE important?</b><br>
+          <label><input type="radio" name="kmq2" value="a"> For safety</label><br>
+          <label><input type="radio" name="kmq2" value="b"> To increase internet speed</label><br>
+          <label><input type="radio" name="kmq2" value="c"> To change salary</label>
+        </div>
+        <button class="btn" type="button" id="kmQuizSubmit">Check Result</button>
+        <div id="kmQuizResult" class="km-mini muted"></div>
+      </div>
+    </article>
+
+    <article class="km-ultimate-card">
+      <span class="eyebrow">SKILL PASSPORT</span>
+      <h3>🏅 Skill Passport Upgrade</h3>
+      <p class="muted">Store your skill-test result and profile completion status on this device.</p>
+      <div class="km-progress"><i id="kmProfileProgress"></i></div>
+      <div id="kmProfileProgressText" class="km-mini">Profile strength: 0%</div>
+      <div class="km-badges" id="kmAchievementBadges"></div>
+    </article>
+
+    <article class="km-ultimate-card">
+      <span class="eyebrow">PROFILE STRENGTH</span>
+      <h3>📈 Complete Your Profile</h3>
+      <p class="muted">Add these details to make your worker profile more useful.</p>
+      <label><input type="checkbox" class="km-profile-check"> Skill added</label><br>
+      <label><input type="checkbox" class="km-profile-check"> Experience added</label><br>
+      <label><input type="checkbox" class="km-profile-check"> City added</label><br>
+      <label><input type="checkbox" class="km-profile-check"> Availability added</label><br>
+      <label><input type="checkbox" class="km-profile-check"> Digital Skill Card created</label>
+    </article>
+
+    <article class="km-ultimate-card">
+      <span class="eyebrow">CALLBACK</span>
+      <h3>📞 Request a Callback</h3>
+      <p class="muted">Send a callback request to KaamMilega support. This opens the user's email app.</p>
+      <div class="km-callback-grid">
+        <input class="input" id="kmCbName" placeholder="Name">
+        <input class="input" id="kmCbPhone" placeholder="Phone">
+        <select class="input" id="kmCbType"><option>Worker</option><option>Employer</option><option>Contractor</option></select>
+        <select class="input" id="kmCbTime"><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
+      </div>
+      <textarea class="input" id="kmCbReason" rows="3" placeholder="Reason for callback"></textarea>
+      <button class="btn" type="button" id="kmCbSend">Request Callback</button>
+    </article>
+
+    <article class="km-ultimate-card km-emergency">
+      <span class="eyebrow">URGENT HIRING</span>
+      <h3>🚨 Emergency Job Board</h3>
+      <p class="muted">For genuine urgent requirements such as “10 welders needed tomorrow”. The existing company-requirement workflow should be used for submission and verification.</p>
+      <button class="btn" type="button" data-open="ownerRequirementModal">Submit Worker Requirement</button>
+    </article>
+
+    <article class="km-ultimate-card">
+      <span class="eyebrow">JOB GUIDES</span>
+      <h3>📚 Career Guides</h3>
+      <p class="muted">Helpful topics can be expanded into verified KaamMilega guides for different trades.</p>
+      <div class="km-badges">
+        <span class="km-badge">Welding</span><span class="km-badge">Electrician</span><span class="km-badge">Driver</span>
+        <span class="km-badge">Fitter</span><span class="km-badge">Helper</span>
+      </div>
+    </article>
+
+    <article class="km-ultimate-card">
+      <span class="eyebrow">ACHIEVEMENTS</span>
+      <h3>🏆 Worker Badges</h3>
+      <p class="muted">Badges are earned from profile actions or verified platform events—not automatically claimed as professional qualifications.</p>
+      <div class="km-badges">
+        <span class="km-badge">Profile Complete</span>
+        <span class="km-badge">Skill Test Taken</span>
+        <span class="km-badge">Skill Card Created</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<script id="km-ultimate-js">
+(function(){
+  const SUPPORT='kaammilaga.official@gmail.com';
+  const quizResult=document.getElementById('kmQuizResult');
+  const quizBtn=document.getElementById('kmQuizSubmit');
+  if(quizBtn)quizBtn.onclick=()=>{
+    let score=0;
+    if(document.querySelector('input[name="kmq1"]:checked')?.value==='b')score++;
+    if(document.querySelector('input[name="kmq2"]:checked')?.value==='a')score++;
+    quizResult.textContent='Result: '+score+'/2 correct. This is an informational sample test, not a professional certificate.';
+    localStorage.setItem('km_skill_test_score',String(score));
+    updateStrength();
+  };
+
+  const checks=[...document.querySelectorAll('.km-profile-check')];
+  function updateStrength(){
+    let n=checks.filter(x=>x.checked).length;
+    if(localStorage.getItem('km_skill_test_score')!==null)n=Math.min(5,n+1);
+    const pct=Math.round(n/5*100);
+    const bar=document.getElementById('kmProfileProgress');
+    const txt=document.getElementById('kmProfileProgressText');
+    if(bar)bar.style.width=pct+'%';
+    if(txt)txt.textContent='Profile strength: '+pct+'%';
+    const badges=document.getElementById('kmAchievementBadges');
+    if(badges){
+      let b=[];
+      if(pct>=100)b.push('🏆 Profile Complete');
+      if(localStorage.getItem('km_skill_test_score')!==null)b.push('🧠 Skill Test Taken');
+      if(localStorage.getItem('km_skill_card_v2'))b.push('🪪 Skill Card Created');
+      badges.innerHTML=b.map(x=>'<span class="km-badge">'+x+'</span>').join('')||'<span class="km-badge">Complete your profile to earn badges</span>';
+    }
+  }
+  checks.forEach(x=>x.addEventListener('change',updateStrength));
+  updateStrength();
+
+  const cb=document.getElementById('kmCbSend');
+  if(cb)cb.onclick=()=>{
+    const name=document.getElementById('kmCbName').value.trim()||'Not provided';
+    const phone=document.getElementById('kmCbPhone').value.trim()||'Not provided';
+    const type=document.getElementById('kmCbType').value;
+    const time=document.getElementById('kmCbTime').value;
+    const reason=document.getElementById('kmCbReason').value.trim()||'General support';
+    const subject=encodeURIComponent('Callback Request - '+type);
+    const body=encodeURIComponent('Name: '+name+'\nPhone: '+phone+'\nUser type: '+type+'\nPreferred time: '+time+'\nReason: '+reason);
+    location.href='mailto:'+SUPPORT+'?subject='+subject+'&body='+body;
+  };
+})();
+</script>
+
 </body>
 </html>

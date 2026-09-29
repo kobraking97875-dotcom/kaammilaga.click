@@ -394,7 +394,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <!-- JOB -->
 <div id="jobModal" class="modal hidden"><div class="modalbox">
 <button class="close" data-close>×</button><h2>Post a Job</h2>
-<div class="row"><div class="formgroup"><label>Job Title</label><input id="jobTitle" class="input" placeholder="MIG Welder"></div><div class="formgroup"><label>Category</label><input id="jobCategory" class="input" placeholder="Welder"></div></div>
+<div class="row"><div class="formgroup"><label>Which job do you need? *</label><select id="jobTitle" class="input"><option value="">Select job</option><option>MIG Welder</option><option>TIG Welder</option><option>Arc Welder</option><option>Welder Helper</option><option>Fitter</option><option>Electrician</option><option>Plumber</option><option>Fabricator</option><option>Machine Operator</option><option>Driver</option><option>Delivery Executive</option><option>Helper</option><option>Supervisor</option><option>Security Guard</option><option>Painter</option><option>Carpenter</option><option>Other Skilled Worker</option></select></div><div class="formgroup"><label>Category</label><select id="jobCategory" class="input"><option value="">Select category</option><option>Welder</option><option>Fitter</option><option>Electrical</option><option>Plumbing</option><option>Fabrication</option><option>Machine Operator</option><option>Driving</option><option>Delivery</option><option>Helper</option><option>Supervisor</option><option>Security</option><option>Construction</option><option>Other</option></select></div></div>
 <div class="row"><div class="formgroup"><label>City</label><input id="jobCity" class="input" placeholder="Ahmedabad"></div><div class="formgroup"><label>Salary</label><input id="jobSalary" class="input" placeholder="₹20,000/month"></div></div>
 <div class="row"><div class="formgroup"><label>Job Type</label><select id="jobType"><option>Full Time</option><option>Part Time</option><option>Contract</option><option>Daily Wage</option></select></div><div class="formgroup"><label>Contact Phone</label><input id="jobPhone" class="input" placeholder="Mobile / WhatsApp"></div></div>
 <div class="formgroup"><label>Description</label><textarea id="jobDescription" rows="4" placeholder="Job requirements..."></textarea></div>
@@ -722,7 +722,7 @@ $("submitJob").onclick=async()=>{
   const token=await getSession();
   if(!token){msg("jobMsg","Please login first.","error");return}
   const title=$("jobTitle").value.trim(), category=$("jobCategory").value.trim(), city=$("jobCity").value.trim();
-  if(!title||!category||!city){msg("jobMsg","Job title, category and city are required.","error");return}
+  if(!title||!category||!city){msg("jobMsg","Please select the job you need, category and city.","error");return}
   try{
     const auth=await fetch(SUPABASE_URL+"/auth/v1/user",{headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
     const user=await auth.json(); if(!user.id)throw new Error("Session expired. Please login again.");
@@ -749,6 +749,45 @@ $("submitJob").onclick=async()=>{
   }catch(e){msg("jobMsg",e.message,"error")}
 };
 
+async function loadJobReviews(jobIds){
+  const reviews={};
+  if(!jobIds.length)return reviews;
+  const q="job_reviews?select=job_id,rating,comment,reviewer_id,created_at&job_id=in."+encodeURIComponent("("+jobIds.join(',')+")")+"&order=created_at.desc";
+  const r=await supa(q);
+  if(!r.ok)return reviews;
+  const rows=await r.json();
+  if(Array.isArray(rows)) rows.forEach(x=>{(reviews[x.job_id] ||= []).push(x)});
+  return reviews;
+}
+function starsHtml(n){const v=Math.max(0,Math.min(5,Number(n)||0));return "★★★★★".slice(0,Math.round(v))+"☆☆☆☆☆".slice(0,5-Math.round(v));}
+function reviewSummary(rows){
+  if(!rows||!rows.length)return '<span class="muted">No rating yet</span>';
+  const avg=rows.reduce((a,x)=>a+Number(x.rating||0),0)/rows.length;
+  return `<span style="font-weight:800">${avg.toFixed(1)} / 5</span> <span style="letter-spacing:1px">${starsHtml(avg)}</span> <span class="muted">(${rows.length} review${rows.length===1?'':'s'})</span>`;
+}
+async function renderJobReviews(job,rows){
+  const wrap=document.getElementById("reviews-"+job.id); if(!wrap)return;
+  const reviews=rows||[];
+  const comments=reviews.slice(0,3).map(x=>`<div style="border-top:1px solid #edf1f6;padding:8px 0"><div><span style="letter-spacing:1px">${starsHtml(x.rating)}</span></div><div style="font-size:13px;margin-top:3px">${escapeHtml(x.comment||"")}</div></div>`).join("");
+  wrap.innerHTML=`<div style="font-size:13px;margin-bottom:8px"><b>Rating:</b> ${reviewSummary(reviews)}</div>${comments?`<div>${comments}</div>`:""}<div class="review-form" style="margin-top:10px"><div class="row"><div class="formgroup"><label>Your rating</label><select class="input review-rating"><option value="5">★★★★★ 5</option><option value="4">★★★★☆ 4</option><option value="3">★★★☆☆ 3</option><option value="2">★★☆☆☆ 2</option><option value="1">★☆☆☆☆ 1</option></select></div><div class="formgroup"><label>Comment</label><input class="input review-comment" maxlength="500" placeholder="Write your comment"></div></div><button class="btn secondary review-submit">Submit Rating & Comment</button><div class="review-msg" style="margin-top:6px"></div></div>`;
+  const form=wrap.querySelector('.review-form');
+  wrap.querySelector('.review-submit').onclick=async()=>{
+    const token=await getSession();
+    const msgEl=wrap.querySelector('.review-msg');
+    if(!token){msgEl.innerHTML='<div class="notice">Please login first.</div>';return}
+    const rating=Number(wrap.querySelector('.review-rating').value);
+    const comment=wrap.querySelector('.review-comment').value.trim();
+    try{
+      const auth=await fetch(SUPABASE_URL+"/auth/v1/user",{headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
+      const user=await auth.json(); if(!user.id)throw new Error("Session expired. Please login again.");
+      const r=await supa("job_reviews",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=representation"},body:JSON.stringify({job_id:job.id,reviewer_id:user.id,rating,comment})});
+      if(!r.ok){const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.hint||d.details||raw||"Could not submit review.")}
+      msgEl.innerHTML='<div class="notice success">Rating and comment added.</div>';
+      await loadJobs();
+    }catch(e){msgEl.innerHTML='<div class="notice error">'+escapeHtml(e.message)+'</div>'}
+  };
+}
+
 async function loadJobs(){
   const r=await supa("jobs?select=id,title,category,city,salary,job_type,description,contact_phone,employer_id&status=eq.active&order=created_at.desc&limit=1000");
   const data=await r.json(); const box=$("jobs");
@@ -756,7 +795,9 @@ async function loadJobs(){
   if(!Array.isArray(data)||!data.length){box.innerHTML='<div class="card"><h3>No jobs yet</h3><p class="muted">New jobs will appear here.</p></div>';return}
   const ids=[...new Set(data.map(j=>j.employer_id).filter(Boolean))]; let profiles={};
   if(ids.length){const pr=await supa("public_profiles?id=in."+encodeURIComponent("("+ids.join(',')+")")+"&select=id,name,city,skills,avatar_url");const rows=await pr.json();if(Array.isArray(rows))rows.forEach(p=>profiles[p.id]=p)}
-  box.innerHTML=data.map(j=>{const p=profiles[j.employer_id]||{};const skills=Array.isArray(p.skills)?p.skills.join(", "):"";const avatar=p.avatar_url||avatarPlaceholder(p.name||"E");return `<div class="card job"><div style="flex:1"><span class="tag">${escapeHtml(j.category||"Job")}</span><h3>${escapeHtml(j.title)}</h3><p class="muted">${escapeHtml(j.city)} · ${escapeHtml(j.salary||"Salary not specified")} · ${escapeHtml(j.job_type||"")}</p><p>${escapeHtml(j.description||"")}</p><div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid #edf1f6"><img class="avatar" style="width:44px;height:44px;font-size:16px" src="${escapeHtml(avatar)}" alt="Employer profile"><div><b>${escapeHtml(p.name||"Employer")}</b><div class="muted" style="font-size:12px">${escapeHtml(p.city||j.city||"")}${skills?" · "+escapeHtml(skills):""}</div><div style="font-size:11px;color:#166534;font-weight:700;margin-top:2px">Public employer profile</div></div></div></div><div><button class="btn secondary applyBtn" data-phone="${escapeHtml(j.contact_phone||"")}">Contact</button></div></div>`}).join("");
+  const reviews=await loadJobReviews(data.map(j=>j.id));
+  box.innerHTML=data.map(j=>{const p=profiles[j.employer_id]||{};const skills=Array.isArray(p.skills)?p.skills.join(", "):"";const avatar=p.avatar_url||avatarPlaceholder(p.name||"E");return `<div class="card job"><div style="flex:1"><span class="tag">${escapeHtml(j.category||"Job")}</span><h3>${escapeHtml(j.title)}</h3><p class="muted">${escapeHtml(j.city)} · ${escapeHtml(j.salary||"Salary not specified")} · ${escapeHtml(j.job_type||"")}</p><p>${escapeHtml(j.description||"")}</p><div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid #edf1f6"><img class="avatar" style="width:44px;height:44px;font-size:16px" src="${escapeHtml(avatar)}" alt="Employer profile"><div><b>${escapeHtml(p.name||"Employer")}</b><div class="muted" style="font-size:12px">${escapeHtml(p.city||j.city||"")}${skills?" · "+escapeHtml(skills):""}</div><div style="font-size:11px;color:#166534;font-weight:700;margin-top:2px">Public employer profile</div></div></div><div id="reviews-${escapeHtml(j.id)}" style="margin-top:12px;padding-top:12px;border-top:1px solid #edf1f6"><span class="muted">Loading rating...</span></div></div><div><button class="btn secondary applyBtn" data-phone="${escapeHtml(j.contact_phone||"")}">Contact</button></div></div>`}).join("");
+  for(const j of data) await renderJobReviews(j,reviews[j.id]||[]);
   box.querySelectorAll(".applyBtn").forEach(b=>b.onclick=()=>{const p=b.dataset.phone;if(p)location.href="https://wa.me/"+p.replace(/\D/g,"")});
 }
 function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
@@ -771,6 +812,11 @@ $("searchBtn").onclick=async()=>{
   if(ids.length){const pr=await supa("public_profiles?id=in."+encodeURIComponent("("+ids.join(',')+")")+"&select=id,name,city,skills,avatar_url");const rows=await pr.json();if(Array.isArray(rows))rows.forEach(p=>profiles[p.id]=p)}
   $("jobs").innerHTML=data.map(j=>{const p=profiles[j.employer_id]||{};const skills=Array.isArray(p.skills)?p.skills.join(", "):"";const avatar=p.avatar_url||avatarPlaceholder(p.name||"E");return `<div class="card"><span class="tag">${escapeHtml(j.category)}</span><h3>${escapeHtml(j.title)}</h3><p class="muted">${escapeHtml(j.city)} · ${escapeHtml(j.salary||"")}</p><p>${escapeHtml(j.description||"")}</p><div style="display:flex;align-items:center;gap:10px;margin-top:12px"><img class="avatar" style="width:40px;height:40px;font-size:15px" src="${escapeHtml(avatar)}" alt="Employer profile"><div><b>${escapeHtml(p.name||"Employer")}</b><div class="muted" style="font-size:12px">${escapeHtml(p.city||j.city||"")}${skills?" · "+escapeHtml(skills):""}</div></div></div></div>`}).join("");
 };
+
+$("jobTitle").addEventListener("change",()=>{
+  const map={"MIG Welder":"Welder","TIG Welder":"Welder","Arc Welder":"Welder","Welder Helper":"Helper","Fitter":"Fitter","Electrician":"Electrical","Plumber":"Plumbing","Fabricator":"Fabrication","Machine Operator":"Machine Operator","Driver":"Driving","Delivery Executive":"Delivery","Helper":"Helper","Supervisor":"Supervisor","Security Guard":"Security","Painter":"Construction","Carpenter":"Construction","Other Skilled Worker":"Other"};
+  const v=$("jobTitle").value; if(map[v])$("jobCategory").value=map[v];
+});
 
 $("payFeatured").onclick=async()=>{
   const token=await getSession(); if(!token){msg("featuredMsg","Please login first.","error");return}

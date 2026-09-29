@@ -938,18 +938,18 @@ $("payFeatured").onclick=async()=>{
     }
 
     // payu-payment returns success=true and paymentUrl (camelCase).
-    if(!d || d.success!==true){
+    if(!d || !(d.success===true || d.ok===true)){
       const detail=d?.error || d?.message || d?.msg || "The PayU payment service did not return a valid payment response.";
       throw new Error(detail);
     }
 
-    if(!d.paymentUrl || !d.params || typeof d.params!=="object"){
+    if(!(d.paymentUrl || d.payment_url) || !d.params || typeof d.params!=="object"){
       throw new Error("PayU payment configuration is incomplete. Please check the payu-payment function.");
     }
 
     const form=document.createElement("form");
     form.method="POST";
-    form.action=d.paymentUrl;
+    form.action=d.paymentUrl || d.payment_url;
     Object.entries(d.params).forEach(([k,v])=>{
       const i=document.createElement("input");
       i.type="hidden";
@@ -968,17 +968,9 @@ $("payFeatured").onclick=async()=>{
 $("submitUrgent").onclick=()=>{
   const c=$("uCompany").value.trim(), p=$("uContact").value.trim(), m=$("uMobile").value.trim(), w=$("uWorker").value.trim(), n=$("uCount").value.trim(), city=$("uCity").value.trim();
   if(!c||!p||!m||!w||!n||!city){msg("urgentMsg","Please fill the required fields.","error");return}
-  const subject = encodeURIComponent("KaamMilega Urgent Worker Requirement");
-  const body = encodeURIComponent(`Company: ${c}
-Contact: ${p}
-Mobile: ${m}
-Worker: ${w}
-Number of workers: ${n}
-Location: ${city}
-Salary: ${$("uSalary").value}
-Joining: ${$("uDate").value}
-Details: ${$("uDetails").value}`);
-  location.href=`mailto:kaammilaga.official@gmail.com?subject=${subject}&body=${body}`;
+  const text=`KaamMilega Urgent Worker Requirement\nCompany: ${c}\nContact: ${p}\nMobile: ${m}\nWorker: ${w}\nNumber of workers: ${n}\nLocation: ${city}\nSalary: ${$("uSalary").value}\nJoining: ${$("uDate").value}\nDetails: ${$("uDetails").value}`;
+  msg("urgentMsg","Opening WhatsApp…","success");
+  window.location.href="https://wa.me/916206085383?text="+encodeURIComponent(text);
 };
 
 
@@ -1061,11 +1053,12 @@ async function loadOwnerJobs(){
 async function ownerMutation(method,path,body){
   const owner=await getOwnerUser();
   if(!owner)throw new Error("Owner login required.");
-  const token=await getSession();
-  const headers={"Authorization":"Bearer "+token,"Prefer":"return=minimal"};
-  if(body!==undefined)headers["Content-Type"]="application/json";
-  const r=await supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
-  if(!r.ok){const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.hint||d.details||raw||"Owner action failed.")}
+  let token=await getSession();
+  if(!token)throw new Error("Owner session expired. Please login again.");
+  const send=()=>{const headers={"Authorization":"Bearer "+token,"Prefer":"return=representation"};if(body!==undefined)headers["Content-Type"]="application/json";return supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});};
+  let r=await send();
+  if(r.status===401){const refreshed=await refreshStoredSession();if(refreshed){token=refreshed;r=await send();}}
+  if(!r.ok){const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.error||d.hint||d.details||raw||"Owner action failed.")}
   return r;
 }
 
@@ -1176,14 +1169,9 @@ loadJobs();
       msg.innerHTML = '<div class="notice">Please enter Job/Role, City and Mobile/WhatsApp number.</div>';
       return;
     }
-    const subject = encodeURIComponent("KaamMilega Job Requirement");
-    const body = encodeURIComponent(`Job required: ${role}
-Preferred city: ${city}
-Experience: ${exp}
-Mobile/WhatsApp: ${phone}
-Requirement: ${note}`);
-    window.location.href = `mailto:kaammilaga.official@gmail.com?subject=${subject}&body=${body}`;
-    msg.innerHTML = '<div class="notice success">Your email draft is being opened for KaamMilega support.</div>';
+    const text = `KaamMilega Job Requirement\nJob/Role: ${role}\nPreferred city: ${city}\nExperience: ${exp}\nMobile/WhatsApp: ${phone}\nRequirement: ${note}`;
+    msg.innerHTML = '<div class="notice success">Opening WhatsApp to send your requirement…</div>';
+    window.location.href = "https://wa.me/916206085383?text=" + encodeURIComponent(text);
   });
 })();
 
@@ -1192,16 +1180,13 @@ Requirement: ${note}`);
 async function ownerRequirementsMutation(method, path, body){
   const owner = await getOwnerUser();
   if(!owner) throw new Error("Owner login required.");
-  const token = await getSession();
+  let token = await getSession();
   if(!token) throw new Error("Owner session expired. Please login again.");
-  const headers = {"Authorization":"Bearer "+token, "Prefer":"return=representation"};
-  if(body !== undefined) headers["Content-Type"]="application/json";
-  const r = await supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
-  const raw = await r.text();
-  if(!r.ok){
-    let d={}; try{d=JSON.parse(raw)}catch(e){}
-    throw new Error(d.message||d.hint||d.details||raw||"Owner action failed.");
-  }
+  const send=()=>{const headers={"Authorization":"Bearer "+token,"Prefer":"return=representation"};if(body !== undefined) headers["Content-Type"]="application/json";return supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});};
+  let r=await send();
+  if(r.status===401){const refreshed=await refreshStoredSession();if(refreshed){token=refreshed;r=await send();}}
+  const raw=await r.text();
+  if(!r.ok){let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.error||d.hint||d.details||raw||"Owner action failed.");}
   return raw ? JSON.parse(raw) : [];
 }
 
@@ -2549,137 +2534,5 @@ if(document.getElementById("ownerReqSaveEdit")){
 })();
 </script>
 
-
-<script id="kaammilega-master-stability-fix-2026-09-30">
-(function(){
-  'use strict';
-  const $=id=>document.getElementById(id);
-  const OWNER='kaammilaga.official@gmail.com';
-  const clean=v=>String(v||'').trim().toLowerCase();
-  const escv=v=>typeof escapeHtml==='function'?escapeHtml(v):String(v??'');
-  const errorText=async r=>{const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(_){}return d.message||d.hint||d.details||d.error||raw||('HTTP '+r.status)};
-
-  // One authoritative owner check: use the live Supabase Auth user, with refresh support.
-  window.getOwnerUser=async function(){
-    try{
-      const u=await getCurrentUser();
-      if(u && clean(u.email)===OWNER){ window.ownerUser=u; return u; }
-    }catch(_){}
-    return null;
-  };
-
-  async function requireOwner(){
-    const u=await window.getOwnerUser();
-    if(!u) throw new Error('Owner session expired. Please use Owner Login again.');
-    const token=await getSession();
-    if(!token) throw new Error('Owner session expired. Please use Owner Login again.');
-    return {u,token};
-  }
-
-  window.loadOwnerJobs=async function(){
-    const box=$('ownerJobs'); if(!box)return;
-    box.innerHTML='<div class="card">Loading jobs...</div>';
-    try{
-      const {token}=await requireOwner();
-      const r=await supa('jobs?select=id,title,category,city,salary,job_type,description,contact_phone,status,created_at,employer_id&order=created_at.desc&limit=1000',{headers:{Authorization:'Bearer '+token}});
-      if(!r.ok) throw new Error(await errorText(r));
-      const data=await r.json();
-      if(!Array.isArray(data)||!data.length){box.innerHTML='<div class="card"><h3>No job posts</h3><p class="muted">No jobs are currently stored.</p></div>';return;}
-      box.innerHTML=data.map(j=>{
-        const st=String(j.status||'pending_owner');
-        const cls=st==='active'?'status-active':st==='completed'?'status-completed':'status-pending';
-        const label=st==='active'?'CONFIRMED / ACTIVE':st==='completed'?'COMPLETED':'PENDING OWNER';
-        return `<div class="owner-job"><div class="owner-job-head"><div><span class="tag">${escv(j.category||'Job')}</span><h3 style="margin:7px 0">${escv(j.title||'Untitled')}</h3><div class="owner-small">${escv(j.city||'')} · ${escv(j.salary||'Salary not specified')} · ${escv(j.job_type||'')}</div><div class="owner-small" style="margin-top:5px">ID: ${escv(j.id||'')}</div></div><span class="notice ${cls}" style="margin:0">${label}</span></div><p>${escv(j.description||'')}</p><div class="owner-actions"><button class="btn" onclick="ownerSetStatus('${j.id}','active')">Confirm / Activate</button><button class="btn secondary" onclick="ownerSetStatus('${j.id}','completed')">Mark Complete</button><button class="btn ghost" onclick="ownerEditJob('${j.id}')">Update</button><button class="btn danger" onclick="ownerDeleteJob('${j.id}')">Delete</button></div></div>`;
-      }).join('');
-    }catch(e){box.innerHTML='<div class="card"><div class="notice error">'+escv(e.message||'Could not load jobs.')+'</div></div>'; if($('ownerPanelMsg'))msg('ownerPanelMsg',e.message||'Could not load jobs.','error');}
-  };
-
-  window.loadOwnerCompanyRequirements=async function(){
-    const box=$('ownerRequirementsList'); if(!box)return;
-    box.innerHTML='<div class="card">Loading company requirements...</div>';
-    try{
-      const {token}=await requireOwner();
-      const r=await supa('company_requirements?select=*&order=created_at.desc',{headers:{Authorization:'Bearer '+token}});
-      if(!r.ok)throw new Error(await errorText(r));
-      const rows=await r.json();
-      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No company requirements found.</div>';return;}
-      box.innerHTML=rows.map(x=>`<article class="owner-job"><div class="owner-job-head"><div><span class="owner-badge">${x.status==='completed'?'COMPLETED':'ACTIVE'}</span><h3 style="margin:8px 0 4px">${escv(x.company_name)}</h3><div class="owner-small">${escv(x.location)} · ${escv(String(x.members_needed))} members · ${escv(x.worker_requirement)}</div></div><div class="owner-small">ID: ${escv(String(x.id))}</div></div><div style="margin-top:10px"><b>Calling:</b> ${escv(x.caller_role)} — ${escv(x.caller_name)}<br><b>Salary / Rate:</b> ${escv(x.salary)}<br><b>Joining:</b> ${escv(x.joining_date||'As per company')}${x.details?`<br><b>Details:</b> ${escv(x.details)}`:''}</div><div class="owner-actions">${x.status!=='completed'?`<button class="btn secondary" onclick="ownerCompleteRequirement(${x.id})">Mark Complete</button>`:`<button class="btn" onclick="ownerReopenRequirement(${x.id})">Re-Open</button>`}<button class="btn secondary" onclick="ownerEditRequirement(${x.id})">Update</button><button class="btn danger" onclick="ownerDeleteRequirement(${x.id})">Delete</button></div></article>`).join('');
-    }catch(e){box.innerHTML='<div class="card"><div class="notice error">'+escv(e.message||'Could not load company requirements.')+'</div></div>';if($('ownerRequirementsMsg'))msg('ownerRequirementsMsg',e.message||'Could not load company requirements.','error');}
-  };
-
-  window.loadOwnerVideos=async function(){
-    const box=$('ownerVideosList'); if(!box)return;
-    box.innerHTML='<div class="card">Loading videos...</div>';
-    try{
-      const {token}=await requireOwner();
-      const r=await supa('work_result_videos?select=*&order=created_at.desc&limit=500',{headers:{Authorization:'Bearer '+token}});
-      if(!r.ok)throw new Error(await errorText(r));
-      const rows=await r.json();
-      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No user videos found.</div>';return;}
-      box.innerHTML=rows.map(v=>{const label=v.result==='work_got'?'Kaam Mila':v.result==='work_not_got'?'Kaam Nahi Mila':'Abhi Job Search Kar Raha Hoon';return `<article class="owner-video"><div class="owner-job-head"><div><span class="owner-badge">${escv(v.status||'pending').toUpperCase()}</span><h3 style="margin:8px 0 4px">${escv(v.title)}</h3><div class="owner-small">${escv(label)} · ${new Date(v.created_at).toLocaleString()}</div></div><div class="owner-small">${escv(v.user_id||'')}</div></div>${v.note?`<p>${escv(v.note)}</p>`:''}<video controls preload="metadata" style="width:100%;max-height:300px;margin-top:10px;border-radius:12px;background:#000" src="${escv(v.public_url)}"></video><div class="owner-actions"><button class="btn" onclick="ownerSetVideoStatus('${escv(v.id)}','active')">Keep Active</button><button class="btn danger" onclick="ownerDeleteVideo('${escv(v.id)}')">Delete</button></div></article>`}).join('');
-    }catch(e){box.innerHTML='<div class="card"><div class="notice error">'+escv(e.message||'Could not load videos.')+'</div></div>';if($('ownerVideosMsg'))msg('ownerVideosMsg',e.message||'Could not load videos.','error');}
-  };
-
-  window.loadOwnerReviews=async function(){
-    const box=$('ownerReviews'); if(!box)return;
-    box.innerHTML='<div class="card">Loading ratings...</div>';
-    try{
-      const {token}=await requireOwner();
-      const r=await supa('job_reviews?select=*&order=created_at.desc&limit=500',{headers:{Authorization:'Bearer '+token}});
-      if(!r.ok)throw new Error(await errorText(r));
-      const rows=await r.json();
-      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No reviews yet.</div>';return;}
-      box.innerHTML=rows.map(x=>`<article class="owner-job"><div class="review-stars">${'★'.repeat(Math.max(0,Math.min(5,Number(x.rating)||0)))}${'☆'.repeat(5-Math.max(0,Math.min(5,Number(x.rating)||0)))}</div><h3>${escv(x.job_title_snapshot||'Job Review')}</h3><p>${escv(x.comment||'')}</p><div class="owner-small">${escv(x.reviewer_id||'')} · ${new Date(x.created_at).toLocaleString()}</div></article>`).join('');
-    }catch(e){box.innerHTML='<div class="card"><div class="notice error">'+escv(e.message||'Could not load ratings.')+'</div></div>';if($('ownerReviewsMsg'))msg('ownerReviewsMsg',e.message||'Could not load ratings.','error');}
-  };
-
-  // Public sections: never leave the page stuck on "Loading".
-  window.loadCompanyRequirements=async function(){
-    const box=$('companyRequirements');if(!box)return;
-    box.innerHTML='<div class="card">Loading company requirements...</div>';
-    try{
-      const r=await supa('company_requirements?select=*&status=eq.active&order=created_at.desc');
-      if(!r.ok)throw new Error(await errorText(r));
-      const rows=await r.json();
-      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No active company requirements yet.</div>';return;}
-      box.innerHTML=rows.map(x=>`<article class="requirement-card"><div class="requirement-top"><div><span class="eyebrow">HIRING REQUIREMENT</span><h3 style="margin:5px 0">${escv(x.company_name)}</h3></div><span class="requirement-status">ACTIVE</span></div><div class="requirement-meta"><div><div class="requirement-label">Members Needed</div><div class="requirement-value">${escv(String(x.members_needed))}</div></div><div><div class="requirement-label">Worker Required</div><div class="requirement-value">${escv(x.worker_requirement)}</div></div><div><div class="requirement-label">Calling</div><div class="requirement-value">${escv(x.caller_role)} — ${escv(x.caller_name)}</div></div><div><div class="requirement-label">Salary / Rate</div><div class="requirement-value">${escv(x.salary)}</div></div><div><div class="requirement-label">Location</div><div class="requirement-value">${escv(x.location)}</div></div><div><div class="requirement-label">Joining</div><div class="requirement-value">${escv(x.joining_date||'As per company')}</div></div></div>${x.details?`<p style="margin:14px 0 0">${escv(x.details)}</p>`:''}<div class="requirement-owner">Posted through KaamMilega Owner Hiring Desk</div></article>`).join('');
-    }catch(e){box.innerHTML='<div class="card"><div class="notice error">Company requirements are temporarily unavailable. '+escv(e.message||'')+'</div></div>';}
-  };
-
-  window.loadPublicOwnerReviews=async function(){
-    const box=$('publicReviews');if(!box)return;
-    box.innerHTML='<div class="card">Loading ratings...</div>';
-    try{
-      const r=await supa('job_reviews?select=id,job_id,rating,comment,job_title_snapshot,job_category_snapshot,job_city_snapshot,created_at&order=created_at.desc&limit=100');
-      if(!r.ok)throw new Error(await errorText(r));
-      const rows=await r.json();
-      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card"><p class="muted">No ratings yet.</p></div>';return;}
-      box.innerHTML=rows.map(x=>{const n=Math.max(0,Math.min(5,Number(x.rating)||0));return `<article class="card"><div class="review-stars">${'★'.repeat(n)}${'☆'.repeat(5-n)}</div><h3>${escv(x.job_title_snapshot||'Job Review')}</h3><p class="muted">${escv(x.job_category_snapshot||'Job')}${x.job_city_snapshot?' · '+escv(x.job_city_snapshot):''}</p><p>${escv(x.comment||'')}</p><div class="muted" style="font-size:12px;margin-top:8px">${new Date(x.created_at).toLocaleDateString()}</div></article>`}).join('');
-    }catch(e){box.innerHTML='<div class="card"><div class="notice error">Ratings are temporarily unavailable. '+escv(e.message||'')+'</div></div>';}
-  };
-
-  // Rebind management buttons so they always open the correct manager and load it.
-  const binds=[
-    ['ownerJobsManageBtn','ownerPanelModal',loadOwnerJobs],
-    ['ownerRequirementsManageBtn','ownerRequirementsModal',loadOwnerCompanyRequirements],
-    ['ownerReviewsManageBtn','ownerReviewsModal',loadOwnerReviews],
-    ['ownerVideosManageBtn','ownerVideosModal',loadOwnerVideos]
-  ];
-  for(const [id,modal,fn] of binds){const b=$(id);if(!b)continue;b.onclick=async function(e){e.preventDefault();e.stopPropagation();const o=await window.getOwnerUser();if(!o){openModal('ownerLoginModal');return;}openModal(modal);await fn();};}
-
-  // Every refresh button works from the same verified session.
-  const refreshes=[
-    ['ownerJobsRefresh',loadOwnerJobs],['ownerRequirementsRefresh',loadOwnerCompanyRequirements],['ownerReviewsRefresh',loadOwnerReviews],['ownerVideosRefresh',loadOwnerVideos]
-  ];
-  for(const [id,fn] of refreshes){const b=$(id);if(!b)continue;b.onclick=async function(e){e.preventDefault();e.stopPropagation();const o=await window.getOwnerUser();if(!o){openModal('ownerLoginModal');return;}const old=b.textContent;b.disabled=true;b.textContent='Refreshing...';try{await fn();showToast('Section refreshed.');}catch(err){showToast(err.message||'Refresh failed.');}finally{b.disabled=false;b.textContent=old;}};}
-
-  // Owner panel refresh all sections without failing the whole panel if one query fails.
-  const all=$('ownerRefresh');if(all)all.onclick=async function(e){e.preventDefault();e.stopPropagation();const o=await window.getOwnerUser();if(!o){openModal('ownerLoginModal');return;}const old=all.textContent;all.disabled=true;all.textContent='Refreshing...';try{await Promise.allSettled([loadOwnerJobs(),loadOwnerCompanyRequirements(),loadOwnerReviews(),loadOwnerVideos()]);showToast('Owner panel refreshed.');}finally{all.disabled=false;all.textContent=old;}};
-
-  // Refresh public sections once after this stability layer is installed.
-  setTimeout(()=>{loadCompanyRequirements();loadPublicOwnerReviews();},50);
-})();
-
-</script>
 </body>
 </html>

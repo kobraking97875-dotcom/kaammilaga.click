@@ -128,7 +128,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 
 <section class="section" style="padding-top:20px">
 <div class="trust-strip">
-<div class="trust-mini"><b>Secure mobile login</b><span>OTP-based account access</span></div>
+<div class="trust-mini"><b>Secure account login</b><span>Email + password account access</span></div>
 <div class="trust-mini"><b>Real job listings</b><span>Structured employer requirements</span></div>
 <div class="trust-mini"><b>Payment checkout</b><span>PayU checkout for featured job promotion</span></div>
 <div class="trust-mini"><b>Customer support</b><span>Direct KaamMilega assistance</span></div>
@@ -413,6 +413,13 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div class="notice" style="margin-top:18px"><b>Owner:</b> Virjul Kumar Yadav · <b>Email:</b> kaammilaga.official@gmail.com</div>
 <div id="ownerPanelMsg"></div>
 <div id="ownerJobs" class="owner-grid"><div class="card">Loading owner jobs...</div></div>
+<div class="card" style="margin:16px 0;background:#f8fbff;border-color:#cfe0f5">
+  <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
+    <div><span class="owner-badge">WORK RESULT VIDEOS</span><h3 style="margin:8px 0 4px">User Video Submissions</h3><p class="muted" style="margin:0">Activate or delete videos uploaded by users about whether they got work.</p></div>
+    <button class="btn orange" id="ownerVideosManageBtn" type="button">Manage Videos</button>
+  </div>
+</div>
+
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
   <button class="btn danger" id="ownerLogout">Owner Logout</button>
   <button class="btn secondary" data-close>Close Panel</button>
@@ -448,13 +455,14 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div class="formgroup"><label>Skills</label><input id="profileSkills" class="input" placeholder="Welder, Electrician"></div>
 </div>
 <div id="profileMsg"></div>
+<div id="myJobReviewBox" class="notice" style="margin-top:12px"><b>My Job</b><div class="muted" style="margin-top:5px">Loading your job status...</div></div>
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
 <button class="btn" id="saveProfile">Save Profile</button>
 <button class="btn secondary" id="continueProfile">Continue</button>
 <button class="btn ghost" id="logoutBtn">Log Out</button>
 </div>
-<div class="notice success" style="margin-top:14px"><b>Secure account:</b> Your profile is connected to your verified mobile login and protected by account access controls.</div>
-<div class="notice" style="margin-top:10px">For security, never share your OTP, password or payment credentials with anyone.</div>
+<div class="notice success" style="margin-top:14px"><b>Secure account:</b> Your profile is connected to your secure email/password account and protected by account access controls.</div>
+<div class="notice" style="margin-top:10px">For security, never share your password or payment credentials with anyone.</div>
 </div></div>
 
 <!-- LOGIN -->
@@ -1356,6 +1364,341 @@ if(document.getElementById("ownerReqSaveEdit")){
     <button class="btn" id="ownerReqSaveEdit">Save Changes</button>
   </div>
 </div>
+
+
+<div class="modal hidden" id="ownerVideosModal">
+  <div class="modal-card" style="max-width:980px">
+    <button class="modal-close" data-close="ownerVideosModal">×</button>
+    <span class="eyebrow">OWNER CONTROL</span>
+    <h2>User Work Result Videos</h2>
+    <p class="muted">Keep a video active or delete it from the public website.</p>
+    <div id="ownerVideosMsg"></div>
+    <div id="ownerVideosList" class="owner-grid"><div class="card">Loading videos...</div></div>
+  </div>
+</div>
+
+
+<script id="kaammilega-v7-functions">
+(function(){
+  const $id = id => document.getElementById(id);
+  const esc = window.escapeHtml || (s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])));
+  const ownerEmail = "kaammilaga.official@gmail.com";
+
+  // ---------------- EMAIL + PASSWORD LOGIN ----------------
+  const signupBtn = $id("signupSubmit");
+  const loginBtn = $id("loginSubmit");
+  const showSignup = $id("showSignupBtn");
+  const showLogin = $id("showLoginBtn");
+
+  if(showSignup) showSignup.onclick = ()=>{
+    $id("signupArea")?.classList.remove("hidden");
+    $id("loginArea")?.classList.add("hidden");
+    $id("loginMsg").innerHTML="";
+  };
+  if(showLogin) showLogin.onclick = ()=>{
+    $id("signupArea")?.classList.add("hidden");
+    $id("loginArea")?.classList.remove("hidden");
+    $id("loginMsg").innerHTML="";
+  };
+
+  if(signupBtn) signupBtn.onclick = async ()=>{
+    const email = ($id("signupEmail")?.value||"").trim().toLowerCase();
+    const p1 = $id("signupPassword")?.value||"";
+    const p2 = $id("signupPassword2")?.value||"";
+    if(!email || !p1 || !p2){ msg("loginMsg","Email and both password fields are required.","error"); return; }
+    if(p1.length < 6){ msg("loginMsg","Password must be at least 6 characters.","error"); return; }
+    if(p1 !== p2){ msg("loginMsg","Passwords do not match.","error"); return; }
+    try{
+      const r = await fetch(SUPABASE_URL+"/auth/v1/signup",{
+        method:"POST",
+        headers:{"apikey":SUPABASE_ANON_KEY,"Content-Type":"application/json"},
+        body:JSON.stringify({email,password:p1})
+      });
+      const d = await r.json();
+      if(!r.ok) throw new Error(d.msg||d.error_description||d.message||"Signup failed.");
+      if(d.access_token){
+        localStorage.setItem("km_access_token",d.access_token);
+        if(d.refresh_token) localStorage.setItem("km_refresh_token",d.refresh_token);
+        await updateAuthUI();
+        $id("loginModal")?.classList.add("hidden");
+        showToast("Account created successfully. You are logged in.");
+      }else{
+        // Supabase may require email confirmation before a session is issued.
+        msg("loginMsg","Account created. Please confirm your email if Supabase asks for email verification, then use Login with the same password.","success");
+        if(showLogin) showLogin.click();
+      }
+    }catch(e){ msg("loginMsg",e.message||"Signup failed.","error"); }
+  };
+
+  if(loginBtn) loginBtn.onclick = async ()=>{
+    const email = ($id("loginEmail")?.value||"").trim().toLowerCase();
+    const password = $id("loginPassword")?.value||"";
+    if(!email || !password){ msg("loginMsg","Enter your signup email and password.","error"); return; }
+    try{
+      const r = await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=password",{
+        method:"POST",
+        headers:{"apikey":SUPABASE_ANON_KEY,"Content-Type":"application/json"},
+        body:JSON.stringify({email,password})
+      });
+      const d = await r.json();
+      if(!r.ok || !d.access_token) throw new Error(d.error_description||d.msg||d.message||"Login failed.");
+      localStorage.setItem("km_access_token",d.access_token);
+      if(d.refresh_token) localStorage.setItem("km_refresh_token",d.refresh_token);
+      await updateAuthUI();
+      $id("loginModal")?.classList.add("hidden");
+      showToast("Login successful.");
+      await loadMyJobReviewBox();
+    }catch(e){ msg("loginMsg",e.message||"Login failed.","error"); }
+  };
+
+  // ---------------- ONE JOB POST PER USER ----------------
+  async function getMyJobs(userId, token){
+    const r = await supa("jobs?employer_id=eq."+encodeURIComponent(userId)+"&select=id,title,status,category,city,created_at&order=created_at.desc&limit=2",{
+      headers:{"Authorization":"Bearer "+token}
+    });
+    if(!r.ok) return [];
+    const d = await r.json();
+    return Array.isArray(d)?d:[];
+  }
+
+  // Override the existing publish handler with one-post enforcement.
+  const postBtn = $id("submitJob");
+  if(postBtn) postBtn.onclick = async ()=>{
+    const token=await getSession();
+    if(!token){msg("jobMsg","Please Sign Up or Login first.","error");return;}
+    const user=await getCurrentUser();
+    if(!user?.id){msg("jobMsg","Session expired. Please login again.","error");return;}
+    const existing=await getMyJobs(user.id,token);
+    if(existing.length){
+      msg("jobMsg","This account has already posted one job. One user can keep only one job post on KaamMilega.","error");
+      return;
+    }
+    const title=$id("jobTitle").value.trim(), category=$id("jobCategory").value.trim(), city=$id("jobCity").value.trim();
+    if(!title||!category||!city){msg("jobMsg","Please select Job Title and enter City.","error");return;}
+    try{
+      const pr=await supa("profiles?id=eq."+encodeURIComponent(user.id)+"&select=name,city,skills,avatar_url&limit=1",{headers:{"Authorization":"Bearer "+token}});
+      const prows=await pr.json(); const profile=Array.isArray(prows)&&prows[0]?prows[0]:{};
+      const employerName=profile.name||user.user_metadata?.name||"Employer";
+      const employerSkills=Array.isArray(profile.skills)?profile.skills:[];
+      const r=await supa("jobs",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=minimal"},body:JSON.stringify({
+        employer_id:user.id,title,category,city,
+        salary:$id("jobSalary").value.trim(),
+        job_type:$id("jobType").value,
+        description:$id("jobDescription").value.trim(),
+        contact_phone:$id("jobPhone").value.trim()||user.phone||"",
+        status:"pending_owner"
+      })});
+      if(!r.ok){
+        const raw=await r.text(); let d={}; try{d=JSON.parse(raw)}catch(_){}
+        throw new Error(d.message||d.hint||d.details||raw||"Could not publish job.");
+      }
+      $id("jobModal").classList.add("hidden");
+      $id("jobMsg").innerHTML="";
+      ["jobTitle","jobCategory","jobCity","jobSalary","jobPhone","jobDescription"].forEach(id=>{if($id(id))$id(id).value=""});
+      $id("jobType").value="Full Time";
+      await loadJobs();
+      showToast("Job posted. Owner approval is required before it becomes public.");
+    }catch(e){msg("jobMsg",e.message||"Could not publish job.","error");}
+  };
+
+  // ---------------- REVIEWS ----------------
+  async function loadPublicReviews(){
+    const box=$id("publicReviews"); if(!box)return;
+    const r=await supa("job_reviews?select=id,job_id,rating,comment,job_title_snapshot,job_category_snapshot,job_city_snapshot,created_at&order=created_at.desc&limit=100");
+    if(!r.ok){box.innerHTML='<div class="card">Ratings are temporarily unavailable.</div>';return;}
+    const rows=await r.json();
+    if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card"><p class="muted">No ratings yet.</p></div>';return;}
+    box.innerHTML=rows.map(x=>{
+      const stars="★".repeat(Number(x.rating)||0)+"☆".repeat(5-(Number(x.rating)||0));
+      return `<article class="update-card"><div class="review-stars">${stars}</div><h3>${esc(x.job_title_snapshot||"Job Review")}</h3><p class="muted">${esc(x.job_category_snapshot||"Job")}${x.job_city_snapshot?" · "+esc(x.job_city_snapshot):""}</p><p>${esc(x.comment||"")}</p><div class="muted" style="font-size:12px;margin-top:8px">${new Date(x.created_at).toLocaleDateString()}</div></article>`;
+    }).join("");
+  }
+
+  async function loadMyJobReviewBox(){
+    const box=$id("myJobReviewBox"); if(!box)return;
+    const user=await getCurrentUser();
+    if(!user){box.innerHTML="<b>My Job</b><div class='muted' style='margin-top:5px'>Login to see your job and rating option.</div>";return;}
+    const token=await getSession();
+    const jobs=await getMyJobs(user.id,token);
+    if(!jobs.length){box.innerHTML="<b>My Job</b><div class='muted' style='margin-top:5px'>You have not posted a job yet.</div>";return;}
+    const j=jobs[0];
+    let review=null;
+    const rr=await supa("job_reviews?reviewer_id=eq."+encodeURIComponent(user.id)+"&select=id,job_id,rating,comment&order=created_at.desc&limit=1",{headers:{"Authorization":"Bearer "+token}});
+    if(rr.ok){const a=await rr.json(); review=Array.isArray(a)&&a[0]?a[0]:null;}
+    box.innerHTML=`<b>My Job</b><div style="margin-top:6px"><strong>${esc(j.title)}</strong> · ${esc(j.city||"")} · <span class="tag">${esc(j.status||"")}</span></div>
+      ${review?`<div class="rating-box"><div class="review-stars">${"★".repeat(review.rating)}${"☆".repeat(5-review.rating)}</div><div>${esc(review.comment||"")}</div></div>`:
+      `<button class="btn secondary" type="button" style="margin-top:10px" data-my-review="${esc(j.id)}">${j.status==="completed"?"Rate / Comment on Completed Job":"Rate / Comment"}</button>`}`;
+    const b=box.querySelector("[data-my-review]");
+    if(b)b.onclick=()=>openReviewForJob(j.id);
+  }
+
+  async function openReviewForJob(jobId){
+    const user=await getCurrentUser();
+    if(!user){openModal("loginModal");return;}
+    $id("reviewJobId").value=jobId;
+    $id("reviewRating").value="5";
+    $id("reviewComment").value="";
+    openModal("reviewModal");
+  }
+
+  window.openReviewForJob=openReviewForJob;
+
+  const reviewSubmit=$id("submitReview");
+  if(reviewSubmit) reviewSubmit.onclick=async()=>{
+    const user=await getCurrentUser();
+    const jobId=$id("reviewJobId").value;
+    const rating=Number($id("reviewRating").value);
+    const comment=$id("reviewComment").value.trim();
+    if(!user){msg("reviewMsg","Please login first.","error");return;}
+    if(!jobId||!rating||!comment){msg("reviewMsg","Rating and comment are required.","error");return;}
+    const token=await getSession();
+    try{
+      const r=await supa("job_reviews",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=representation"},body:JSON.stringify({job_id:Number(jobId),reviewer_id:user.id,rating,comment})});
+      if(!r.ok){const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(_){ }throw new Error(d.message||d.hint||d.details||raw||"Could not save rating.");}
+      $id("reviewModal").classList.add("hidden");
+      showToast("Rating and comment saved.");
+      await loadMyJobReviewBox();
+      await loadPublicReviews();
+    }catch(e){msg("reviewMsg",e.message||"Could not save rating.","error");}
+  };
+
+  // ---------------- WORK RESULT VIDEO UPLOAD ----------------
+  const videoBtn=$id("videoUploadBtn");
+  if(videoBtn) videoBtn.onclick=async()=>{
+    const user=await getCurrentUser();
+    if(!user){msg("videoMsg","Please Sign Up or Login first.","error");return;}
+    const title=($id("videoTitle")?.value||"").trim();
+    const result=$id("videoResult")?.value||"still_searching";
+    const note=($id("videoNote")?.value||"").trim();
+    const file=$id("videoFile")?.files?.[0];
+    if(!title||!file){msg("videoMsg","Please enter a video title and choose a video.","error");return;}
+    if(!file.type.startsWith("video/")){msg("videoMsg","Only video files are allowed.","error");return;}
+    if(file.size>50*1024*1024){msg("videoMsg","Video must be 50 MB or smaller.","error");return;}
+    try{
+      const token=await getSession();
+      const safe=(file.name.split(".").pop()||"mp4").toLowerCase().replace(/[^a-z0-9]/g,"")||"mp4";
+      const path=`${user.id}/${crypto.randomUUID()}.${safe}`;
+      const up=await fetch(`${SUPABASE_URL}/storage/v1/object/work-result-videos/${path}`,{
+        method:"POST",headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token,"Content-Type":file.type,"x-upsert":"false"},body:file
+      });
+      if(!up.ok) throw new Error("Video upload failed. Run the v7 SQL setup once in Supabase.");
+      const publicUrl=`${SUPABASE_URL}/storage/v1/object/public/work-result-videos/${path}`;
+      const r=await supa("work_result_videos",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=minimal"},body:JSON.stringify({user_id:user.id,title,result,note,storage_path:path,public_url:publicUrl,status:"pending"})});
+      if(!r.ok){
+        await fetch(`${SUPABASE_URL}/storage/v1/object/work-result-videos/${path}`,{method:"DELETE",headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
+        const raw=await r.text(); throw new Error(raw||"Could not save video record.");
+      }
+      $id("videoTitle").value="";$id("videoNote").value="";$id("videoFile").value="";
+      msg("videoMsg","Video uploaded. It is waiting for owner approval.","success");
+      showToast("Video sent to owner for approval.");
+      await loadPublicVideos();
+    }catch(e){msg("videoMsg",e.message||"Video upload failed.","error");}
+  };
+
+  async function loadPublicVideos(){
+    const box=$id("publicVideos"); if(!box)return;
+    const r=await supa("work_result_videos?select=id,title,result,note,public_url,created_at&status=eq.active&order=created_at.desc&limit=50");
+    if(!r.ok){box.innerHTML='<div class="card">Videos are temporarily unavailable.</div>';return;}
+    const rows=await r.json();
+    if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card"><p class="muted">No approved work-result videos yet.</p></div>';return;}
+    box.innerHTML=rows.map(v=>{
+      const label=v.result==="work_got"?"Kaam Mila":v.result==="work_not_got"?"Kaam Nahi Mila":"Abhi Job Search Kar Raha Hoon";
+      return `<article class="update-card video-card"><span class="eyebrow">WORK RESULT</span><h3>${esc(v.title)}</h3><span class="tag">${esc(label)}</span>${v.note?`<p class="muted">${esc(v.note)}</p>`:""}<video controls preload="metadata" src="${esc(v.public_url)}"></video></article>`;
+    }).join("");
+  }
+
+  // ---------------- OWNER VIDEO MANAGEMENT ----------------
+  async function loadOwnerVideos(){
+    const box=$id("ownerVideosList"); if(!box)return;
+    const owner=await getOwnerUser(); if(!owner){box.innerHTML='<div class="card">Owner login required.</div>';return;}
+    const token=await getSession();
+    const r=await supa("work_result_videos?select=*&order=created_at.desc&limit=500",{headers:{"Authorization":"Bearer "+token}});
+    if(!r.ok){box.innerHTML='<div class="card">Could not load videos. Run the v7 SQL setup.</div>';return;}
+    const rows=await r.json();
+    if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No user videos found.</div>';return;}
+    box.innerHTML=rows.map(v=>{
+      const label=v.result==="work_got"?"Kaam Mila":v.result==="work_not_got"?"Kaam Nahi Mila":"Abhi Job Search Kar Raha Hoon";
+      return `<article class="owner-video"><div class="owner-job-head"><div><span class="owner-badge">${esc(v.status||"pending").toUpperCase()}</span><h3 style="margin:8px 0 4px">${esc(v.title)}</h3><div class="owner-small">${esc(label)} · ${new Date(v.created_at).toLocaleString()}</div></div><div class="owner-small">${esc(v.user_id||"")}</div></div>${v.note?`<p>${esc(v.note)}</p>`:""}<video controls preload="metadata" style="width:100%;max-height:300px;margin-top:10px;border-radius:12px;background:#000" src="${esc(v.public_url)}"></video><div class="owner-actions"><button class="btn" onclick="ownerSetVideoStatus('${esc(v.id)}','active')">Keep Active</button><button class="btn danger" onclick="ownerDeleteVideo('${esc(v.id)}')">Delete</button></div></article>`;
+    }).join("");
+  }
+
+  window.ownerSetVideoStatus=async function(id,status){
+    try{
+      const token=await getSession();
+      const r=await supa("work_result_videos?id=eq."+encodeURIComponent(id),{method:"PATCH",headers:{"Authorization":"Bearer "+token,"Prefer":"return=minimal"},body:JSON.stringify({status})});
+      if(!r.ok)throw new Error(await r.text());
+      await loadOwnerVideos();await loadPublicVideos();showToast("Video activated.");
+    }catch(e){msg("ownerVideosMsg",e.message,"error");}
+  };
+
+  window.ownerDeleteVideo=async function(id){
+    if(!confirm("Delete this video permanently from the website?"))return;
+    try{
+      const token=await getSession();
+      const rr=await supa("work_result_videos?id=eq."+encodeURIComponent(id)+"&select=storage_path&limit=1",{headers:{"Authorization":"Bearer "+token}});
+      const rows=await rr.json(); const path=Array.isArray(rows)&&rows[0]?.storage_path;
+      if(path) await fetch(`${SUPABASE_URL}/storage/v1/object/work-result-videos/${path}`,{method:"DELETE",headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
+      const r=await supa("work_result_videos?id=eq."+encodeURIComponent(id),{method:"DELETE",headers:{"Authorization":"Bearer "+token}});
+      if(!r.ok)throw new Error(await r.text());
+      await loadOwnerVideos();await loadPublicVideos();showToast("Video deleted.");
+    }catch(e){msg("ownerVideosMsg",e.message,"error");}
+  };
+
+  // ---------------- OWNER REVIEWS ----------------
+  async function loadOwnerReviews(){
+    const box=$id("ownerReviews"); if(!box)return;
+    const owner=await getOwnerUser(); if(!owner)return;
+    const token=await getSession();
+    const r=await supa("job_reviews?select=*&order=created_at.desc&limit=500",{headers:{"Authorization":"Bearer "+token}});
+    if(!r.ok){box.innerHTML='<div class="card">Could not load reviews. Run the v7 SQL setup.</div>';return;}
+    const rows=await r.json();
+    if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No reviews yet.</div>';return;}
+    box.innerHTML=rows.map(x=>`<article class="owner-job"><div class="review-stars">${"★".repeat(Number(x.rating)||0)}${"☆".repeat(5-(Number(x.rating)||0))}</div><h3>${esc(x.job_title_snapshot||"Job Review")}</h3><p>${esc(x.comment||"")}</p><div class="owner-small">${esc(x.reviewer_id||"")} · ${new Date(x.created_at).toLocaleString()}</div></article>`).join("");
+  }
+
+  // Existing owner requirement manager is retained. Add video/review loading when owner panel opens.
+  const manageVideos=$id("ownerVideosManageBtn");
+  if(manageVideos) manageVideos.onclick=async()=>{
+    const owner=await getOwnerUser(); if(!owner){showToast("Owner login required.");return;}
+    openModal("ownerVideosModal"); await loadOwnerVideos();
+  };
+
+  // Wrap the existing requirement-manager button so reviews/videos refresh too.
+  const reqBtn=$id("ownerRequirementsManageBtn");
+  if(reqBtn){
+    const old=reqBtn.onclick;
+    reqBtn.onclick=async function(){
+      if(old) await old.call(this);
+    };
+  }
+
+  // Refresh owner content when the owner panel is opened.
+  const ownerRefresh=$id("ownerRefresh");
+  if(ownerRefresh){
+    const old=ownerRefresh.onclick;
+    ownerRefresh.onclick=async function(){
+      if(old) await old.call(this);
+      await loadOwnerReviews();
+      await loadOwnerVideos();
+    };
+  }
+
+  // When owner logs in and opens the panel, load reviews/videos too.
+  const ownerLogin=$id("ownerLoginSubmit");
+  if(ownerLogin){
+    ownerLogin.addEventListener("click",async()=>{ setTimeout(async()=>{ await loadOwnerReviews(); },500); },{passive:true});
+  }
+
+  // Load public content.
+  loadPublicReviews();
+  loadPublicVideos();
+  loadMyJobReviewBox();
+
+  // If profile modal opens through the existing UI, refresh the job/review block shortly after.
+  const authBtn=$id("authNavBtn");
+  if(authBtn) authBtn.addEventListener("click",()=>setTimeout(loadMyJobReviewBox,400));
+})();
+</script>
 
 </body>
 </html>

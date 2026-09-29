@@ -91,6 +91,18 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div id="companyRequirements" class="requirement-grid" style="margin-top:18px"><div class="card">Loading company requirements...</div></div>
 </section>
 
+
+<section class="section" id="publicReviewsSection">
+  <div>
+    <span class="eyebrow">RATINGS & COMMENTS</span>
+    <h2 style="margin:5px 0">What Employers Say</h2>
+    <p class="muted" style="margin:0">Ratings and comments saved for KaamMilega jobs.</p>
+  </div>
+  <div id="publicReviews" class="cards" style="margin-top:18px">
+    <div class="card">Loading ratings...</div>
+  </div>
+</section>
+
 <section class="section trust-section">
 <div class="trust-head"><div><span class="eyebrow">BUILT FOR REAL HIRING</span><h2>A simpler, more professional way to hire</h2><p class="muted">Post requirements, reach relevant workers and get support when you need it.</p></div></div>
 <div class="cards">
@@ -337,6 +349,10 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </div>
 <div id="ownerPanelMsg"></div>
 <div id="ownerJobs" class="owner-grid"><div class="card">Loading owner jobs...</div></div>
+<div class="card" style="margin-top:18px;background:#fffdf7;border-color:#ead9a8">
+  <div><span class="owner-badge">RATINGS & COMMENTS</span><h3 style="margin:8px 0 4px">Completed / Deleted Jobs Reviews</h3><p class="owner-small" style="margin:0">When a job is marked complete or deleted, its rating and comment stay saved here. Delete is handled as a soft-delete so review history is not lost.</p></div>
+  <div id="ownerReviews" class="owner-grid" style="margin-top:14px"><div class="card">Loading reviews...</div></div>
+</div>
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
   <button class="btn danger" id="ownerLogout">Owner Logout</button>
   <button class="btn secondary" data-close>Close Panel</button>
@@ -383,18 +399,18 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 
 <!-- LOGIN -->
 <div id="loginModal" class="modal hidden"><div class="modalbox">
-<button class="close" data-close>×</button><h2>Login / Sign Up</h2><p class="muted">Once you sign in, you will stay logged in on this browser until the saved login data is cleared or you sign out.</p>
-<p class="muted">Enter your mobile number to continue.</p>
-<div class="formgroup"><input id="loginPhone" class="input" placeholder="+91XXXXXXXXXX"></div>
-<button class="btn" id="sendOtp">Send OTP</button>
-<div id="otpArea" class="hidden" style="margin-top:12px"><input id="otp" class="input" placeholder="6-digit OTP"><button class="btn" id="verifyOtp" style="margin-top:10px">Verify OTP</button></div>
+<button class="close" data-close>×</button><h2>Login</h2><p class="muted">Login to KaamMilega using your Gmail/email address and password.</p>
+<div class="formgroup"><label>Email / Gmail</label><input id="loginEmail" class="input" type="email" autocomplete="username" placeholder="yourname@gmail.com"></div>
+<div class="formgroup"><label>Password</label><input id="loginPassword" class="input" type="password" autocomplete="current-password" placeholder="Enter password"></div>
+<button class="btn" id="loginSubmit">Login</button>
 <div id="loginMsg"></div>
+<div class="notice" style="margin-top:12px">Wrong email or password means <b>login will not happen</b>. Passwords are checked by Supabase Auth.</div>
 </div></div>
 
 <!-- JOB -->
 <div id="jobModal" class="modal hidden"><div class="modalbox">
 <button class="close" data-close>×</button><h2>Post a Job</h2>
-<div class="row"><div class="formgroup"><label>Which job do you need? *</label><select id="jobTitle" class="input"><option value="">Select job</option><option>MIG Welder</option><option>TIG Welder</option><option>Arc Welder</option><option>Welder Helper</option><option>Fitter</option><option>Electrician</option><option>Plumber</option><option>Fabricator</option><option>Machine Operator</option><option>Driver</option><option>Delivery Executive</option><option>Helper</option><option>Supervisor</option><option>Security Guard</option><option>Painter</option><option>Carpenter</option><option>Other Skilled Worker</option></select></div><div class="formgroup"><label>Category</label><select id="jobCategory" class="input"><option value="">Select category</option><option>Welder</option><option>Fitter</option><option>Electrical</option><option>Plumbing</option><option>Fabrication</option><option>Machine Operator</option><option>Driving</option><option>Delivery</option><option>Helper</option><option>Supervisor</option><option>Security</option><option>Construction</option><option>Other</option></select></div></div>
+<div class="row"><div class="formgroup"><label>Job Title</label><input id="jobTitle" class="input" placeholder="MIG Welder"></div><div class="formgroup"><label>Category</label><input id="jobCategory" class="input" placeholder="Welder"></div></div>
 <div class="row"><div class="formgroup"><label>City</label><input id="jobCity" class="input" placeholder="Ahmedabad"></div><div class="formgroup"><label>Salary</label><input id="jobSalary" class="input" placeholder="₹20,000/month"></div></div>
 <div class="row"><div class="formgroup"><label>Job Type</label><select id="jobType"><option>Full Time</option><option>Part Time</option><option>Contract</option><option>Daily Wage</option></select></div><div class="formgroup"><label>Contact Phone</label><input id="jobPhone" class="input" placeholder="Mobile / WhatsApp"></div></div>
 <div class="formgroup"><label>Description</label><textarea id="jobDescription" rows="4" placeholder="Job requirements..."></textarea></div>
@@ -646,6 +662,7 @@ $("saveProfile").onclick=async()=>{
       $("profileMsg").innerHTML="";
       showToast("Profile updated successfully");
       loadJobs();
+loadPublicReviews();
     },600);
   }catch(e){msg("profileMsg",e.message||"Could not save profile.","error")}
 };
@@ -677,52 +694,38 @@ async function restoreLoginState(){
 window.addEventListener("storage",()=>{ updateAuthUI(); });
 window.addEventListener("pageshow",()=>{ updateAuthUI(); });
 
-// Login demo-safe flow: if Supabase Auth is configured for phone OTP, request OTP.
-// Otherwise user can still browse and use WhatsApp/urgent forms.
-$("sendOtp").onclick=async()=>{
-  const phone=$("loginPhone").value.trim();
-  if(!phone){msg("loginMsg","Enter your mobile number.","error");return}
+// Email + password login. Supabase Auth verifies the password; a wrong password returns an error and no session.
+$("loginSubmit").onclick=async()=>{
+  const email=$("loginEmail").value.trim().toLowerCase();
+  const password=$("loginPassword").value;
+  if(!email||!email.includes("@")){msg("loginMsg","Enter a valid Gmail/email address.","error");return}
+  if(!password){msg("loginMsg","Enter your password.","error");return}
   try{
-    const r=await fetch(SUPABASE_URL+"/auth/v1/otp",{
+    const r=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=password",{
       method:"POST",
       headers:{"apikey":SUPABASE_ANON_KEY,"Content-Type":"application/json"},
-      body:JSON.stringify({phone,create_user:true})
+      body:JSON.stringify({email,password})
     });
     const d=await r.json();
-    if(!r.ok) throw new Error(d.msg||d.error_description||"OTP could not be sent.");
-    $("otpArea").classList.remove("hidden"); msg("loginMsg","OTP sent. Enter the code.","success");
-  }catch(e){msg("loginMsg",e.message,"error")}
-};
-
-$("verifyOtp").onclick=async()=>{
-  const phone=$("loginPhone").value.trim(), token=$("otp").value.trim();
-  try{
-    const r=await fetch(SUPABASE_URL+"/auth/v1/verify",{
-      method:"POST",
-      headers:{"apikey":SUPABASE_ANON_KEY,"Content-Type":"application/json"},
-      body:JSON.stringify({phone,token,type:"sms"})
-    });
-    const d=await r.json();
-    if(!r.ok) throw new Error(d.msg||"OTP verification failed.");
-    if(d.access_token)localStorage.setItem("km_access_token",d.access_token);
+    if(!r.ok||!d.access_token)throw new Error(d.error_description||d.msg||"Incorrect email or password.");
+    localStorage.setItem("km_access_token",d.access_token);
     if(d.refresh_token)localStorage.setItem("km_refresh_token",d.refresh_token);
     await updateAuthUI();
     msg("loginMsg","Login successful.","success");
-    // Close the login modal automatically after successful OTP verification.
     setTimeout(()=>{
-      const modal = $("loginModal");
-      if(modal) modal.classList.add("hidden");
-      $("otp").value = "";
-      $("otpArea").classList.add("hidden");
-    }, 700);
-  }catch(e){msg("loginMsg",e.message,"error")}
+      $("loginModal")?.classList.add("hidden");
+      $("loginEmail").value="";
+      $("loginPassword").value="";
+      $("loginMsg").innerHTML="";
+    },500);
+  }catch(e){msg("loginMsg",e.message||"Incorrect email or password.","error")}
 };
 
 $("submitJob").onclick=async()=>{
   const token=await getSession();
   if(!token){msg("jobMsg","Please login first.","error");return}
   const title=$("jobTitle").value.trim(), category=$("jobCategory").value.trim(), city=$("jobCity").value.trim();
-  if(!title||!category||!city){msg("jobMsg","Please select the job you need, category and city.","error");return}
+  if(!title||!category||!city){msg("jobMsg","Job title, category and city are required.","error");return}
   try{
     const auth=await fetch(SUPABASE_URL+"/auth/v1/user",{headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
     const user=await auth.json(); if(!user.id)throw new Error("Session expired. Please login again.");
@@ -749,43 +752,120 @@ $("submitJob").onclick=async()=>{
   }catch(e){msg("jobMsg",e.message,"error")}
 };
 
-async function loadJobReviews(jobIds){
-  const reviews={};
-  if(!jobIds.length)return reviews;
-  const q="job_reviews?select=job_id,rating,comment,reviewer_id,created_at&job_id=in."+encodeURIComponent("("+jobIds.join(',')+")")+"&order=created_at.desc";
-  const r=await supa(q);
-  if(!r.ok)return reviews;
-  const rows=await r.json();
-  if(Array.isArray(rows)) rows.forEach(x=>{(reviews[x.job_id] ||= []).push(x)});
-  return reviews;
+async function fetchJobReviews(jobIds){
+  if(!jobIds.length)return {};
+  try{
+    const q="job_reviews?select=id,job_id,reviewer_id,rating,comment,created_at,updated_at&job_id=in."+encodeURIComponent("("+jobIds.join(",")+")")+"&order=created_at.desc";
+    const r=await supa(q);
+    if(!r.ok)return {};
+    const rows=await r.json();
+    const out={};
+    if(Array.isArray(rows))rows.forEach(x=>{(out[x.job_id] ||= []).push(x)});
+    return out;
+  }catch(e){console.error("Review load error",e);return {}}
 }
-function starsHtml(n){const v=Math.max(0,Math.min(5,Number(n)||0));return "★★★★★".slice(0,Math.round(v))+"☆☆☆☆☆".slice(0,5-Math.round(v));}
-function reviewSummary(rows){
-  if(!rows||!rows.length)return '<span class="muted">No rating yet</span>';
-  const avg=rows.reduce((a,x)=>a+Number(x.rating||0),0)/rows.length;
-  return `<span style="font-weight:800">${avg.toFixed(1)} / 5</span> <span style="letter-spacing:1px">${starsHtml(avg)}</span> <span class="muted">(${rows.length} review${rows.length===1?'':'s'})</span>`;
+
+function renderReviewSummary(reviews){
+  if(!reviews||!reviews.length)return '<div class="review-summary"><b>Rating:</b> No rating yet</div>';
+  const avg=reviews.reduce((a,x)=>a+Number(x.rating||0),0)/reviews.length;
+  const stars="★".repeat(Math.round(avg))+"☆".repeat(5-Math.round(avg));
+  const latest=reviews[0];
+  return `<div class="review-summary"><b>Rating:</b> ${stars} ${avg.toFixed(1)} (${reviews.length} review${reviews.length===1?"":"s"})${latest?.comment?`<div class="review-comment"><b>Comment:</b> ${escapeHtml(latest.comment)}</div>`:""}</div>`;
 }
-async function renderJobReviews(job,rows){
-  const wrap=document.getElementById("reviews-"+job.id); if(!wrap)return;
-  const reviews=rows||[];
-  const comments=reviews.slice(0,3).map(x=>`<div style="border-top:1px solid #edf1f6;padding:8px 0"><div><span style="letter-spacing:1px">${starsHtml(x.rating)}</span></div><div style="font-size:13px;margin-top:3px">${escapeHtml(x.comment||"")}</div></div>`).join("");
-  wrap.innerHTML=`<div style="font-size:13px;margin-bottom:8px"><b>Rating:</b> ${reviewSummary(reviews)}</div>${comments?`<div>${comments}</div>`:""}<div class="review-form" style="margin-top:10px"><div class="row"><div class="formgroup"><label>Your rating</label><select class="input review-rating"><option value="5">★★★★★ 5</option><option value="4">★★★★☆ 4</option><option value="3">★★★☆☆ 3</option><option value="2">★★☆☆☆ 2</option><option value="1">★☆☆☆☆ 1</option></select></div><div class="formgroup"><label>Comment</label><input class="input review-comment" maxlength="500" placeholder="Write your comment"></div></div><button class="btn secondary review-submit">Submit Rating & Comment</button><div class="review-msg" style="margin-top:6px"></div></div>`;
-  const form=wrap.querySelector('.review-form');
-  wrap.querySelector('.review-submit').onclick=async()=>{
-    const token=await getSession();
-    const msgEl=wrap.querySelector('.review-msg');
-    if(!token){msgEl.innerHTML='<div class="notice">Please login first.</div>';return}
-    const rating=Number(wrap.querySelector('.review-rating').value);
-    const comment=wrap.querySelector('.review-comment').value.trim();
-    try{
-      const auth=await fetch(SUPABASE_URL+"/auth/v1/user",{headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
-      const user=await auth.json(); if(!user.id)throw new Error("Session expired. Please login again.");
-      const r=await supa("job_reviews",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=representation"},body:JSON.stringify({job_id:job.id,reviewer_id:user.id,rating,comment})});
-      if(!r.ok){const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.hint||d.details||raw||"Could not submit review.")}
-      msgEl.innerHTML='<div class="notice success">Rating and comment added.</div>';
-      await loadJobs();
-    }catch(e){msgEl.innerHTML='<div class="notice error">'+escapeHtml(e.message)+'</div>'}
-  };
+
+function renderReviewControls(job,reviews,currentUser){
+  const own=!!(currentUser&&currentUser.id===job.employer_id);
+  const existing=own&&reviews?.find(x=>x.reviewer_id===currentUser.id);
+  if(!own)return renderReviewSummary(reviews);
+  return `<div class="review-box">${renderReviewSummary(reviews)}<div class="review-form"><label>Your rating</label><select class="input reviewRating" data-job="${escapeHtml(job.id)}"><option value="5" ${existing?.rating==5?"selected":""}>★★★★★ 5</option><option value="4" ${existing?.rating==4?"selected":""}>★★★★☆ 4</option><option value="3" ${existing?.rating==3?"selected":""}>★★★☆☆ 3</option><option value="2" ${existing?.rating==2?"selected":""}>★★☆☆☆ 2</option><option value="1" ${existing?.rating==1?"selected":""}>★☆☆☆☆ 1</option></select><label>Comment</label><textarea class="input reviewComment" data-job="${escapeHtml(job.id)}" rows="2" maxlength="2000" placeholder="Write your comment">${escapeHtml(existing?.comment||"")}</textarea><button class="btn secondary submitReview" data-job="${escapeHtml(job.id)}">${existing?"Update Rating & Comment":"Submit Rating & Comment"}</button><div class="reviewMsg" data-job="${escapeHtml(job.id)}"></div></div></div>`;
+}
+
+async function submitJobReview(jobId,rating,comment){
+  const token=await getSession();
+  if(!token)throw new Error("Please login first.");
+  const user=await getCurrentUser();
+  if(!user?.id)throw new Error("Please login again.");
+  const body={job_id:Number(jobId),reviewer_id:user.id,rating:Number(rating),comment:comment.trim()};
+  if(!body.comment)throw new Error("Please write a comment.");
+  const existing=await supa("job_reviews?job_id=eq."+encodeURIComponent(jobId)+"&reviewer_id=eq."+encodeURIComponent(user.id)+"&select=id&limit=1",{headers:{"Authorization":"Bearer "+token}});
+  const erows=await existing.json();
+  let r;
+  if(Array.isArray(erows)&&erows[0]?.id){
+    r=await supa("job_reviews?id=eq."+encodeURIComponent(erows[0].id),{method:"PATCH",headers:{"Authorization":"Bearer "+token,"Prefer":"return=minimal"},body:JSON.stringify({rating:body.rating,comment:body.comment})});
+  }else{
+    r=await supa("job_reviews",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=minimal"},body:JSON.stringify(body)});
+  }
+  if(!r.ok){const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.hint||d.details||raw||"Could not save rating.");}
+}
+
+async function renderJobs(data){
+  const box=$("jobs");
+  const ids=[...new Set(data.map(j=>j.id).filter(Boolean))];
+  let profiles={}, reviews={};
+  if(ids.length){reviews=await fetchJobReviews(ids);}
+  const employerIds=[...new Set(data.map(j=>j.employer_id).filter(Boolean))];
+  if(employerIds.length){const pr=await supa("public_profiles?id=in."+encodeURIComponent("("+employerIds.join(',')+")")+"&select=id,name,city,skills,avatar_url");const rows=await pr.json();if(Array.isArray(rows))rows.forEach(p=>profiles[p.id]=p)}
+  const currentUser=await getCurrentUser();
+  box.innerHTML=data.map(j=>{
+    const p=profiles[j.employer_id]||{};const skills=Array.isArray(p.skills)?p.skills.join(", "):"";const avatar=p.avatar_url||avatarPlaceholder(p.name||"E");
+    return `<div class="card job"><div style="flex:1"><span class="tag">${escapeHtml(j.category||"Job")}</span><h3>${escapeHtml(j.title)}</h3><p class="muted">${escapeHtml(j.city)} · ${escapeHtml(j.salary||"Salary not specified")} · ${escapeHtml(j.job_type||"")}</p><p>${escapeHtml(j.description||"")}</p><div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid #edf1f6"><img class="avatar" style="width:44px;height:44px;font-size:16px" src="${escapeHtml(avatar)}" alt="Employer profile"><div><b>${escapeHtml(p.name||"Employer")}</b><div class="muted" style="font-size:12px">${escapeHtml(p.city||j.city||"")}${skills?" · "+escapeHtml(skills):""}</div><div style="font-size:11px;color:#166534;font-weight:700;margin-top:2px">Public employer profile</div></div></div>${renderReviewControls(j,reviews[j.id]||[],currentUser)}</div><div><button class="btn secondary applyBtn" data-phone="${escapeHtml(j.contact_phone||"")}">Contact</button></div></div>`
+  }).join("");
+  box.querySelectorAll(".applyBtn").forEach(b=>b.onclick=()=>{const p=b.dataset.phone;if(p)location.href="https://wa.me/"+p.replace(/\D/g,"")});
+  box.querySelectorAll(".submitReview").forEach(btn=>btn.onclick=async()=>{
+    const id=btn.dataset.job; const rating=box.querySelector(`.reviewRating[data-job="${CSS.escape(id)}"]`)?.value; const comment=box.querySelector(`.reviewComment[data-job="${CSS.escape(id)}"]`)?.value||""; const out=box.querySelector(`.reviewMsg[data-job="${CSS.escape(id)}"]`);
+    try{btn.disabled=true;await submitJobReview(id,rating,comment);if(out)out.innerHTML='<div class="notice success">Rating & comment saved.</div>';await renderJobs(data);await loadPublicReviews();}catch(e){if(out)out.innerHTML='<div class="notice error">'+escapeHtml(e.message||"Could not save rating.")+'</div>';}finally{btn.disabled=false;}
+  });
+}
+
+
+async function loadPublicReviews(){
+  const box=$("publicReviews");
+  if(!box)return;
+  try{
+    const r=await supa("job_reviews?select=id,job_id,rating,comment,created_at&order=created_at.desc&limit=100");
+    if(!r.ok)throw new Error("Could not load ratings.");
+    const reviews=await r.json();
+    if(!Array.isArray(reviews)||!reviews.length){
+      box.innerHTML='<div class="card"><h3>No ratings yet</h3><p class="muted">Ratings will appear here after a job receives a review.</p></div>';
+      return;
+    }
+
+    const ids=[...new Set(reviews.map(x=>x.job_id).filter(Boolean))];
+    let jobs=[];
+    if(ids.length){
+      const jr=await supa("jobs?select=id,title,category,city,status&id=in."+encodeURIComponent("("+ids.join(",")+")"));
+      if(jr.ok) jobs=await jr.json();
+    }
+    const jobMap={};
+    if(Array.isArray(jobs)) jobs.forEach(j=>jobMap[String(j.id)]=j);
+
+    box.innerHTML=reviews.map(x=>{
+      const j=jobMap[String(x.job_id)]||{};
+      const rating=Math.max(1,Math.min(5,Number(x.rating||0)));
+      const stars="★".repeat(rating)+"☆".repeat(5-rating);
+      const status=String(j.status||"");
+      const statusText=status==="completed"?"COMPLETED":status==="deleted"?"DELETED":"ACTIVE";
+      return `<div class="card">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:center">
+          <div>
+            <span class="tag">${escapeHtml(j.category||"Job")}</span>
+            <h3 style="margin:7px 0">${escapeHtml(j.title||"Job")}</h3>
+            <div class="muted">${escapeHtml(j.city||"")}</div>
+          </div>
+          <span class="notice ${status==="completed"?"status-completed":status==="deleted"?"status-pending":"status-active"}">${statusText}</span>
+        </div>
+        <div class="review-summary" style="margin-top:12px">
+          <b>Rating:</b> ${stars} (${rating}/5)
+        </div>
+        <div class="review-comment" style="margin-top:8px">
+          <b>Comment:</b> ${escapeHtml(x.comment||"")}
+        </div>
+        <div class="owner-small" style="margin-top:8px">${escapeHtml(new Date(x.created_at||Date.now()).toLocaleString())}</div>
+      </div>`;
+    }).join("");
+  }catch(e){
+    box.innerHTML='<div class="card"><p class="error notice">'+escapeHtml(e.message||"Could not load ratings.")+'</p></div>';
+  }
 }
 
 async function loadJobs(){
@@ -793,13 +873,9 @@ async function loadJobs(){
   const data=await r.json(); const box=$("jobs");
   if(!r.ok){box.innerHTML='<div class="card"><h3>Jobs are temporarily unavailable</h3><p class="muted">Please try again shortly.</p></div>'; console.error("Jobs load error",data); return}
   if(!Array.isArray(data)||!data.length){box.innerHTML='<div class="card"><h3>No jobs yet</h3><p class="muted">New jobs will appear here.</p></div>';return}
-  const ids=[...new Set(data.map(j=>j.employer_id).filter(Boolean))]; let profiles={};
-  if(ids.length){const pr=await supa("public_profiles?id=in."+encodeURIComponent("("+ids.join(',')+")")+"&select=id,name,city,skills,avatar_url");const rows=await pr.json();if(Array.isArray(rows))rows.forEach(p=>profiles[p.id]=p)}
-  const reviews=await loadJobReviews(data.map(j=>j.id));
-  box.innerHTML=data.map(j=>{const p=profiles[j.employer_id]||{};const skills=Array.isArray(p.skills)?p.skills.join(", "):"";const avatar=p.avatar_url||avatarPlaceholder(p.name||"E");return `<div class="card job"><div style="flex:1"><span class="tag">${escapeHtml(j.category||"Job")}</span><h3>${escapeHtml(j.title)}</h3><p class="muted">${escapeHtml(j.city)} · ${escapeHtml(j.salary||"Salary not specified")} · ${escapeHtml(j.job_type||"")}</p><p>${escapeHtml(j.description||"")}</p><div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid #edf1f6"><img class="avatar" style="width:44px;height:44px;font-size:16px" src="${escapeHtml(avatar)}" alt="Employer profile"><div><b>${escapeHtml(p.name||"Employer")}</b><div class="muted" style="font-size:12px">${escapeHtml(p.city||j.city||"")}${skills?" · "+escapeHtml(skills):""}</div><div style="font-size:11px;color:#166534;font-weight:700;margin-top:2px">Public employer profile</div></div></div><div id="reviews-${escapeHtml(j.id)}" style="margin-top:12px;padding-top:12px;border-top:1px solid #edf1f6"><span class="muted">Loading rating...</span></div></div><div><button class="btn secondary applyBtn" data-phone="${escapeHtml(j.contact_phone||"")}">Contact</button></div></div>`}).join("");
-  for(const j of data) await renderJobReviews(j,reviews[j.id]||[]);
-  box.querySelectorAll(".applyBtn").forEach(b=>b.onclick=()=>{const p=b.dataset.phone;if(p)location.href="https://wa.me/"+p.replace(/\D/g,"")});
+  await renderJobs(data);
 }
+
 function escapeHtml(s){return String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]))}
 $("searchBtn").onclick=async()=>{
   const skill=$("searchSkill").value.trim(), city=$("searchCity").value.trim();
@@ -808,15 +884,8 @@ $("searchBtn").onclick=async()=>{
   if(skill)q+="&or=(title.ilike."+encodeURIComponent("%"+skill+"%")+",category.ilike."+encodeURIComponent("%"+skill+"%")+")";
   const r=await supa(q); const data=await r.json();
   if(!Array.isArray(data)||!data.length){$("jobs").innerHTML='<div class="card">No matching jobs found.</div>';return}
-  const ids=[...new Set(data.map(j=>j.employer_id).filter(Boolean))]; let profiles={};
-  if(ids.length){const pr=await supa("public_profiles?id=in."+encodeURIComponent("("+ids.join(',')+")")+"&select=id,name,city,skills,avatar_url");const rows=await pr.json();if(Array.isArray(rows))rows.forEach(p=>profiles[p.id]=p)}
-  $("jobs").innerHTML=data.map(j=>{const p=profiles[j.employer_id]||{};const skills=Array.isArray(p.skills)?p.skills.join(", "):"";const avatar=p.avatar_url||avatarPlaceholder(p.name||"E");return `<div class="card"><span class="tag">${escapeHtml(j.category)}</span><h3>${escapeHtml(j.title)}</h3><p class="muted">${escapeHtml(j.city)} · ${escapeHtml(j.salary||"")}</p><p>${escapeHtml(j.description||"")}</p><div style="display:flex;align-items:center;gap:10px;margin-top:12px"><img class="avatar" style="width:40px;height:40px;font-size:15px" src="${escapeHtml(avatar)}" alt="Employer profile"><div><b>${escapeHtml(p.name||"Employer")}</b><div class="muted" style="font-size:12px">${escapeHtml(p.city||j.city||"")}${skills?" · "+escapeHtml(skills):""}</div></div></div></div>`}).join("");
+  await renderJobs(data);
 };
-
-$("jobTitle").addEventListener("change",()=>{
-  const map={"MIG Welder":"Welder","TIG Welder":"Welder","Arc Welder":"Welder","Welder Helper":"Helper","Fitter":"Fitter","Electrician":"Electrical","Plumber":"Plumbing","Fabricator":"Fabrication","Machine Operator":"Machine Operator","Driver":"Driving","Delivery Executive":"Delivery","Helper":"Helper","Supervisor":"Supervisor","Security Guard":"Security","Painter":"Construction","Carpenter":"Construction","Other Skilled Worker":"Other"};
-  const v=$("jobTitle").value; if(map[v])$("jobCategory").value=map[v];
-});
 
 $("payFeatured").onclick=async()=>{
   const token=await getSession(); if(!token){msg("featuredMsg","Please login first.","error");return}
@@ -983,6 +1052,22 @@ async function loadOwnerJobs(){
     const label=st==="active"?"CONFIRMED / ACTIVE":st==="completed"?"COMPLETED":"PENDING OWNER";
     return `<div class="owner-job"><div class="owner-job-head"><div><span class="tag">${escapeHtml(j.category||"Job")}</span><h3 style="margin:7px 0">${escapeHtml(j.title||"Untitled")}</h3><div class="owner-small">${escapeHtml(j.city||"")} · ${escapeHtml(j.salary||"Salary not specified")} · ${escapeHtml(j.job_type||"")}</div><div class="owner-small" style="margin-top:5px">ID: ${escapeHtml(j.id||"")}</div></div><span class="notice ${cls}" style="margin:0">${label}</span></div><p>${escapeHtml(j.description||"")}</p><div class="owner-actions"><button class="btn" onclick="ownerSetStatus('${j.id}','active')">Confirm / Activate</button><button class="btn secondary" onclick="ownerSetStatus('${j.id}','completed')">Mark Complete</button><button class="btn ghost" onclick="ownerEditJob('${j.id}')">Update</button><button class="btn danger" onclick="ownerDeleteJob('${j.id}')">Delete</button></div></div>`;
   }).join("");
+  await loadOwnerReviews(data);
+}
+
+async function loadOwnerReviews(jobs){
+  const box=$("ownerReviews");
+  if(!box)return;
+  const oldJobs=jobs.filter(j=>["completed","deleted"].includes(String(j.status||"")));
+  if(!oldJobs.length){box.innerHTML='<div class="card"><h3>No completed/deleted jobs</h3><p class="muted">When a job is completed or deleted, its saved rating and comment will appear here.</p></div>';return;}
+  const reviews=await fetchJobReviews(oldJobs.map(j=>j.id));
+  box.innerHTML=oldJobs.map(j=>{
+    const rs=reviews[j.id]||[];
+    const avg=rs.length?rs.reduce((a,x)=>a+Number(x.rating||0),0)/rs.length:0;
+    const stars=rs.length?"★".repeat(Math.round(avg))+"☆".repeat(5-Math.round(avg)):"No rating yet";
+    const comments=rs.length?rs.map(x=>`<div class="review-comment"><b>${"★".repeat(Number(x.rating||0))}</b> ${escapeHtml(x.comment)}<div class="owner-small">${escapeHtml(new Date(x.created_at||Date.now()).toLocaleString())}</div></div>`).join(""):`<p class="muted">No rating/comment submitted yet.</p>`;
+    return `<div class="card"><div class="owner-job-head"><div><span class="tag">${escapeHtml(j.category||"Job")}</span><h3 style="margin:7px 0">${escapeHtml(j.title||"Untitled")}</h3><div class="owner-small">ID: ${escapeHtml(j.id||"")} · ${escapeHtml(j.city||"")}</div></div><span class="notice ${j.status==="deleted"?"status-pending":"status-completed"}" style="margin:0">${j.status==="deleted"?"DELETED":"COMPLETED"}</span></div><div class="review-summary" style="margin-top:12px"><b>Rating:</b> ${stars}${rs.length?` (${rs.length} review${rs.length===1?"":"s"})`:""}</div>${comments}</div>`;
+  }).join("");
 }
 
 async function ownerMutation(method,path,body){
@@ -1005,10 +1090,10 @@ window.ownerSetStatus=async function(id,status){
 };
 
 window.ownerDeleteJob=async function(id){
-  if(!confirm("Delete this job permanently? This cannot be undone."))return;
+  if(!confirm("Hide/delete this job? Its rating and comment history will be kept in the Owner Panel."))return;
   try{
-    await ownerMutation("DELETE","jobs?id=eq."+encodeURIComponent(id));
-    await loadOwnerJobs(); await loadJobs(); showToast("Job deleted permanently.");
+    await ownerMutation("PATCH","jobs?id=eq."+encodeURIComponent(id),{status:"deleted"});
+    await loadOwnerJobs(); await loadJobs(); showToast("Job deleted/hidden. Review history was kept.");
   }catch(e){msg("ownerPanelMsg",e.message,"error")}
 };
 

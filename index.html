@@ -102,6 +102,9 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 }
 </style>
 
+<style id="kaammilega-v7-ui-fix">
+.video-card video{width:100%;max-height:320px;border-radius:12px;background:#000;margin-top:10px}.review-stars{font-size:20px;letter-spacing:2px;color:#f59e0b;margin-bottom:6px}.rating-box{margin-top:12px;padding:12px;border:1px solid #dbe5f0;border-radius:12px;background:#f8fafc}.owner-control-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}.owner-control-card{border:1px solid #e5e7eb;border-radius:12px;padding:14px;background:#fff}.owner-control-card h3{margin:0 0 6px}.modal-card{background:#fff;border-radius:16px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:22px;position:relative}.modal-close{float:right;background:#eef2f7;border:0;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:20px}.owner-video{border:1px solid #e5e7eb;border-radius:12px;padding:14px;background:#fff}.owner-video video{width:100%;max-height:300px;border-radius:12px;background:#000;margin-top:10px}.upload-box{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px}@media(max-width:800px){.owner-control-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body><div id="toast" class="toast"></div>
 <header><div class="nav">
@@ -283,6 +286,24 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </section>
 
 <!-- INFORMATIONAL CONTENT FOR USERS AND SEARCH ENGINES -->
+<!-- WORK RESULT VIDEO UPLOAD -->
+<section class="section" id="communityVideos">
+<div class="upload-box">
+<span class="eyebrow">WORK RESULT</span><h2 style="margin:5px 0">Tell Us If You Got Work</h2>
+<p class="muted">Upload a video and tell other workers whether you got work. The owner approves videos before they appear publicly.</p>
+<div class="row"><div class="formgroup"><label>Video Title</label><input id="videoTitle" class="input" placeholder="Example: I got a welding job"></div><div class="formgroup"><label>Result</label><select id="videoResult" class="input"><option value="work_got">Kaam Mila</option><option value="work_not_got">Kaam Nahi Mila</option><option value="still_searching">Abhi Job Search Kar Raha Hoon</option></select></div></div>
+<div class="formgroup"><label>Short Note</label><textarea id="videoNote" class="input" rows="3" placeholder="Tell us about your result..."></textarea></div>
+<div class="formgroup"><label>Video File</label><input id="videoFile" class="input" type="file" accept="video/*"><div class="muted" style="font-size:12px;margin-top:5px">Maximum 50 MB.</div></div>
+<button class="btn orange" id="videoUploadBtn" type="button">Upload Work Result Video</button><div id="videoMsg"></div>
+</div>
+<div style="margin-top:24px"><h2>Approved Work Result Videos</h2><div id="publicVideos" class="cards"><div class="card">Loading videos...</div></div></div>
+</section>
+
+<section class="section" id="publicReviewsSection">
+<span class="eyebrow">JOB RATINGS & COMMENTS</span><h2 style="margin:5px 0">Worker & Employer Reviews</h2><p class="muted">Ratings and comments submitted on KaamMilega jobs appear here.</p>
+<div id="publicReviews" class="cards"><div class="card">Loading ratings...</div></div>
+</section>
+
 <section class="info-section anchor-offset" id="aboutKaamMilega">
   <span class="eyebrow">ABOUT KAAMMILEGA</span>
   <h2>What KaamMilega does</h2>
@@ -413,11 +434,10 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div class="notice" style="margin-top:18px"><b>Owner:</b> Virjul Kumar Yadav · <b>Email:</b> kaammilaga.official@gmail.com</div>
 <div id="ownerPanelMsg"></div>
 <div id="ownerJobs" class="owner-grid"><div class="card">Loading owner jobs...</div></div>
-<div class="card" style="margin:16px 0;background:#f8fbff;border-color:#cfe0f5">
-  <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap">
-    <div><span class="owner-badge">WORK RESULT VIDEOS</span><h3 style="margin:8px 0 4px">User Video Submissions</h3><p class="muted" style="margin:0">Activate or delete videos uploaded by users about whether they got work.</p></div>
-    <button class="btn orange" id="ownerVideosManageBtn" type="button">Manage Videos</button>
-  </div>
+<div class="owner-control-grid">
+  <div class="owner-control-card"><span class="owner-badge">COMPANY REQUIREMENTS</span><h3>Manage Company Requirements</h3><p class="muted">Complete, update, reopen or delete company worker requirements.</p><button class="btn" id="ownerRequirementsManageBtn" type="button">Manage Company</button></div>
+  <div class="owner-control-card"><span class="owner-badge">RATINGS & COMMENTS</span><h3>Job Reviews</h3><p class="muted">View ratings and comments submitted for jobs.</p><button class="btn secondary" id="ownerReviewsManageBtn" type="button">Manage Ratings</button></div>
+  <div class="owner-control-card"><span class="owner-badge">WORK RESULT VIDEOS</span><h3>User Video Submissions</h3><p class="muted">Activate or delete videos uploaded by users.</p><button class="btn orange" id="ownerVideosManageBtn" type="button">Manage Videos</button></div>
 </div>
 
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
@@ -467,11 +487,20 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 
 <!-- LOGIN -->
 <div id="loginModal" class="modal hidden"><div class="modalbox">
-<button class="close" data-close>×</button><h2>Login / Sign Up</h2><p class="muted">Once you sign in, you will stay logged in on this browser until the saved login data is cleared or you sign out.</p>
-<p class="muted">Enter your mobile number to continue.</p>
-<div class="formgroup"><input id="loginPhone" class="input" placeholder="+91XXXXXXXXXX"></div>
-<button class="btn" id="sendOtp">Send OTP</button>
-<div id="otpArea" class="hidden" style="margin-top:12px"><input id="otp" class="input" placeholder="6-digit OTP"><button class="btn" id="verifyOtp" style="margin-top:10px">Verify OTP</button></div>
+<button class="close" data-close>×</button><h2>Login / Sign Up</h2>
+<p class="muted">Create an account or login with your email and password.</p>
+<div style="display:flex;gap:8px;margin-bottom:14px"><button class="btn secondary" id="showSignupBtn" type="button">Sign Up</button><button class="btn ghost" id="showLoginBtn" type="button">Login</button></div>
+<div id="signupArea">
+<div class="formgroup"><label>Email</label><input id="signupEmail" class="input" type="email" placeholder="you@example.com"></div>
+<div class="formgroup"><label>Password</label><input id="signupPassword" class="input" type="password" placeholder="Minimum 6 characters"></div>
+<div class="formgroup"><label>Confirm Password</label><input id="signupPassword2" class="input" type="password" placeholder="Repeat password"></div>
+<button class="btn" id="signupSubmit" type="button">Create Account</button>
+</div>
+<div id="loginArea" class="hidden">
+<div class="formgroup"><label>Email</label><input id="loginEmail" class="input" type="email" placeholder="you@example.com"></div>
+<div class="formgroup"><label>Password</label><input id="loginPassword" class="input" type="password" placeholder="Your password"></div>
+<button class="btn" id="loginSubmit" type="button">Login</button>
+</div>
 <div id="loginMsg"></div>
 </div></div>
 
@@ -1378,6 +1407,11 @@ if(document.getElementById("ownerReqSaveEdit")){
 </div>
 
 
+<!-- REVIEW MODAL -->
+<div class="modal hidden" id="reviewModal"><div class="modal-card"><button class="modal-close" data-close="reviewModal">×</button><span class="eyebrow">JOB REVIEW</span><h2>Rate & Comment</h2><input type="hidden" id="reviewJobId"><div class="formgroup"><label>Rating</label><select id="reviewRating" class="input"><option value="5">★★★★★ — 5</option><option value="4">★★★★☆ — 4</option><option value="3">★★★☆☆ — 3</option><option value="2">★★☆☆☆ — 2</option><option value="1">★☆☆☆☆ — 1</option></select></div><div class="formgroup"><label>Comment</label><textarea id="reviewComment" class="input" rows="5" placeholder="Write your comment..."></textarea></div><button class="btn" id="submitReview" type="button">Submit Rating & Comment</button><div id="reviewMsg"></div></div></div>
+
+<div class="modal hidden" id="ownerReviewsModal"><div class="modal-card" style="max-width:980px"><button class="modal-close" data-close="ownerReviewsModal">×</button><span class="eyebrow">OWNER CONTROL</span><h2>Job Ratings & Comments</h2><p class="muted">All submitted ratings and comments.</p><div id="ownerReviewsMsg"></div><div id="ownerReviews" class="owner-grid"><div class="card">Loading reviews...</div></div></div></div>
+
 <script id="kaammilega-v7-functions">
 (function(){
   const $id = id => document.getElementById(id);
@@ -1661,6 +1695,18 @@ if(document.getElementById("ownerReqSaveEdit")){
   if(manageVideos) manageVideos.onclick=async()=>{
     const owner=await getOwnerUser(); if(!owner){showToast("Owner login required.");return;}
     openModal("ownerVideosModal"); await loadOwnerVideos();
+  };
+
+  const manageReviews=$id("ownerReviewsManageBtn");
+  if(manageReviews) manageReviews.onclick=async()=>{
+    const owner=await getOwnerUser(); if(!owner){showToast("Owner login required.");return;}
+    openModal("ownerReviewsModal"); await loadOwnerReviews();
+  };
+
+  const manageRequirements=$id("ownerRequirementsManageBtn");
+  if(manageRequirements) manageRequirements.onclick=async()=>{
+    const owner=await getOwnerUser(); if(!owner){showToast("Owner login required.");return;}
+    openModal("ownerRequirementsModal"); await loadOwnerCompanyRequirements();
   };
 
   // Wrap the existing requirement-manager button so reviews/videos refresh too.

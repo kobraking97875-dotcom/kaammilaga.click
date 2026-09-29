@@ -440,7 +440,11 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
   <div class="owner-control-card"><span class="owner-badge">RATINGS & COMMENTS</span><h3>Job Reviews</h3><p class="muted">View ratings and comments submitted for jobs.</p><button class="btn secondary" id="ownerReviewsManageBtn" type="button">Manage Ratings</button></div>
   <div class="owner-control-card"><span class="owner-badge">WORK RESULT VIDEOS</span><h3>User Video Submissions</h3><p class="muted">Activate or delete videos uploaded by users.</p><button class="btn orange" id="ownerVideosManageBtn" type="button">Manage Videos</button></div>
 </div>
-<div id="ownerJobs" class="owner-grid"><div class="card">Loading owner jobs...</div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0">
+  <h3 style="margin:0">Posted Jobs</h3>
+  <button class="btn ghost" id="ownerJobsRefresh" type="button">Refresh Jobs</button>
+</div>
+<div id="ownerJobs" class="owner-grid"><div class="card">Tap Refresh Jobs to load owner jobs.</div></div>
 
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
   <button class="btn danger" id="ownerLogout">Owner Logout</button>
@@ -2399,5 +2403,151 @@ if(document.getElementById("ownerReqSaveEdit")){
   }
 })();
 </script>
+
+<script id="kaammilega-v13-owner-refresh-stability">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const ownerEmail='kaammilaga.official@gmail.com';
+  const clean=v=>String(v||'').trim().toLowerCase();
+  const TIMEOUT=12000;
+
+  function ownerErrorBox(id, message){
+    const box=$(id);
+    if(box) box.innerHTML='<div class="card"><div class="notice error">'+String(message||'Could not load data.')+'</div></div>';
+  }
+
+  async function verifiedOwner(){
+    try{
+      if(typeof getCurrentUser==='function'){
+        const u=await getCurrentUser();
+        if(u && clean(u.email)===ownerEmail) return u;
+      }
+    }catch(_){ }
+    return null;
+  }
+
+  async function withTimeout(promise, label){
+    let timer;
+    const timeout=new Promise((_,reject)=>{
+      timer=setTimeout(()=>reject(new Error(label+' is taking too long. Tap Refresh and try again.')),TIMEOUT);
+    });
+    try{return await Promise.race([promise,timeout]);}
+    finally{clearTimeout(timer);}
+  }
+
+  async function runRefresh(button, label, fn){
+    const owner=await verifiedOwner();
+    if(!owner){
+      if(typeof openModal==='function')openModal('ownerLoginModal');
+      return;
+    }
+    const old=button.textContent;
+    button.disabled=true; button.textContent='Refreshing...';
+    try{
+      await withTimeout(Promise.resolve().then(fn),label);
+      if(typeof showToast==='function')showToast(label+' refreshed.');
+    }catch(e){
+      const id=button.id;
+      if(id==='ownerJobsRefresh')ownerErrorBox('ownerJobs',e.message);
+      if(id==='ownerRequirementsRefresh')ownerErrorBox('ownerRequirementsList',e.message);
+      if(id==='ownerReviewsRefresh')ownerErrorBox('ownerReviews',e.message);
+      if(id==='ownerVideosRefresh')ownerErrorBox('ownerVideosList',e.message);
+      const msgId=id==='ownerJobsRefresh'?'ownerPanelMsg':id==='ownerRequirementsRefresh'?'ownerRequirementsMsg':id==='ownerReviewsRefresh'?'ownerReviewsMsg':'ownerVideosMsg';
+      if(typeof window.msg==='function')window.msg(msgId,e.message,'error');
+    }finally{
+      button.disabled=false; button.textContent=old;
+    }
+  }
+
+  // Jobs refresh: always visible inside Owner Panel.
+  $('ownerJobsRefresh')?.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    runRefresh(this,'Jobs',async()=>{
+      const box=$('ownerJobs');
+      if(box)box.innerHTML='<div class="card">Loading jobs...</div>';
+      if(typeof loadOwnerJobs!=='function')throw new Error('Job manager is unavailable.');
+      await loadOwnerJobs();
+    });
+  },true);
+
+  // Company refresh.
+  $('ownerRequirementsRefresh')?.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    runRefresh(this,'Company requirements',async()=>{
+      const box=$('ownerRequirementsList');
+      if(box)box.innerHTML='<div class="card">Loading company requirements...</div>';
+      if(typeof loadOwnerCompanyRequirements!=='function')throw new Error('Company manager is unavailable.');
+      await loadOwnerCompanyRequirements();
+    });
+  },true);
+
+  // Ratings refresh.
+  $('ownerReviewsRefresh')?.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    runRefresh(this,'Ratings',async()=>{
+      const box=$('ownerReviews');
+      if(box)box.innerHTML='<div class="card">Loading ratings...</div>';
+      if(typeof loadOwnerReviews==='function') await loadOwnerReviews();
+      else if(typeof loadPublicOwnerReviews==='function') await loadPublicOwnerReviews();
+      else throw new Error('Ratings manager is unavailable.');
+    });
+  },true);
+
+  // Videos refresh.
+  $('ownerVideosRefresh')?.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    runRefresh(this,'Videos',async()=>{
+      const box=$('ownerVideosList');
+      if(box)box.innerHTML='<div class="card">Loading videos...</div>';
+      if(typeof loadOwnerVideos!=='function')throw new Error('Video manager is unavailable.');
+      await loadOwnerVideos();
+    });
+  },true);
+
+  // Main Owner Panel refresh = refresh ALL four sections.
+  $('ownerRefresh')?.addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    runRefresh(this,'Owner panel',async()=>{
+      const jobs=$('ownerJobs'), req=$('ownerRequirementsList'), rev=$('ownerReviews'), vid=$('ownerVideosList');
+      if(jobs)jobs.innerHTML='<div class="card">Loading jobs...</div>';
+      if(req)req.innerHTML='<div class="card">Loading company requirements...</div>';
+      if(rev)rev.innerHTML='<div class="card">Loading ratings...</div>';
+      if(vid)vid.innerHTML='<div class="card">Loading videos...</div>';
+      const tasks=[];
+      if(typeof loadOwnerJobs==='function')tasks.push(withTimeout(loadOwnerJobs(),'Jobs'));
+      if(typeof loadOwnerCompanyRequirements==='function')tasks.push(withTimeout(loadOwnerCompanyRequirements(),'Company requirements'));
+      if(typeof loadOwnerReviews==='function')tasks.push(withTimeout(loadOwnerReviews(),'Ratings'));
+      if(typeof loadOwnerVideos==='function')tasks.push(withTimeout(loadOwnerVideos(),'Videos'));
+      const results=await Promise.allSettled(tasks);
+      const failed=results.filter(x=>x.status==='rejected');
+      if(failed.length)throw failed[0].reason;
+    });
+  },true);
+
+  // Make every management button immediately show a loading state, then recover on error.
+  const manageMap=[
+    ['ownerJobsManageBtn','ownerJobs','Loading jobs...','Manage Jobs',()=>loadOwnerJobs?.()],
+    ['ownerRequirementsManageBtn','ownerRequirementsList','Loading company requirements...','Manage Company',()=>loadOwnerCompanyRequirements?.()],
+    ['ownerReviewsManageBtn','ownerReviews','Loading ratings...','Manage Ratings',()=>loadOwnerReviews?.()],
+    ['ownerVideosManageBtn','ownerVideosList','Loading videos...','Manage Videos',()=>loadOwnerVideos?.()]
+  ];
+  for(const [btnId,boxId,loading,label,fn] of manageMap){
+    const b=$(btnId);
+    if(!b)continue;
+    b.addEventListener('click',function(){
+      const box=$(boxId); if(box)box.innerHTML='<div class="card">'+loading+'</div>';
+      setTimeout(()=>{
+        const box2=$(boxId);
+        if(box2 && /Loading/.test(box2.textContent||'')){
+          // Do not leave an endless spinner if the request never returns.
+          box2.innerHTML='<div class="card"><div class="notice error">'+label+' is taking too long. Please tap the Refresh button.</div></div>';
+        }
+      },15000);
+    },true);
+  }
+})();
+</script>
+
 </body>
 </html>

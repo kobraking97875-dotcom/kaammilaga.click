@@ -892,11 +892,6 @@ $("searchBtn").onclick=async()=>{
 };
 
 $("payFeatured").onclick=async()=>{
-  const payBtn=$("payFeatured");
-  if(payBtn.dataset.busy==="1")return;
-  payBtn.dataset.busy="1";
-  const oldText=payBtn.textContent; payBtn.textContent="Connecting to PayU…"; payBtn.disabled=true;
-  try{
   const token=await getSession(); if(!token){msg("featuredMsg","Please login first.","error");return}
   if(!$("fConfirm").checked){msg("featuredMsg","Please confirm the details first.","error");return}
   const body={company_name:$("fCompany").value.trim(),contact_person:$("fContact").value.trim(),mobile:$("fMobile").value.trim(),job_title:$("fTitle").value.trim(),category:$("fCategory").value.trim(),city:$("fCity").value.trim(),salary:$("fSalary").value.trim(),job_type:"Full Time",description:$("fDescription").value.trim(),plan_days:Number($("fPlan").value)};
@@ -923,6 +918,7 @@ $("payFeatured").onclick=async()=>{
     return {d,raw};
   }
 
+  try{
     let r=await sendPaymentRequest(token);
     let {d,raw}=await readPaymentResponse(r);
 
@@ -942,18 +938,18 @@ $("payFeatured").onclick=async()=>{
     }
 
     // payu-payment returns success=true and paymentUrl (camelCase).
-    if(!d || !(d.success===true || d.ok===true)){
+    if(!d || d.success!==true){
       const detail=d?.error || d?.message || d?.msg || "The PayU payment service did not return a valid payment response.";
       throw new Error(detail);
     }
 
-    if(!(d.paymentUrl || d.payment_url) || !d.params || typeof d.params!=="object"){
+    if(!d.paymentUrl || !d.params || typeof d.params!=="object"){
       throw new Error("PayU payment configuration is incomplete. Please check the payu-payment function.");
     }
 
     const form=document.createElement("form");
     form.method="POST";
-    form.action=d.paymentUrl || d.payment_url;
+    form.action=d.paymentUrl;
     Object.entries(d.params).forEach(([k,v])=>{
       const i=document.createElement("input");
       i.type="hidden";
@@ -966,20 +962,23 @@ $("payFeatured").onclick=async()=>{
   }catch(e){
     console.error("KaamMilega PayU error:",e);
     msg("featuredMsg",e?.message||"Payment could not be started. Please try again.","error");
-  }finally{
-    payBtn.dataset.busy="0"; payBtn.textContent=oldText; payBtn.disabled=false;
   }
 };
 
 $("submitUrgent").onclick=()=>{
-  const btn=$("submitUrgent");
   const c=$("uCompany").value.trim(), p=$("uContact").value.trim(), m=$("uMobile").value.trim(), w=$("uWorker").value.trim(), n=$("uCount").value.trim(), city=$("uCity").value.trim();
   if(!c||!p||!m||!w||!n||!city){msg("urgentMsg","Please fill the required fields.","error");return}
-  const text=`KaamMilega Urgent Worker Requirement\nCompany: ${c}\nContact: ${p}\nMobile: ${m}\nWorker: ${w}\nNumber of workers: ${n}\nLocation: ${city}\nSalary: ${$("uSalary").value}\nJoining: ${$("uDate").value}\nDetails: ${$("uDetails").value}`;
-  btn.disabled=true; btn.textContent="Opening WhatsApp…";
-  msg("urgentMsg","Opening WhatsApp…","success");
-  window.location.href="https://wa.me/916206085383?text="+encodeURIComponent(text);
-  setTimeout(()=>{btn.disabled=false;btn.textContent="Send Requirement"},1500);
+  const subject = encodeURIComponent("KaamMilega Urgent Worker Requirement");
+  const body = encodeURIComponent(`Company: ${c}
+Contact: ${p}
+Mobile: ${m}
+Worker: ${w}
+Number of workers: ${n}
+Location: ${city}
+Salary: ${$("uSalary").value}
+Joining: ${$("uDate").value}
+Details: ${$("uDetails").value}`);
+  location.href=`mailto:kaammilaga.official@gmail.com?subject=${subject}&body=${body}`;
 };
 
 
@@ -990,38 +989,14 @@ function isOwnerUser(user){
   return !!(user && String(user.email||"").toLowerCase()===OWNER_EMAIL.toLowerCase());
 }
 async function getOwnerUser(){
-  let token=await getSession();
+  const token=await getSession();
   if(!token)return null;
   try{
-    let r=await fetch(SUPABASE_URL+"/auth/v1/user",{headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
-    if(r.status===401){
-      const refreshed=await refreshStoredSession();
-      if(refreshed){
-        token=refreshed;
-        r=await fetch(SUPABASE_URL+"/auth/v1/user",{headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
-      }
-    }
+    const r=await fetch(SUPABASE_URL+"/auth/v1/user",{headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
     if(!r.ok)return null;
     const u=await r.json();
     return isOwnerUser(u)?u:null;
   }catch(e){return null}
-}
-
-async function ownerRequest(path, options={}){
-  const owner=await getOwnerUser();
-  if(!owner)throw new Error("Owner session expired. Please login again.");
-  let token=await getSession();
-  if(!token)throw new Error("Owner session expired. Please login again.");
-  const send=()=>{
-    const headers=Object.assign({},options.headers||{}, {"Authorization":"Bearer "+token,"apikey":SUPABASE_ANON_KEY});
-    return supa(path,Object.assign({},options,{headers}));
-  };
-  let r=await send();
-  if(r.status===401){
-    const refreshed=await refreshStoredSession();
-    if(refreshed){token=refreshed;r=await send();}
-  }
-  return r;
 }
 
 async function updateOwnerUI(){
@@ -1070,7 +1045,8 @@ async function loadOwnerJobs(){
   if(!box)return;
   const owner=await getOwnerUser();
   if(!owner){box.innerHTML='<div class="card"><p class="muted">Owner session is not active.</p></div>';return}
-  const r=await ownerRequest("jobs?select=id,title,category,city,salary,job_type,description,contact_phone,status,created_at,employer_id&order=created_at.desc&limit=1000");
+  const token=await getSession();
+  const r=await supa("jobs?select=id,title,category,city,salary,job_type,description,contact_phone,status,created_at,employer_id&order=created_at.desc&limit=1000",{headers:{"Authorization":"Bearer "+token}});
   const data=await r.json();
   if(!r.ok){box.innerHTML='<div class="card"><p class="error notice">Could not load owner jobs. Run the owner RLS SQL setup first.</p></div>';return}
   if(!Array.isArray(data)||!data.length){box.innerHTML='<div class="card"><h3>No job posts</h3><p class="muted">No jobs are currently stored.</p></div>';return}
@@ -1085,12 +1061,11 @@ async function loadOwnerJobs(){
 async function ownerMutation(method,path,body){
   const owner=await getOwnerUser();
   if(!owner)throw new Error("Owner login required.");
-  let token=await getSession();
-  if(!token)throw new Error("Owner session expired. Please login again.");
-  const send=()=>{const headers={"Authorization":"Bearer "+token,"Prefer":"return=representation"};if(body!==undefined)headers["Content-Type"]="application/json";return supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});};
-  let r=await send();
-  if(r.status===401){const refreshed=await refreshStoredSession();if(refreshed){token=refreshed;r=await send();}}
-  if(!r.ok){const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.error||d.hint||d.details||raw||"Owner action failed.")}
+  const token=await getSession();
+  const headers={"Authorization":"Bearer "+token,"Prefer":"return=minimal"};
+  if(body!==undefined)headers["Content-Type"]="application/json";
+  const r=await supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
+  if(!r.ok){const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.hint||d.details||raw||"Owner action failed.")}
   return r;
 }
 
@@ -1112,7 +1087,8 @@ window.ownerDeleteJob=async function(id){
 
 window.ownerEditJob=async function(id){
   const owner=await getOwnerUser(); if(!owner){msg("ownerPanelMsg","Owner login required.","error");return}
-  const r=await ownerRequest("jobs?id=eq."+encodeURIComponent(id)+"&select=id,title,category,city,salary,job_type,description,contact_phone,status&limit=1");
+  const token=await getSession();
+  const r=await supa("jobs?id=eq."+encodeURIComponent(id)+"&select=id,title,category,city,salary,job_type,description,contact_phone,status&limit=1",{headers:{"Authorization":"Bearer "+token}});
   const rows=await r.json();
   const j=Array.isArray(rows)?rows[0]:null;
   if(!j){msg("ownerPanelMsg","Job not found.","error");return}
@@ -1157,7 +1133,7 @@ async function loadCompanyRequirements(){
       ${x.details?`<p style="margin:14px 0 0">${escapeHtml(x.details)}</p>`:""}
       <div class="requirement-owner">Posted through KaamMilega Owner Hiring Desk</div>
     </article>`).join('');
-  }catch(e){box.innerHTML='<div class="card"><b>Company requirements could not load.</b><div class="muted" style="margin-top:6px">Please refresh the page after running the latest SQL.</div></div>';console.error(e);}
+  }catch(e){box.innerHTML='<div class="card">Company requirements are temporarily unavailable.</div>';console.error(e);}
 }
 
 function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[c]));}
@@ -1168,7 +1144,8 @@ $("saveRequirement").onclick=async()=>{
   const body={company_name:$("reqCompany").value.trim(),members_needed:Number($("reqMembers").value),caller_role:$("reqCallerRole").value,caller_name:$("reqCallerName").value.trim(),worker_requirement:$("reqWorker").value.trim(),salary:$("reqSalary").value.trim(),location:$("reqLocation").value.trim(),joining_date:$("reqJoining").value||null,details:$("reqDetails").value.trim(),status:"active"};
   if(!body.company_name||!body.members_needed||!body.caller_name||!body.worker_requirement||!body.salary||!body.location){msg("reqMsg","Please fill all fields marked *.","error");return;}
   try{
-    const r=await ownerRequest("company_requirements",{method:"POST",headers:{"Prefer":"return=representation","Content-Type":"application/json"},body:JSON.stringify(body)});
+    const token=await getSession();
+    const r=await supa("company_requirements",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=representation"},body:JSON.stringify(body)});
     if(!r.ok){const raw=await r.text();throw new Error(raw||"Could not publish requirement.");}
     ["reqCompany","reqMembers","reqCallerName","reqWorker","reqSalary","reqLocation","reqJoining","reqDetails"].forEach(id=>$(id).value="");
     $("ownerRequirementModal").classList.add("hidden");
@@ -1199,9 +1176,14 @@ loadJobs();
       msg.innerHTML = '<div class="notice">Please enter Job/Role, City and Mobile/WhatsApp number.</div>';
       return;
     }
-    const text = `KaamMilega Job Requirement\nJob/Role: ${role}\nPreferred city: ${city}\nExperience: ${exp}\nMobile/WhatsApp: ${phone}\nRequirement: ${note}`;
-    msg.innerHTML = '<div class="notice success">Opening WhatsApp to send your requirement…</div>';
-    window.location.href = "https://wa.me/916206085383?text=" + encodeURIComponent(text);
+    const subject = encodeURIComponent("KaamMilega Job Requirement");
+    const body = encodeURIComponent(`Job required: ${role}
+Preferred city: ${city}
+Experience: ${exp}
+Mobile/WhatsApp: ${phone}
+Requirement: ${note}`);
+    window.location.href = `mailto:kaammilaga.official@gmail.com?subject=${subject}&body=${body}`;
+    msg.innerHTML = '<div class="notice success">Your email draft is being opened for KaamMilega support.</div>';
   });
 })();
 
@@ -1210,13 +1192,16 @@ loadJobs();
 async function ownerRequirementsMutation(method, path, body){
   const owner = await getOwnerUser();
   if(!owner) throw new Error("Owner login required.");
-  let token = await getSession();
+  const token = await getSession();
   if(!token) throw new Error("Owner session expired. Please login again.");
-  const send=()=>{const headers={"Authorization":"Bearer "+token,"Prefer":"return=representation"};if(body !== undefined) headers["Content-Type"]="application/json";return supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});};
-  let r=await send();
-  if(r.status===401){const refreshed=await refreshStoredSession();if(refreshed){token=refreshed;r=await send();}}
-  const raw=await r.text();
-  if(!r.ok){let d={};try{d=JSON.parse(raw)}catch(e){}throw new Error(d.message||d.error||d.hint||d.details||raw||"Owner action failed.");}
+  const headers = {"Authorization":"Bearer "+token, "Prefer":"return=representation"};
+  if(body !== undefined) headers["Content-Type"]="application/json";
+  const r = await supa(path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});
+  const raw = await r.text();
+  if(!r.ok){
+    let d={}; try{d=JSON.parse(raw)}catch(e){}
+    throw new Error(d.message||d.hint||d.details||raw||"Owner action failed.");
+  }
   return raw ? JSON.parse(raw) : [];
 }
 
@@ -1226,7 +1211,10 @@ async function loadOwnerCompanyRequirements(){
   const box = document.getElementById("ownerRequirementsList");
   if(!box) return;
   try{
-    const r = await ownerRequest("company_requirements?select=*&order=created_at.desc");
+    const token = await getSession();
+    const r = await supa("company_requirements?select=*&order=created_at.desc",{
+      headers:{"Authorization":"Bearer "+token}
+    });
     const raw = await r.text();
     if(!r.ok) throw new Error(raw);
     const rows = JSON.parse(raw);
@@ -1300,7 +1288,10 @@ window.ownerEditRequirement = async function(id){
   try{
     const owner = await getOwnerUser();
     if(!owner) throw new Error("Owner login required.");
-    const r = await ownerRequest("company_requirements?id=eq."+encodeURIComponent(id)+"&select=*&limit=1");
+    const token = await getSession();
+    const r = await supa("company_requirements?id=eq."+encodeURIComponent(id)+"&select=*&limit=1",{
+      headers:{"Authorization":"Bearer "+token}
+    });
     const rows = await r.json();
     const x = Array.isArray(rows) ? rows[0] : null;
     if(!x) throw new Error("Requirement not found.");
@@ -2555,6 +2546,210 @@ if(document.getElementById("ownerReqSaveEdit")){
       },15000);
     },true);
   }
+})();
+</script>
+
+
+<script id="kaammilega-v14-master-stability">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const OWNER='kaammilaga.official@gmail.com';
+  const TIMEOUT=15000;
+  let refreshPromise=null;
+
+  function clean(v){return String(v||'').trim().toLowerCase()}
+  function setMsg(id,text,type){try{if(typeof window.msg==='function')window.msg(id,text,type);else if($(id))$(id).innerHTML='<div class="notice '+(type||'')+'">'+String(text)+'</div>';}catch(_){} }
+  function timeoutFetch(input,options={},ms=TIMEOUT){
+    const c=new AbortController(); const t=setTimeout(()=>c.abort(),ms);
+    return fetch(input,Object.assign({},options,{signal:c.signal})).finally(()=>clearTimeout(t));
+  }
+  async function parseResp(r){
+    const raw=await r.text(); let data={}; try{data=raw?JSON.parse(raw):{}}catch(_){data={raw}}
+    return {raw,data};
+  }
+  function errorText(data,raw,fallback){return data?.message||data?.error_description||data?.hint||data?.details||data?.error||raw||fallback}
+
+  async function refreshTokenOnce(){
+    const rt=localStorage.getItem('km_refresh_token');
+    if(!rt)return null;
+    if(refreshPromise)return refreshPromise;
+    refreshPromise=(async()=>{
+      try{
+        const r=await timeoutFetch(SUPABASE_URL+'/auth/v1/token?grant_type=refresh_token',{
+          method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({refresh_token:rt})
+        });
+        const {data,raw}=await parseResp(r);
+        if(!r.ok||!data.access_token){localStorage.removeItem('km_access_token');return null}
+        localStorage.setItem('km_access_token',data.access_token);
+        if(data.refresh_token)localStorage.setItem('km_refresh_token',data.refresh_token);
+        return data.access_token;
+      }catch(_){return null}
+      finally{refreshPromise=null}
+    })();
+    return refreshPromise;
+  }
+
+  async function stableSession(){
+    let token=localStorage.getItem('km_access_token');
+    if(!token)token=await refreshTokenOnce();
+    if(!token)return null;
+    try{
+      const r=await timeoutFetch(SUPABASE_URL+'/auth/v1/user',{headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token}});
+      if(r.ok)return token;
+      if(r.status===401){
+        const fresh=await refreshTokenOnce();
+        if(fresh){
+          const v=await timeoutFetch(SUPABASE_URL+'/auth/v1/user',{headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+fresh}});
+          if(v.ok)return fresh;
+        }
+        localStorage.removeItem('km_access_token');
+        return null;
+      }
+      return token;
+    }catch(_){return token}
+  }
+
+  async function stableUser(){
+    const token=await stableSession(); if(!token)return null;
+    try{
+      const r=await timeoutFetch(SUPABASE_URL+'/auth/v1/user',{headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token}});
+      if(!r.ok)return null;
+      return await r.json();
+    }catch(_){return null}
+  }
+
+  // Replace the old session helpers so concurrent refreshes cannot invalidate each other.
+  window.getSession=stableSession;
+  window.getCurrentUser=stableUser;
+  window.getOwnerUser=async function(){const u=await stableUser();return u&&clean(u.email)===OWNER?u:null};
+  window.updateOwnerUI=async function(){
+    const owner=await window.getOwnerUser(); window.ownerUser=owner;
+    const b=$('ownerLoginBtn'), a=$('authNavBtn');
+    if(b){b.textContent=owner?'Owner Panel':'Owner Login';b.dataset.open=owner?'ownerPanelModal':'ownerLoginModal';b.classList.toggle('orange',!!owner);b.classList.toggle('ghost',!owner)}
+    if(a)a.classList.toggle('owner-hidden',!!owner);
+    return owner;
+  };
+
+  async function ownerRequired(){
+    const u=await window.getOwnerUser();
+    if(!u)throw new Error('Owner session is not active. Please login again.');
+    const token=await stableSession();
+    if(!token)throw new Error('Owner session is not active. Please login again.');
+    return {u,token};
+  }
+
+  window.loadOwnerJobs=async function(){
+    const box=$('ownerJobs'); if(!box)return;
+    box.innerHTML='<div class="card">Loading jobs...</div>';
+    try{
+      const {token}=await ownerRequired();
+      const r=await timeoutFetch(SUPABASE_URL+'/rest/v1/jobs?select=id,title,category,city,salary,job_type,description,contact_phone,status,created_at,employer_id&order=created_at.desc&limit=1000',{headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token,'Accept':'application/json'}});
+      const {data,raw}=await parseResp(r);
+      if(!r.ok)throw new Error(errorText(data,raw,'Could not load owner jobs.'));
+      if(!Array.isArray(data)||!data.length){box.innerHTML='<div class="card"><h3>No job posts</h3><p class="muted">No jobs are currently stored.</p></div>';return}
+      box.innerHTML=data.map(j=>{
+        const st=String(j.status||'pending_owner');
+        const label=st==='active'?'CONFIRMED / ACTIVE':st==='completed'?'COMPLETED':'PENDING OWNER';
+        const cls=st==='active'?'status-active':st==='completed'?'status-completed':'status-pending';
+        return `<div class="owner-job"><div class="owner-job-head"><div><span class="tag">${escapeHtml(j.category||'Job')}</span><h3 style="margin:7px 0">${escapeHtml(j.title||'Untitled')}</h3><div class="owner-small">${escapeHtml(j.city||'')} · ${escapeHtml(j.salary||'Salary not specified')} · ${escapeHtml(j.job_type||'')}</div><div class="owner-small" style="margin-top:5px">ID: ${escapeHtml(j.id||'')}</div></div><span class="notice ${cls}" style="margin:0">${label}</span></div><p>${escapeHtml(j.description||'')}</p><div class="owner-actions"><button class="btn" data-km-job-action="active" data-id="${escapeHtml(j.id)}">Confirm / Activate</button><button class="btn secondary" data-km-job-action="completed" data-id="${escapeHtml(j.id)}">Mark Complete</button><button class="btn ghost" data-km-job-action="edit" data-id="${escapeHtml(j.id)}">Update</button><button class="btn danger" data-km-job-action="delete" data-id="${escapeHtml(j.id)}">Delete</button></div></div>`;
+      }).join('');
+    }catch(e){box.innerHTML='<div class="card"><div class="notice error">'+escapeHtml(e.message||'Could not load owner jobs.')+'</div></div>';setMsg('ownerPanelMsg',e.message||'Could not load owner jobs.','error')}
+  };
+
+  window.ownerMutation=async function(method,path,body){
+    const {token}=await ownerRequired();
+    async function send(t){
+      const h={'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+t,'Prefer':'return=minimal'};
+      if(body!==undefined)h['Content-Type']='application/json';
+      return timeoutFetch(SUPABASE_URL+'/rest/v1/'+path,{method,headers:h,body:body===undefined?undefined:JSON.stringify(body)});
+    }
+    let r=await send(token);
+    if(r.status===401){const fresh=await refreshTokenOnce();if(fresh)r=await send(fresh)}
+    const {data,raw}=await parseResp(r); if(!r.ok)throw new Error(errorText(data,raw,'Owner action failed.')); return data;
+  };
+
+  window.ownerSetStatus=async function(id,status){
+    if(!confirm(status==='completed'?'Mark this job as completed? It will disappear from public listings.':'Confirm/activate this job and make it visible publicly?'))return;
+    try{await window.ownerMutation('PATCH','jobs?id=eq.'+encodeURIComponent(id),{status});await window.loadOwnerJobs();if(typeof loadJobs==='function')await loadJobs();showToast(status==='completed'?'Job marked completed.':'Job confirmed and published.');}
+    catch(e){setMsg('ownerPanelMsg',e.message,'error')}
+  };
+  window.ownerDeleteJob=async function(id){
+    if(!confirm('Delete this job permanently? This cannot be undone.'))return;
+    try{await window.ownerMutation('DELETE','jobs?id=eq.'+encodeURIComponent(id));await window.loadOwnerJobs();if(typeof loadJobs==='function')await loadJobs();showToast('Job deleted permanently.');}
+    catch(e){setMsg('ownerPanelMsg',e.message,'error')}
+  };
+  window.ownerEditJob=async function(id){
+    try{
+      const {token}=await ownerRequired();
+      const r=await timeoutFetch(SUPABASE_URL+'/rest/v1/jobs?id=eq.'+encodeURIComponent(id)+'&select=id,title,category,city,salary,job_type,description,contact_phone,status&limit=1',{headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token}});
+      const {data,raw}=await parseResp(r);if(!r.ok)throw new Error(errorText(data,raw,'Could not load job.'));
+      const j=Array.isArray(data)?data[0]:null;if(!j)throw new Error('Job not found.');
+      $('ownerEditId').value=j.id;$('ownerEditTitle').value=j.title||'';$('ownerEditCategory').value=j.category||'';$('ownerEditCity').value=j.city||'';$('ownerEditSalary').value=j.salary||'';$('ownerEditType').value=j.job_type||'Full Time';$('ownerEditPhone').value=j.contact_phone||'';$('ownerEditDescription').value=j.description||'';$('ownerEditStatus').value=j.status||'pending_owner';openModal('ownerEditModal');
+    }catch(e){setMsg('ownerPanelMsg',e.message,'error')}
+  };
+
+  window.ownerRequirementsMutation=async function(method,path,body){
+    const {token}=await ownerRequired();
+    const h={'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token,'Prefer':'return=representation'};if(body!==undefined)h['Content-Type']='application/json';
+    let r=await timeoutFetch(SUPABASE_URL+'/rest/v1/'+path,{method,headers:h,body:body===undefined?undefined:JSON.stringify(body)});
+    if(r.status===401){const fresh=await refreshTokenOnce();if(fresh){h.Authorization='Bearer '+fresh;r=await timeoutFetch(SUPABASE_URL+'/rest/v1/'+path,{method,headers:h,body:body===undefined?undefined:JSON.stringify(body)})}}
+    const {data,raw}=await parseResp(r);if(!r.ok)throw new Error(errorText(data,raw,'Company requirement action failed.'));return data;
+  };
+
+  window.loadOwnerCompanyRequirements=async function(){
+    const box=$('ownerRequirementsList');if(!box)return;box.innerHTML='<div class="card">Loading company requirements...</div>';
+    try{
+      const {token}=await ownerRequired();
+      const r=await timeoutFetch(SUPABASE_URL+'/rest/v1/company_requirements?select=*&order=created_at.desc',{headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token}});
+      const {data,raw}=await parseResp(r);if(!r.ok)throw new Error(errorText(data,raw,'Could not load company requirements.'));
+      if(!Array.isArray(data)||!data.length){box.innerHTML='<div class="card">No company requirements found.</div>';return}
+      box.innerHTML=data.map(x=>`<article class="owner-job"><div class="owner-job-head"><div><span class="owner-badge">${x.status==='completed'?'COMPLETED':'ACTIVE'}</span><h3 style="margin:8px 0 4px">${escapeHtml(x.company_name)}</h3><div class="owner-small">${escapeHtml(x.location)} · ${escapeHtml(String(x.members_needed))} members · ${escapeHtml(x.worker_requirement)}</div></div><div class="owner-small">ID: ${escapeHtml(String(x.id))}</div></div><div style="margin-top:10px"><b>Calling:</b> ${escapeHtml(x.caller_role)} — ${escapeHtml(x.caller_name)}<br><b>Salary / Rate:</b> ${escapeHtml(x.salary)}<br><b>Joining:</b> ${escapeHtml(x.joining_date||'As per company')}${x.details?'<br><b>Details:</b> '+escapeHtml(x.details):''}</div><div class="owner-actions">${x.status!=='completed'?`<button class="btn secondary" data-km-req-action="completed" data-id="${x.id}">Mark Complete</button>`:`<button class="btn" data-km-req-action="active" data-id="${x.id}">Re-Open</button>`}<button class="btn secondary" data-km-req-action="edit" data-id="${x.id}">Update</button><button class="btn danger" data-km-req-action="delete" data-id="${x.id}">Delete</button></div></article>`).join('');
+    }catch(e){box.innerHTML='<div class="card"><div class="notice error">'+escapeHtml(e.message||'Could not load company requirements.')+'</div></div>';setMsg('ownerRequirementsMsg',e.message||'Could not load company requirements.','error')}
+  };
+  window.ownerCompleteRequirement=async function(id){if(!confirm('Mark this company requirement as completed? It will disappear from the public website.'))return;try{await window.ownerRequirementsMutation('PATCH','company_requirements?id=eq.'+encodeURIComponent(id),{status:'completed'});await window.loadOwnerCompanyRequirements();if(typeof loadCompanyRequirements==='function')await loadCompanyRequirements();showToast('Company requirement marked completed.')}catch(e){setMsg('ownerRequirementsMsg',e.message,'error')}};
+  window.ownerReopenRequirement=async function(id){if(!confirm('Re-open this company requirement?'))return;try{await window.ownerRequirementsMutation('PATCH','company_requirements?id=eq.'+encodeURIComponent(id),{status:'active'});await window.loadOwnerCompanyRequirements();if(typeof loadCompanyRequirements==='function')await loadCompanyRequirements();showToast('Company requirement re-opened.')}catch(e){setMsg('ownerRequirementsMsg',e.message,'error')}};
+  window.ownerDeleteRequirement=async function(id){if(!confirm('Delete this company requirement permanently?'))return;try{await window.ownerRequirementsMutation('DELETE','company_requirements?id=eq.'+encodeURIComponent(id));await window.loadOwnerCompanyRequirements();if(typeof loadCompanyRequirements==='function')await loadCompanyRequirements();showToast('Company requirement deleted.')}catch(e){setMsg('ownerRequirementsMsg',e.message,'error')}};
+  window.ownerEditRequirement=async function(id){try{const {token}=await ownerRequired();const r=await timeoutFetch(SUPABASE_URL+'/rest/v1/company_requirements?id=eq.'+encodeURIComponent(id)+'&select=*&limit=1',{headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token}});const {data,raw}=await parseResp(r);if(!r.ok)throw new Error(errorText(data,raw,'Could not load requirement.'));const x=Array.isArray(data)?data[0]:null;if(!x)throw new Error('Requirement not found.');$('ownerReqEditId').value=x.id;$('ownerReqEditCompany').value=x.company_name||'';$('ownerReqEditMembers').value=x.members_needed||'';$('ownerReqEditCallerRole').value=x.caller_role||'HR';$('ownerReqEditCallerName').value=x.caller_name||'';$('ownerReqEditWorker').value=x.worker_requirement||'';$('ownerReqEditSalary').value=x.salary||'';$('ownerReqEditLocation').value=x.location||'';$('ownerReqEditJoining').value=x.joining_date||'';$('ownerReqEditDetails').value=x.details||'';$('ownerReqEditStatus').value=x.status||'active';openModal('ownerRequirementEditModal')}catch(e){setMsg('ownerRequirementsMsg',e.message,'error')}};
+
+  // Remove all old listeners from critical buttons by replacing the nodes.
+  function fresh(id){const old=$(id);if(!old)return null;const n=old.cloneNode(true);old.replaceWith(n);return n}
+
+  function bindOwnerLogin(){
+    const b=fresh('ownerLoginSubmit');if(!b)return;
+    b.addEventListener('click',async e=>{e.preventDefault();e.stopPropagation();const pw=$('ownerPassword')?.value||'';if(!pw){setMsg('ownerLoginMsg','Enter the owner password.','error');return}b.disabled=true;b.textContent='Logging in...';try{const r=await timeoutFetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:OWNER,password:pw})});const {data,raw}=await parseResp(r);if(!r.ok||!data.access_token)throw new Error(errorText(data,raw,'Owner email/password is incorrect.'));if(clean(data.user?.email||OWNER)!==OWNER)throw new Error('This account is not authorized for Owner access.');localStorage.setItem('km_access_token',data.access_token);if(data.refresh_token)localStorage.setItem('km_refresh_token',data.refresh_token);window.ownerUser=data.user;$('ownerPassword').value='';$('ownerLoginModal')?.classList.add('hidden');openModal('ownerPanelModal');await window.updateOwnerUI();await Promise.allSettled([window.loadOwnerJobs(),window.loadOwnerCompanyRequirements()]);showToast('Owner login successful.')}catch(err){setMsg('ownerLoginMsg',err.message,'error')}finally{b.disabled=false;b.textContent='Login as Owner'}},false);
+  }
+
+  function bindOwnerNav(){const b=fresh('ownerLoginBtn');if(!b)return;b.addEventListener('click',async e=>{e.preventDefault();e.stopPropagation();const u=await window.getOwnerUser();if(u){openModal('ownerPanelModal');await window.loadOwnerJobs()}else openModal('ownerLoginModal')},false)}
+  function bindOwnerButtons(){
+    const j=fresh('ownerJobsManageBtn');if(j)j.addEventListener('click',async e=>{e.preventDefault();const u=await window.getOwnerUser();if(!u){openModal('ownerLoginModal');return}await window.loadOwnerJobs();$('ownerJobs')?.scrollIntoView({behavior:'smooth',block:'start'});});
+    const r=fresh('ownerRequirementsManageBtn');if(r)r.addEventListener('click',async e=>{e.preventDefault();const u=await window.getOwnerUser();if(!u){openModal('ownerLoginModal');return}openModal('ownerRequirementsModal');await window.loadOwnerCompanyRequirements()});
+    const refresh=fresh('ownerRefresh');if(refresh)refresh.addEventListener('click',async e=>{e.preventDefault();const u=await window.getOwnerUser();if(!u){openModal('ownerLoginModal');return}refresh.disabled=true;refresh.textContent='Refreshing...';try{await Promise.all([window.loadOwnerJobs(),window.loadOwnerCompanyRequirements()]);showToast('Owner panel refreshed.')}catch(err){setMsg('ownerPanelMsg',err.message,'error')}finally{refresh.disabled=false;refresh.textContent='Refresh'}});
+    const jr=fresh('ownerJobsRefresh');if(jr)jr.addEventListener('click',async e=>{e.preventDefault();await window.loadOwnerJobs()});
+    const rr=fresh('ownerRequirementsRefresh');if(rr)rr.addEventListener('click',async e=>{e.preventDefault();await window.loadOwnerCompanyRequirements()});
+  }
+
+  function bindJobActions(){
+    $('ownerJobs')?.addEventListener('click',async e=>{const b=e.target.closest('[data-km-job-action]');if(!b)return;const id=b.dataset.id,action=b.dataset.kmJobAction;if(action==='active'||action==='completed')return window.ownerSetStatus(id,action);if(action==='delete')return window.ownerDeleteJob(id);if(action==='edit')return window.ownerEditJob(id)},false);
+    $('ownerRequirementsList')?.addEventListener('click',async e=>{const b=e.target.closest('[data-km-req-action]');if(!b)return;const id=b.dataset.id,action=b.dataset.kmReqAction;if(action==='completed')return window.ownerCompleteRequirement(id);if(action==='active')return window.ownerReopenRequirement(id);if(action==='delete')return window.ownerDeleteRequirement(id);if(action==='edit')return window.ownerEditRequirement(id)},false);
+  }
+
+  function bindPayU(){
+    const b=fresh('payFeatured');if(!b)return;b.addEventListener('click',async e=>{e.preventDefault();const token=await stableSession();if(!token){setMsg('featuredMsg','Please login first.','error');return}if(!$('fConfirm')?.checked){setMsg('featuredMsg','Please confirm the details first.','error');return}const body={company_name:$('fCompany').value.trim(),contact_person:$('fContact').value.trim(),mobile:$('fMobile').value.trim(),job_title:$('fTitle').value.trim(),category:$('fCategory').value.trim(),city:$('fCity').value.trim(),salary:$('fSalary').value.trim(),job_type:'Full Time',description:$('fDescription').value.trim(),plan_days:Number($('fPlan').value)};for(const k of ['company_name','contact_person','mobile','job_title','category','city','salary'])if(!body[k]){setMsg('featuredMsg','Please fill all required fields.','error');return}b.disabled=true;b.textContent='Connecting to PayU...';try{const send=async t=>timeoutFetch(PAYMENT_FN,{method:'POST',headers:{'Authorization':'Bearer '+t,'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(body)});let r=await send(token);if(r.status===401){const freshToken=await refreshTokenOnce();if(freshToken)r=await send(freshToken)}const {data,raw}=await parseResp(r);if(!r.ok)throw new Error('PayU server: '+errorText(data,raw,'HTTP '+r.status));if(!(data?.success===true||data?.ok===true))throw new Error(errorText(data,raw,'PayU did not return a valid response.'));const url=data.paymentUrl||data.payment_url;if(!url||!data.params)throw new Error('PayU configuration is incomplete in the payu-payment function.');const form=document.createElement('form');form.method='POST';form.action=url;Object.entries(data.params).forEach(([k,v])=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v??'';form.appendChild(i)});document.body.appendChild(form);form.submit()}catch(err){console.error(err);setMsg('featuredMsg',err.message||'PayU payment could not be started.','error')}finally{b.disabled=false;b.textContent='Continue to PayU'}},false)
+  }
+
+  function bindUrgent(){const b=fresh('submitUrgent');if(!b)return;b.addEventListener('click',e=>{e.preventDefault();const c=$('uCompany').value.trim(),p=$('uContact').value.trim(),m=$('uMobile').value.trim(),w=$('uWorker').value.trim(),n=$('uCount').value.trim(),city=$('uCity').value.trim();if(!c||!p||!m||!w||!n||!city){setMsg('urgentMsg','Please fill the required fields.','error');return}const text=`KaamMilega Urgent Worker Requirement\nCompany: ${c}\nContact: ${p}\nMobile: ${m}\nWorker: ${w}\nNumber of workers: ${n}\nLocation: ${city}\nSalary: ${$('uSalary').value}\nJoining: ${$('uDate').value}\nDetails: ${$('uDetails').value}`;setMsg('urgentMsg','Opening WhatsApp...','success');window.location.href='https://wa.me/916206085383?text='+encodeURIComponent(text)},false)}
+
+  function bindHiring(){const b=fresh('postNeedBtn');if(!b)return;b.addEventListener('click',e=>{e.preventDefault();const role=$('needRole')?.value.trim(),city=$('needCity')?.value.trim(),exp=$('needExp')?.value.trim(),phone=$('needPhone')?.value.trim(),note=$('needNote')?.value.trim();if(!role||!city||!phone){setMsg('needMsg','Please enter Job/Role, City and Mobile/WhatsApp number.','error');return}const body=`KaamMilega Job Requirement\nJob required: ${role}\nPreferred city: ${city}\nExperience: ${exp}\nMobile/WhatsApp: ${phone}\nRequirement: ${note}`;setMsg('needMsg','Opening WhatsApp...','success');window.location.href='https://wa.me/916206085383?text='+encodeURIComponent(body)},false)}
+
+  function bindOwnerEditSave(){const b=fresh('ownerSaveEdit');if(!b)return;b.addEventListener('click',async e=>{e.preventDefault();const id=$('ownerEditId').value;const body={title:$('ownerEditTitle').value.trim(),category:$('ownerEditCategory').value.trim(),city:$('ownerEditCity').value.trim(),salary:$('ownerEditSalary').value.trim(),job_type:$('ownerEditType').value,contact_phone:$('ownerEditPhone').value.trim(),description:$('ownerEditDescription').value.trim(),status:$('ownerEditStatus').value};if(!body.title||!body.category||!body.city){setMsg('ownerEditMsg','Title, category and city are required.','error');return}b.disabled=true;b.textContent='Saving...';try{await window.ownerMutation('PATCH','jobs?id=eq.'+encodeURIComponent(id),body);$('ownerEditModal')?.classList.add('hidden');await window.loadOwnerJobs();if(typeof loadJobs==='function')await loadJobs();showToast('Job updated successfully.')}catch(err){setMsg('ownerEditMsg',err.message,'error')}finally{b.disabled=false;b.textContent='Save Changes'}})}
+
+  function bindReqEditSave(){const b=fresh('ownerReqSaveEdit');if(!b)return;b.addEventListener('click',async e=>{e.preventDefault();const id=$('ownerReqEditId').value;const body={company_name:$('ownerReqEditCompany').value.trim(),members_needed:Number($('ownerReqEditMembers').value),caller_role:$('ownerReqEditCallerRole').value,caller_name:$('ownerReqEditCallerName').value.trim(),worker_requirement:$('ownerReqEditWorker').value.trim(),salary:$('ownerReqEditSalary').value.trim(),location:$('ownerReqEditLocation').value.trim(),joining_date:$('ownerReqEditJoining').value||null,details:$('ownerReqEditDetails').value.trim(),status:$('ownerReqEditStatus').value};if(!body.company_name||!body.members_needed||!body.caller_name||!body.worker_requirement||!body.salary||!body.location){setMsg('ownerReqEditMsg','Please fill all required fields.','error');return}b.disabled=true;b.textContent='Saving...';try{await window.ownerRequirementsMutation('PATCH','company_requirements?id=eq.'+encodeURIComponent(id),body);$('ownerRequirementEditModal')?.classList.add('hidden');await window.loadOwnerCompanyRequirements();if(typeof loadCompanyRequirements==='function')await loadCompanyRequirements();showToast('Company requirement updated.')}catch(err){setMsg('ownerReqEditMsg',err.message,'error')}finally{b.disabled=false;b.textContent='Save Changes'}})}
+
+  function init(){
+    try{bindOwnerLogin();bindOwnerNav();bindOwnerButtons();bindJobActions();bindPayU();bindUrgent();bindHiring();bindOwnerEditSave();bindReqEditSave();window.updateOwnerUI();}catch(e){console.error('KaamMilega v14 init',e)}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
 </script>
 

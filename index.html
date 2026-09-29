@@ -47,6 +47,8 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 
 .content-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.content-nav a{background:#eef4ff;color:#0b63ce;text-decoration:none;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:800}.info-section{max-width:1150px;margin:auto;padding:42px 18px}.info-section h2{margin:0 0 10px}.info-section h3{margin:22px 0 8px}.info-section p,.info-section li{line-height:1.7;color:#475569}.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}.info-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px}.info-card h3{margin-top:0}.faq-item{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px 18px;margin:10px 0}.faq-item h3{font-size:17px;margin:0 0 7px}.policy-box{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;margin-top:14px}.policy-box p,.policy-box li{font-size:14px}.anchor-offset{scroll-margin-top:90px}@media(max-width:800px){.info-grid{grid-template-columns:1fr}}
 .modal-card{background:#fff;border-radius:16px;max-width:620px;width:100%;max-height:90vh;overflow:auto;padding:22px;position:relative}.modal-close{float:right;background:#eef2f7;border:0;border-radius:50%;width:34px;height:34px;cursor:pointer;font-size:20px}.modal-card label{display:block;font-weight:700;margin:10px 0 6px}.modal-card .input{margin-bottom:4px}
+
+.custom-content-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.custom-content-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:18px}.custom-content-card img{max-width:100%;height:auto;border-radius:10px}.custom-content-card .custom-type{font-size:11px;font-weight:900;letter-spacing:1px;color:#0b63ce}.custom-content-card .custom-date{font-size:12px;color:#64748b;margin-top:10px}@media(max-width:800px){.custom-content-grid{grid-template-columns:1fr}}.site-content-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:14px}.site-content-item{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:14px}.site-content-item h4{margin:0 0 6px}.content-editor-note{font-size:12px;color:#64748b}.repeat-editor{border:1px solid #dbe5f0;border-radius:12px;padding:12px;margin:10px 0;background:#f8fbff}.repeat-editor-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.small-btn{padding:8px 10px;font-size:12px}.content-manager-tabs{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.content-tab{border:1px solid #d7e1ef;background:#fff;color:#0b63ce;border-radius:999px;padding:8px 11px;font-weight:800;cursor:pointer}.content-tab.active{background:#0b63ce;color:#fff}.site-content-preview{background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:10px;font-size:12px;color:#475569;margin-top:10px}@media(max-width:800px){.site-content-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body><div id="toast" class="toast"></div>
@@ -62,8 +64,8 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </div></header>
 
 <section class="hero"><div class="hero-inner">
-<h1>Find Skilled Workers. Hire With Confidence.</h1>
-<p>KaamMilega is a professional platform connecting employers, contractors and skilled workers across India.</p>
+<h1 id="heroTitle">Find Skilled Workers. Hire With Confidence.</h1>
+<p id="heroText">KaamMilega is a professional platform connecting employers, contractors and skilled workers across India.</p>
 <div class="hero-trust"><span>✓ Skill-based hiring</span><span>✓ Direct employer contact</span><span>✓ Secure payment checkout</span><span>✓ Customer support</span></div>
 <div class="search">
 <input id="searchSkill" class="input" placeholder="Search skill or job title">
@@ -152,7 +154,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
       <div id="needMsg"></div>
     </div>
 
-    <div class="card" style="cursor:pointer" data-open="teamModal">
+    <div class="card" id="teamCard" style="cursor:pointer" data-open="teamModal">
       <span class="eyebrow">MY TEAM MEMBER</span>
       <h3>My Team member</h3>
       <p class="muted">Click here to view the KaamMilega team.</p>
@@ -162,119 +164,21 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </section>
 
 <section class="section" id="companyHiring">
-  <div class="trust-head">
-    <div>
-      <span class="eyebrow">HIRING OPPORTUNITIES</span>
-      <h2>Companies & Hiring Leads</h2>
-      <p class="muted">Company names are shown for job-search assistance. Vacancy status is based on the source noted on each card.</p>
-    </div>
-  </div>
-  <div class="cards">
-    <div class="card company-card">
-      <div class="company-logo" aria-label="NR Company logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#0f172a"/><text x="40" y="50" text-anchor="middle" fill="white" font-size="25" font-weight="800">NR</text></svg></div>
-      <div class="company-info"><span class="eyebrow">COMPANY LEAD</span><h3>NR Company</h3><p class="muted">Hyderabad, Telangana</p><span class="notice">Vacancy status: confirm before applying</span><p>Listed as a company lead for Hyderabad job requirements. Contact KaamMilega support for current requirement verification.</p><a class="btn secondary" href="mailto:kaammilaga.official@gmail.com?subject=NR%20Company%20Hyderabad%20Job%20Requirement">Email Support</a></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Vee Gee Auto Components logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#123b5d"/><path d="M17 23h9l7 26 7-26h9l-11 34h-10z" fill="white"/><text x="58" y="55" text-anchor="middle" fill="#8fd3ff" font-size="11" font-weight="800">VG</text></svg></div>
-      <div class="company-info"><span class="eyebrow">HIRING LEAD</span><h3>Vee Gee Auto Components Pvt Ltd</h3><p class="muted">Ahmedabad, Gujarat</p><span class="notice success">Vacancy confirmed by HR</span><p>Hiring information confirmed through HR communication as provided to KaamMilega. Public listings also show Vee Gee roles in Ahmedabad.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn secondary" href="mailto:kaammilaga.official@gmail.com?subject=Vee%20Gee%20Auto%20Components%20Job%20Requirement">Email Support</a><a class="btn ghost" href="https://www.veegeeindustries.com/" target="_blank" rel="noopener">Company Website</a></div></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Hariyana Industries logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#17603b"/><text x="40" y="51" text-anchor="middle" fill="white" font-size="24" font-weight="800">HI</text><path d="M18 59h44" stroke="#8ee0b0" stroke-width="4"/></svg></div>
-      <div class="company-info"><span class="eyebrow">HIRING LEAD</span><h3>Hariyana Industries</h3><p class="muted">Gujarat</p><span class="notice success">Vacancy confirmed by HR</span><p>Hiring information confirmed through HR communication as provided to KaamMilega. Candidates can email their job requirement for assistance.</p><a class="btn secondary" href="mailto:kaammilaga.official@gmail.com?subject=Hariyana%20Industries%20Job%20Requirement">Email Support</a></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Maruti Suzuki logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#e8eef7"/><ellipse cx="40" cy="40" rx="27" ry="18" fill="none" stroke="#1671c9" stroke-width="6"/><text x="40" y="47" text-anchor="middle" fill="#1671c9" font-size="14" font-weight="900">MARUTI</text></svg></div>
-      <div class="company-info"><span class="eyebrow">CAREERS</span><h3>Maruti Suzuki India Limited</h3><p class="muted">Ahmedabad / Hansalpur, Gujarat</p><span class="notice">Official careers available</span><p>Maruti Suzuki's official careers page currently lists opportunities including Freshers, Engineering, Experienced Professionals and Workmen Hiring.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn secondary" href="https://www.marutisuzuki.com/corporate/careers" target="_blank" rel="noopener">Official Careers</a><a class="btn ghost" href="mailto:kaammilaga.official@gmail.com?subject=Maruti%20Suzuki%20Job%20Requirement">Email Support</a></div></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Honda logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#b40000"/><text x="40" y="51" text-anchor="middle" fill="white" font-size="29" font-family="Arial" font-weight="900">H</text></svg></div>
-      <div class="company-info"><span class="eyebrow">CAREERS</span><h3>Honda</h3><p class="muted">Gujarat / India</p><span class="notice">Official careers available</span><p>Honda's official careers site provides searchable opportunities across engineering, manufacturing, supply chain, sales and other functions.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn secondary" href="https://www.honda.com/careers" target="_blank" rel="noopener">Official Careers</a><a class="btn ghost" href="mailto:kaammilaga.official@gmail.com?subject=Honda%20Job%20Requirement">Email Support</a></div></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Swiggy Instamart logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#ff7a00"/><path d="M25 25c18-8 31 3 27 14-3 9-15 9-20 16" fill="none" stroke="white" stroke-width="7" stroke-linecap="round"/><text x="40" y="65" text-anchor="middle" fill="white" font-size="8" font-weight="800">INSTAMART</text></svg></div>
-      <div class="company-info"><span class="eyebrow">PUBLIC LISTING</span><h3>Swiggy Instamart</h3><p class="muted">Delivery — Sarkhej, Ahmedabad</p><span class="notice success">Public vacancy listing found</span><p>Public listings currently show Food/Grocery Delivery roles in Sarkhej, Ahmedabad. Check the listing before applying.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn secondary" href="https://www.jobhai.com/delivery-jobs-in-sarkhej-ahmedabad-lccty" target="_blank" rel="noopener">View Listing</a><a class="btn ghost" href="mailto:kaammilaga.official@gmail.com?subject=Swiggy%20Instamart%20Job%20Requirement">Email Support</a></div></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Assistant Administration jobs logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#4f46e5"/><path d="M22 29h36v27H22z" fill="none" stroke="white" stroke-width="4"/><path d="M30 29v-6h20v6M30 42h20" fill="none" stroke="white" stroke-width="4"/></svg></div>
-      <div class="company-info"><span class="eyebrow">JOB CATEGORY</span><h3>Assistant / Administration</h3><p class="muted">Ahmedabad, Gujarat</p><span class="notice">Current listings available</span><p>Administrative and assistant roles are listed across Ahmedabad. Employer and role should be verified before applying.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn secondary" href="https://in.linkedin.com/jobs/assistant-administrator-jobs-ahmedabad" target="_blank" rel="noopener">View Jobs</a><a class="btn ghost" href="mailto:kaammilaga.official@gmail.com?subject=Assistant%20Administration%20Job%20Requirement">Email Support</a></div></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="E-Commerce and Tech logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#0b63ce"/><path d="M21 25h38l-4 21H27z" fill="none" stroke="white" stroke-width="4"/><circle cx="31" cy="57" r="3" fill="white"/><circle cx="51" cy="57" r="3" fill="white"/><text x="40" y="39" text-anchor="middle" fill="white" font-size="9" font-weight="800">E-COM</text></svg></div>
-      <div class="company-info"><span class="eyebrow">HIRING CATEGORY</span><h3>E-Commerce & Tech</h3><p class="muted">Delhi / NCR</p><span class="notice">Multiple employer opportunities</span><p>Technology and e-commerce hiring is represented as a job category. Specific employer and vacancy should be checked before applying.</p><a class="btn secondary" href="mailto:kaammilaga.official@gmail.com?subject=E-Commerce%20Tech%20Job%20Requirement">Email Support</a></div>
-    </div>
-  </div>
-  <p class="muted" style="margin-top:14px;font-size:12px">Brand marks are provided for identification and presentation. KaamMilega is an independent employment marketplace and is not the employer of these vacancies. Vacancy status can change; verify the employer and role before applying.</p>
+  <div class="trust-head"><div><span class="eyebrow" id="companyHiringEyebrow">HIRING OPPORTUNITIES</span><h2 id="companyHiringTitle">Companies &amp; Hiring Leads</h2><p class="muted" id="companyHiringNote">Company names are shown for job-search assistance. Vacancy status is based on the source noted on each card.</p></div></div>
+  <div class="cards" id="companyHiringCards"></div>
+  <p class="muted" id="companyHiringDisclaimer" style="margin-top:14px;font-size:12px">Brand marks are provided for identification and presentation. KaamMilega is an independent employment marketplace and is not the employer of these vacancies. Vacancy status can change; verify the employer and role before applying.</p>
 </section>
 <!-- INFORMATIONAL CONTENT FOR USERS AND SEARCH ENGINES -->
-<section class="info-section anchor-offset" id="aboutKaamMilega">
-  <span class="eyebrow">ABOUT KAAMMILEGA</span>
-  <h2>What KaamMilega does</h2>
-  <p>KaamMilega is an independent employment marketplace designed to make job discovery and worker hiring easier for people in India. The platform brings job seekers, employers and contractors together in one place. A worker can search by skill and city, review the information supplied by an employer, and contact the relevant listing. An employer can publish a vacancy, describe the required skill, location, job type and salary, and receive enquiries from interested workers.</p>
-  <p>The platform also supports a hiring-desk workflow for situations where a company or contractor needs several workers. Companies can submit the type of worker required, the number of people needed, work location, salary or rate, joining date and other practical details. KaamMilega can then use the submitted requirement for coordination and follow-up. A company requirement shown on the website is not a promise of employment; the employer remains responsible for the final hiring decision and for confirming the vacancy.</p>
-  <p>KaamMilega is not a government department, recruitment regulator or employer of every vacancy displayed on the site. Job information can change, so users should confirm the employer, role, location, salary, working conditions and joining details before accepting an offer or travelling for an interview.</p>
-  <div class="content-nav"><a href="#howItWorks">How it works</a><a href="#forWorkers">For workers</a><a href="#forEmployers">For employers</a><a href="#safety">Safety</a><a href="#faq">FAQ</a><a href="#contactInfo">Contact</a></div>
-</section>
-
-<section class="info-section anchor-offset" id="howItWorks">
-  <span class="eyebrow">HOW IT WORKS</span>
-  <h2>A clear process for job seekers and employers</h2>
-  <div class="info-grid">
-    <article class="info-card"><h3>1. Search or post</h3><p>Workers can search the latest public jobs using a skill or job title and a city. Employers can use the Post a Job form to provide the vacancy title, category, location, salary, job type, description and contact number.</p></article>
-    <article class="info-card"><h3>2. Review details</h3><p>Read the complete job description before contacting an employer. Check the location, salary or rate, experience requirement, shift, documents and any other conditions that matter to you.</p></article>
-    <article class="info-card"><h3>3. Contact and confirm</h3><p>Use the contact option or KaamMilega support where available. Confirm that the vacancy is still open and that the person contacting you is connected to the stated employer or hiring requirement.</p></article>
-  </div>
-  <p>For employers needing multiple workers, the Company Hiring Requirements area provides a structured way to record the company name, number of members required, worker type, salary or rate, location, joining date and additional instructions. The owner panel is used to update or complete these requirements. Completed requirements are removed from the public list so that old demand is less likely to be mistaken for a current vacancy.</p>
-</section>
-
-<section class="info-section anchor-offset" id="forWorkers">
-  <span class="eyebrow">FOR WORKERS</span><h2>Using KaamMilega to find work</h2>
-  <p>Start by searching for your skill, such as MIG Welder, Electrician, Helper, Delivery Executive, Supervisor or another role. Add your preferred city to narrow the results. Open a listing and read the description carefully rather than relying only on the job title.</p>
-  <div class="info-grid"><article class="info-card"><h3>Keep your profile useful</h3><p>Add your name, city and relevant skills to your profile. Accurate information helps employers understand what type of work you are looking for.</p></article><article class="info-card"><h3>Confirm before travelling</h3><p>Vacancies may close or change. Confirm the employer, interview location, joining date, salary and work conditions before spending money on travel or accommodation.</p></article><article class="info-card"><h3>Never pay for an offer</h3><p>Be cautious if someone asks for money, OTPs, passwords or payment credentials in exchange for a job. Report suspicious requests to KaamMilega support and independently verify the employer.</p></article></div>
-</section>
-
-<section class="info-section anchor-offset" id="forEmployers">
-  <span class="eyebrow">FOR EMPLOYERS &amp; CONTRACTORS</span><h2>Publishing a useful vacancy</h2>
-  <p>A good job listing gives workers enough information to decide whether the opportunity matches their experience and location. Use a specific job title, explain the required skill, state the work location, describe the job type and provide the salary or rate when possible. The description can include experience, shift timing, accommodation, transport, documents, interview details and joining expectations.</p>
-  <p>If you need several workers, use the urgent hiring or company requirement workflow. State the exact number of workers required and the worker category. This helps the KaamMilega team understand the request and reduces unnecessary back-and-forth.</p>
-  <p>Employers are responsible for the accuracy of information they submit and for complying with applicable employment, wage, workplace safety and other legal requirements. KaamMilega provides a marketplace and communication workflow; it does not make the final hiring decision on behalf of an employer.</p>
-</section>
-
-<section class="info-section anchor-offset" id="safety">
-  <span class="eyebrow">TRUST &amp; SAFETY</span><h2>Important checks before a job or payment</h2>
-  <div class="info-grid"><article class="info-card"><h3>Verify the opportunity</h3><p>Confirm the company name, job location, role, salary and joining details directly with the employer. Public vacancy information can become outdated when a position is filled.</p></article><article class="info-card"><h3>Protect account information</h3><p>Never share your login OTP, password, payment PIN or private account credentials with another person. KaamMilega support does not need your OTP or password to provide normal assistance.</p></article><article class="info-card"><h3>Understand payments</h3><p>Featured Job promotion is a paid service for employers. Review the package and details before payment. A promotion fee does not guarantee hiring, applications or employment.</p></article></div>
-  <p>For any suspicious communication, stop the conversation and contact KaamMilega through the support email shown on this website. Do not send money merely because a person claims to represent a company or KaamMilega.</p>
-</section>
-
-<section class="info-section anchor-offset" id="faq">
-  <span class="eyebrow">FREQUENTLY ASKED QUESTIONS</span><h2>KaamMilega FAQ</h2>
-  <div class="faq-item"><h3>Is KaamMilega a government job website?</h3><p>No. KaamMilega is an independent employment marketplace. It is not a government department or government agency. Users should verify any government-job claim through the relevant official government source.</p></div>
-  <div class="faq-item"><h3>Can I post a job for free?</h3><p>The standard Post a Job workflow is available through the website. Additional services, such as Featured Job promotion, may have a separate fee. Check the package shown on the payment screen before paying.</p></div>
-  <div class="faq-item"><h3>Does KaamMilega guarantee a job?</h3><p>No. A listing or support request does not guarantee employment. The employer decides whether to interview or hire a candidate, and the worker should confirm the final terms directly with the employer.</p></div>
-  <div class="faq-item"><h3>How can a company request multiple workers?</h3><p>Use Need Workers Urgently or the Company Hiring Requirements workflow. Provide the company name, number of workers, worker type, location, salary or rate and other relevant requirements so the request can be coordinated accurately.</p></div>
-  <div class="faq-item"><h3>How can I contact support?</h3><p>Email <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a> for job posting, urgent hiring requirements, platform questions and general assistance.</p></div>
-</section>
-
-<section class="info-section anchor-offset" id="contactInfo">
-  <span class="eyebrow">CONTACT &amp; SITE INFORMATION</span><h2>KaamMilega support</h2>
-  <div class="policy-box"><p><b>Support email:</b> <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a></p><p><b>Purpose:</b> Job posting help, worker requirements, employer coordination and website support.</p><p><b>Important:</b> KaamMilega does not guarantee employment, salary, selection or continued vacancy availability. Hiring decisions are made by employers.</p></div>
-</section>
-
-<section class="info-section anchor-offset" id="privacyPolicy">
-  <span class="eyebrow">PRIVACY</span><h2>Privacy information</h2>
-  <div class="policy-box"><p>KaamMilega may receive information that users choose to submit through account, profile, job-posting, hiring-requirement and support forms. This can include a name, mobile number, city, skills, job details and contact information. The information is used to operate the requested marketplace feature, communicate about a submitted requirement and provide support.</p><p>Do not submit passwords, OTPs, payment PINs or other secrets in public job descriptions or support forms. Account authentication is handled through the website's authentication service. Payment processing for paid promotion is handled through the configured payment provider; users should review the payment provider's own terms and privacy information when completing a transaction.</p><p>Users can contact KaamMilega support regarding questions about information submitted through the website. The website may also use cookies or browser storage needed for login and basic functionality, and advertising services may use their own technologies subject to their applicable policies.</p></div>
-</section>
-
-<section class="info-section anchor-offset" id="terms">
-  <span class="eyebrow">TERMS &amp; USE</span><h2>Basic website terms</h2>
-  <div class="policy-box"><p>Users should submit truthful, lawful and relevant information. Do not post fraudulent vacancies, misleading salary claims, abusive content, illegal employment requests or another person's private information without permission.</p><p>Job listings and company requirements may be edited, completed or removed when they are no longer current or when they do not meet the site's requirements. KaamMilega may display third-party company names or links for job-search assistance, but the presence of a company name does not by itself mean that KaamMilega is that company's employer or official representative.</p><p>Before accepting a job, workers should independently confirm the employer and employment terms. Employers should verify candidate information and make their own hiring decisions in accordance with applicable law.</p></div>
-</section>
+<section class="info-section anchor-offset" id="aboutKaamMilega"><div id="aboutContent"></div></section>
+<section class="info-section anchor-offset" id="howItWorks"><div id="howItWorksContent"></div></section>
+<section class="info-section anchor-offset" id="forWorkers"><div id="forWorkersContent"></div></section>
+<section class="info-section anchor-offset" id="forEmployers"><div id="forEmployersContent"></div></section>
+<section class="info-section anchor-offset" id="safety"><div id="safetyContent"></div></section>
+<section class="info-section anchor-offset" id="faq"><div id="faqContent"></div></section>
+<section class="info-section anchor-offset" id="contactInfo"><div id="contactContent"></div></section>
+<section class="info-section anchor-offset" id="privacyPolicy"><div id="privacyContent"></div></section>
+<section class="info-section anchor-offset" id="terms"><div id="termsContent"></div></section>
+<section class="info-section anchor-offset" id="customContentSection"><span class="eyebrow">LATEST UPDATES</span><h2>News, Announcements & Updates</h2><div id="customContentPublic" class="custom-content-grid"></div></section>
 
 <section class="section support-strip">
 <div><span class="eyebrow">CUSTOMER SUPPORT</span><h2>Need help with hiring?</h2><p class="muted">Contact KaamMilega support by email for job posting, urgent worker requirements and general assistance.</p></div>
@@ -347,6 +251,12 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
     <button class="btn orange" id="ownerRequirementsManageBtn" type="button">Manage Company Requirements</button>
   </div>
 </div>
+<div class="card" style="margin:16px 0;background:#f7fbff;border-color:#cfe0f5">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
+    <div><span class="owner-badge">WEBSITE CONTENT</span><h3 style="margin:8px 0 4px">Website Content Manager</h3><p class="owner-small" style="margin:0">Only the owner can edit, add or delete the website's About, How It Works, Workers, Employers, Safety, FAQ, Contact, Privacy, Terms, Team and Company Hiring Leads content.</p></div>
+    <button class="btn" id="websiteContentManageBtn" type="button">Manage Website Content</button>
+  </div>
+</div>
 <div id="ownerPanelMsg"></div>
 <div id="ownerJobs" class="owner-grid"><div class="card">Loading owner jobs...</div></div>
 <div class="card" style="margin-top:18px;background:#fffdf7;border-color:#ead9a8">
@@ -356,6 +266,23 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
   <button class="btn danger" id="ownerLogout">Owner Logout</button>
   <button class="btn secondary" data-close>Close Panel</button>
+</div>
+</div></div>
+
+
+<!-- OWNER WEBSITE CONTENT MANAGER -->
+<div id="websiteContentModal" class="modal hidden"><div class="modalbox" style="max-width:1050px">
+<button class="close" data-close>×</button>
+<span class="owner-badge">OWNER ONLY</span>
+<h2 style="margin:8px 0 4px">Website Content Manager</h2>
+<p class="muted">Changes made here are saved in Supabase and shown on the public website. Add, edit or delete content, then press Save Changes.</p>
+<div id="websiteContentMsg"></div>
+<div class="content-manager-tabs" id="contentManagerTabs"></div>
+<div id="contentManagerEditor"></div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px">
+<button class="btn" id="saveWebsiteContent">Save Changes</button>
+<button class="btn secondary" id="resetWebsiteContent">Reset This Section</button>
+<button class="btn ghost" data-close>Close</button>
 </div>
 </div></div>
 
@@ -1190,6 +1117,154 @@ $("saveRequirement").onclick=async()=>{
     ["reqCompany","reqMembers","reqCallerName","reqWorker","reqSalary","reqLocation","reqJoining","reqDetails"].forEach(id=>$(id).value="");
     $("ownerRequirementModal").classList.add("hidden");
     await loadCompanyRequirements();
+
+// ===== OWNER WEBSITE CONTENT MANAGER =====
+const SITE_DEFAULTS = {
+  hero:{title:'Find Skilled Workers. Hire With Confidence.',text:'KaamMilega is a professional platform connecting employers, contractors and skilled workers across India.'},
+  about:{eyebrow:'ABOUT KAAMMILEGA',title:'What KaamMilega does',paragraphs:[
+    'KaamMilega is an independent employment marketplace designed to make job discovery and worker hiring easier for people in India. The platform brings job seekers, employers and contractors together in one place. A worker can search by skill and city, review the information supplied by an employer, and contact the relevant listing. An employer can publish a vacancy, describe the required skill, location, job type and salary, and receive enquiries from interested workers.',
+    'The platform also supports a hiring-desk workflow for situations where a company or contractor needs several workers. Companies can submit the type of worker required, the number of people needed, work location, salary or rate, joining date and other practical details. KaamMilega can then use the submitted requirement for coordination and follow-up. A company requirement shown on the website is not a promise of employment; the employer remains responsible for the final hiring decision and for confirming the vacancy.',
+    'KaamMilega is not a government department, recruitment regulator or employer of every vacancy displayed on the site. Job information can change, so users should confirm the employer, role, location, salary, working conditions and joining details before accepting an offer or travelling for an interview.'
+  ]},
+  howItWorks:{eyebrow:'HOW IT WORKS',title:'A clear process for job seekers and employers',cards:[
+    {title:'1. Search or post',text:'Workers can search the latest public jobs using a skill or job title and a city. Employers can use the Post a Job form to provide the vacancy title, category, location, salary, job type, description and contact number.'},
+    {title:'2. Review details',text:'Read the complete job description before contacting an employer. Check the location, salary or rate, experience requirement, shift, documents and any other conditions that matter to you.'},
+    {title:'3. Contact and confirm',text:'Use the contact option or KaamMilega support where available. Confirm that the vacancy is still open and that the person contacting you is connected to the stated employer or hiring requirement.'}
+  ],footer:'For employers needing multiple workers, the Company Hiring Requirements area provides a structured way to record the company name, number of members required, worker type, salary or rate, location, joining date and additional instructions. The owner panel is used to update or complete these requirements. Completed requirements are removed from the public list so that old demand is less likely to be mistaken for a current vacancy.'},
+  forWorkers:{eyebrow:'FOR WORKERS',title:'Using KaamMilega to find work',intro:'Start by searching for your skill, such as MIG Welder, Electrician, Helper, Delivery Executive, Supervisor or another role. Add your preferred city to narrow the results. Open a listing and read the description carefully rather than relying only on the job title.',cards:[
+    {title:'Keep your profile useful',text:'Add your name, city and relevant skills to your profile. Accurate information helps employers understand what type of work you are looking for.'},
+    {title:'Confirm before travelling',text:'Vacancies may close or change. Confirm the employer, interview location, joining date, salary and work conditions before spending money on travel or accommodation.'},
+    {title:'Never pay for an offer',text:'Be cautious if someone asks for money, OTPs, passwords or payment credentials in exchange for a job. Report suspicious requests to KaamMilega support and independently verify the employer.'}
+  ]},
+  forEmployers:{eyebrow:'FOR EMPLOYERS & CONTRACTORS',title:'Publishing a useful vacancy',paragraphs:[
+    'A good job listing gives workers enough information to decide whether the opportunity matches their experience and location. Use a specific job title, explain the required skill, state the work location, describe the job type and provide the salary or rate when possible. The description can include experience, shift timing, accommodation, transport, documents, interview details and joining expectations.',
+    'If you need several workers, use the urgent hiring or company requirement workflow. State the exact number of workers required and the worker category. This helps the KaamMilega team understand the request and reduces unnecessary back-and-forth.',
+    'Employers are responsible for the accuracy of information they submit and for complying with applicable employment, wage, workplace safety and other legal requirements. KaamMilega provides a marketplace and communication workflow; it does not make the final hiring decision on behalf of an employer.'
+  ]},
+  safety:{eyebrow:'TRUST & SAFETY',title:'Important checks before a job or payment',cards:[
+    {title:'Verify the opportunity',text:'Confirm the company name, job location, role, salary and joining details directly with the employer. Public vacancy information can become outdated when a position is filled.'},
+    {title:'Protect account information',text:'Never share your login OTP, password, payment PIN or private account credentials with another person. KaamMilega support does not need your OTP or password to provide normal assistance.'},
+    {title:'Understand payments',text:'Featured Job promotion is a paid service for employers. Review the package and details before payment. A promotion fee does not guarantee hiring, applications or employment.'}
+  ],footer:'For any suspicious communication, stop the conversation and contact KaamMilega through the support email shown on this website. Do not send money merely because a person claims to represent a company or KaamMilega.'},
+  faq:{eyebrow:'FREQUENTLY ASKED QUESTIONS',title:'KaamMilega FAQ',items:[
+    {q:'Is KaamMilega a government job website?',a:'No. KaamMilega is an independent employment marketplace. It is not a government department or government agency. Users should verify any government-job claim through the relevant official government source.'},
+    {q:'Can I post a job for free?',a:'The standard Post a Job workflow is available through the website. Additional services, such as Featured Job promotion, may have a separate fee. Check the package shown on the payment screen before paying.'},
+    {q:'Does KaamMilega guarantee a job?',a:'No. A listing or support request does not guarantee employment. The employer decides whether to interview or hire a candidate, and the worker should confirm the final terms directly with the employer.'},
+    {q:'How can a company request multiple workers?',a:'Use Need Workers Urgently or the Company Hiring Requirements workflow. Provide the company name, number of workers, worker type, location, salary or rate and other relevant requirements so the request can be coordinated accurately.'},
+    {q:'How can I contact support?',a:'Email kaammilaga.official@gmail.com for job posting, urgent hiring requirements, platform questions and general assistance.'}
+  ]},
+  contact:{eyebrow:'CONTACT & SITE INFORMATION',title:'KaamMilega support',paragraphs:['Support email: kaammilaga.official@gmail.com','Purpose: Job posting help, worker requirements, employer coordination and website support.','Important: KaamMilega does not guarantee employment, salary, selection or continued vacancy availability. Hiring decisions are made by employers.']},
+  privacy:{eyebrow:'PRIVACY',title:'Privacy information',paragraphs:[
+    'KaamMilega may receive information that users choose to submit through account, profile, job-posting, hiring-requirement and support forms. This can include a name, mobile number, city, skills, job details and contact information. The information is used to operate the requested marketplace feature, communicate about a submitted requirement and provide support.',
+    'Do not submit passwords, OTPs, payment PINs or other secrets in public job descriptions or support forms. Account authentication is handled through the website\'s authentication service. Payment processing for paid promotion is handled through the configured payment provider; users should review the payment provider\'s own terms and privacy information when completing a transaction.',
+    'Users can contact KaamMilega support regarding questions about information submitted through the website. The website may also use cookies or browser storage needed for login and basic functionality, and advertising services may use their own technologies subject to their applicable policies.'
+  ]},
+  terms:{eyebrow:'TERMS & USE',title:'Basic website terms',paragraphs:[
+    'Users should submit truthful, lawful and relevant information. Do not post fraudulent vacancies, misleading salary claims, abusive content, illegal employment requests or another person\'s private information without permission.',
+    'Job listings and company requirements may be edited, completed or removed when they are no longer current or when they do not meet the site\'s requirements. KaamMilega may display third-party company names or links for job-search assistance, but the presence of a company name does not by itself mean that KaamMilega is that company\'s employer or official representative.',
+    'Before accepting a job, workers should independently confirm the employer and employment terms. Employers should verify candidate information and make their own hiring decisions in accordance with applicable law.'
+  ]},
+  team:{eyebrow:'MY TEAM MEMBER',title:'My Team member',text:'Click here to view the KaamMilega team.',button:'View My Team Member'},
+  companies:{eyebrow:'HIRING OPPORTUNITIES',title:'Companies & Hiring Leads',note:'Company names are shown for job-search assistance. Vacancy status is based on the source noted on each card.',disclaimer:'Brand marks are provided for identification and presentation. KaamMilega is an independent employment marketplace and is not the employer of these vacancies. Vacancy status can change; verify the employer and role before applying.',cards:[
+    {badge:'NR',name:'NR Company',location:'Hyderabad, Telangana',status:'Vacancy status: confirm before applying',description:'Listed as a company lead for Hyderabad job requirements. Contact KaamMilega support for current requirement verification.',link1Text:'Email Support',link1Url:'mailto:kaammilaga.official@gmail.com?subject=NR%20Company%20Hyderabad%20Job%20Requirement'},
+    {badge:'VG',name:'Vee Gee Auto Components Pvt Ltd',location:'Ahmedabad, Gujarat',status:'Vacancy confirmed by HR',statusClass:'success',description:'Hiring information confirmed through HR communication as provided to KaamMilega. Public listings also show Vee Gee roles in Ahmedabad.',link1Text:'Email Support',link1Url:'mailto:kaammilaga.official@gmail.com?subject=Vee%20Gee%20Auto%20Components%20Job%20Requirement',link2Text:'Company Website',link2Url:'https://www.veegeeindustries.com/'},
+    {badge:'HI',name:'Hariyana Industries',location:'Gujarat',status:'Vacancy confirmed by HR',statusClass:'success',description:'Hiring information confirmed through HR communication as provided to KaamMilega. Candidates can email their job requirement for assistance.',link1Text:'Email Support',link1Url:'mailto:kaammilaga.official@gmail.com?subject=Hariyana%20Industries%20Job%20Requirement'},
+    {badge:'MARUTI',name:'Maruti Suzuki India Limited',location:'Ahmedabad / Hansalpur, Gujarat',status:'Official careers available',description:"Maruti Suzuki's official careers page currently lists opportunities including Freshers, Engineering, Experienced Professionals and Workmen Hiring.",link1Text:'Official Careers',link1Url:'https://www.marutisuzuki.com/corporate/careers',link2Text:'Email Support',link2Url:'mailto:kaammilaga.official@gmail.com?subject=Maruti%20Suzuki%20Job%20Requirement'},
+    {badge:'H',name:'Honda',location:'Gujarat / India',status:'Official careers available',description:"Honda's official careers site provides searchable opportunities across engineering, manufacturing, supply chain, sales and other functions.",link1Text:'Official Careers',link1Url:'https://www.honda.com/careers',link2Text:'Email Support',link2Url:'mailto:kaammilaga.official@gmail.com?subject=Honda%20Job%20Requirement'},
+    {badge:'INSTAMART',name:'Swiggy Instamart',location:'Delivery — Sarkhej, Ahmedabad',status:'Public vacancy listing found',statusClass:'success',description:'Public listings currently show Food/Grocery Delivery roles in Sarkhej, Ahmedabad. Check the listing before applying.',link1Text:'View Listing',link1Url:'https://www.jobhai.com/delivery-jobs-in-sarkhej-ahmedabad-lccty',link2Text:'Email Support',link2Url:'mailto:kaammilaga.official@gmail.com?subject=Swiggy%20Instamart%20Job%20Requirement'},
+    {badge:'A',name:'Assistant / Administration',location:'Ahmedabad, Gujarat',status:'Current listings available',description:'Administrative and assistant roles are listed across Ahmedabad. Employer and role should be verified before applying.',link1Text:'View Jobs',link1Url:'https://in.linkedin.com/jobs/assistant-administrator-jobs-ahmedabad',link2Text:'Email Support',link2Url:'mailto:kaammilaga.official@gmail.com?subject=Assistant%20Administration%20Job%20Requirement'},
+    {badge:'E-COM',name:'E-Commerce & Tech',location:'Delhi / NCR',status:'Multiple employer opportunities',description:'Technology and e-commerce hiring is represented as a job category. Specific employer and vacancy should be checked before applying.',link1Text:'Email Support',link1Url:'mailto:kaammilaga.official@gmail.com?subject=E-Commerce%20Tech%20Job%20Requirement'}
+  ]},
+  custom:{items:[]}
+};
+
+let siteContent = JSON.parse(JSON.stringify(SITE_DEFAULTS));
+let contentSection = 'hero';
+const CONTENT_SECTIONS = [
+  ['hero','Hero'],['about','About'],['howItWorks','How It Works'],['forWorkers','For Workers'],['forEmployers','For Employers'],['safety','Safety'],['faq','FAQ'],['contact','Contact'],['privacy','Privacy'],['terms','Terms'],['team','Team'],['companies','Company Leads'],['custom','Add Content']
+];
+function cloneSiteDefaults(){return JSON.parse(JSON.stringify(SITE_DEFAULTS));}
+function contentEmailLink(text){const t=escapeHtml(text||''); return t.includes('kaammilaga.official@gmail.com') ? t.replaceAll('kaammilaga.official@gmail.com','<a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a>') : t;}
+function renderSiteContent(){
+  const c=siteContent;
+  $('heroTitle').textContent=c.hero.title; $('heroText').textContent=c.hero.text;
+  $('aboutContent').innerHTML=`<span class="eyebrow">${escapeHtml(c.about.eyebrow)}</span><h2>${escapeHtml(c.about.title)}</h2>${c.about.paragraphs.map(x=>`<p>${contentEmailLink(x)}</p>`).join('')}<div class="content-nav"><a href="#howItWorks">How it works</a><a href="#forWorkers">For workers</a><a href="#forEmployers">For employers</a><a href="#safety">Safety</a><a href="#faq">FAQ</a><a href="#contactInfo">Contact</a></div>`;
+  $('howItWorksContent').innerHTML=`<span class="eyebrow">${escapeHtml(c.howItWorks.eyebrow)}</span><h2>${escapeHtml(c.howItWorks.title)}</h2><div class="info-grid">${c.howItWorks.cards.map(x=>`<article class="info-card"><h3>${escapeHtml(x.title)}</h3><p>${contentEmailLink(x.text)}</p></article>`).join('')}</div><p>${contentEmailLink(c.howItWorks.footer)}</p>`;
+  $('forWorkersContent').innerHTML=`<span class="eyebrow">${escapeHtml(c.forWorkers.eyebrow)}</span><h2>${escapeHtml(c.forWorkers.title)}</h2><p>${contentEmailLink(c.forWorkers.intro)}</p><div class="info-grid">${c.forWorkers.cards.map(x=>`<article class="info-card"><h3>${escapeHtml(x.title)}</h3><p>${contentEmailLink(x.text)}</p></article>`).join('')}</div>`;
+  $('forEmployersContent').innerHTML=`<span class="eyebrow">${escapeHtml(c.forEmployers.eyebrow)}</span><h2>${escapeHtml(c.forEmployers.title)}</h2>${c.forEmployers.paragraphs.map(x=>`<p>${contentEmailLink(x)}</p>`).join('')}`;
+  $('safetyContent').innerHTML=`<span class="eyebrow">${escapeHtml(c.safety.eyebrow)}</span><h2>${escapeHtml(c.safety.title)}</h2><div class="info-grid">${c.safety.cards.map(x=>`<article class="info-card"><h3>${escapeHtml(x.title)}</h3><p>${contentEmailLink(x.text)}</p></article>`).join('')}</div><p>${contentEmailLink(c.safety.footer)}</p>`;
+  $('faqContent').innerHTML=`<span class="eyebrow">${escapeHtml(c.faq.eyebrow)}</span><h2>${escapeHtml(c.faq.title)}</h2>${c.faq.items.map(x=>`<div class="faq-item"><h3>${escapeHtml(x.q)}</h3><p>${contentEmailLink(x.a)}</p></div>`).join('')}`;
+  $('contactContent').innerHTML=`<span class="eyebrow">${escapeHtml(c.contact.eyebrow)}</span><h2>${escapeHtml(c.contact.title)}</h2><div class="policy-box">${c.contact.paragraphs.map((x,i)=>`<p>${i===0?'<b>Support email:</b> ':i===1?'<b>Purpose:</b> ': '<b>Important:</b> '}${contentEmailLink(x.replace(/^Support email:\s*/,'').replace(/^Purpose:\s*/,'').replace(/^Important:\s*/,''))}</p>`).join('')}</div>`;
+  $('privacyContent').innerHTML=`<span class="eyebrow">${escapeHtml(c.privacy.eyebrow)}</span><h2>${escapeHtml(c.privacy.title)}</h2><div class="policy-box">${c.privacy.paragraphs.map(x=>`<p>${contentEmailLink(x)}</p>`).join('')}</div>`;
+  $('termsContent').innerHTML=`<span class="eyebrow">${escapeHtml(c.terms.eyebrow)}</span><h2>${escapeHtml(c.terms.title)}</h2><div class="policy-box">${c.terms.paragraphs.map(x=>`<p>${contentEmailLink(x)}</p>`).join('')}</div>`;
+  $('companyHiringEyebrow').textContent=c.companies.eyebrow; $('companyHiringTitle').textContent=c.companies.title; $('companyHiringNote').textContent=c.companies.note; $('companyHiringDisclaimer').textContent=c.companies.disclaimer;
+  $('companyHiringCards').innerHTML=c.companies.cards.map((x,i)=>`<div class="card company-card"><div class="company-logo" aria-label="${escapeHtml(x.name)} logo">${escapeHtml(x.badge||x.name.slice(0,2).toUpperCase())}</div><div class="company-info"><span class="eyebrow">${escapeHtml(x.type||'HIRING LEAD')}</span><h3>${escapeHtml(x.name)}</h3><p class="muted">${escapeHtml(x.location)}</p><span class="notice ${x.statusClass==='success'?'success':''}">${escapeHtml(x.status)}</span><p>${contentEmailLink(x.description)}</p><div style="display:flex;gap:10px;flex-wrap:wrap">${x.link1Url?`<a class="btn secondary" href="${escapeHtml(x.link1Url)}" target="_blank" rel="noopener">${escapeHtml(x.link1Text||'Open')}</a>`:''}${x.link2Url?`<a class="btn ghost" href="${escapeHtml(x.link2Url)}" target="_blank" rel="noopener">${escapeHtml(x.link2Text||'Open')}</a>`:''}</div></div></div>`).join('');
+  const team=$('teamCard'); if(team){team.querySelector('.eyebrow').textContent=c.team.eyebrow; team.querySelector('h3').textContent=c.team.title; team.querySelector('p').textContent=c.team.text; const b=team.querySelector('button'); if(b)b.textContent=c.team.button;}
+  const customBox=$('customContentPublic'); if(customBox){ const items=(c.custom&&Array.isArray(c.custom.items)?c.custom.items:[]).filter(x=>x&&x.published!==false); customBox.innerHTML=items.length?items.map(x=>{const type=String(x.type||'text'); const safeUrl=escapeHtml(x.url||''); if(type==='image') return `<article class="custom-content-card"><span class="custom-type">IMAGE</span><h3>${escapeHtml(x.title||'')}</h3>${safeUrl?`<img src="${safeUrl}" alt="${escapeHtml(x.title||'KaamMilega image')}" loading="lazy">`:''}${x.text?`<p>${contentEmailLink(x.text)}</p>`:''}${x.linkUrl?`<a class="btn secondary" href="${escapeHtml(x.linkUrl)}" target="_blank" rel="noopener">${escapeHtml(x.linkText||'Open')}</a>`:''}<div class="custom-date">${escapeHtml(x.createdAt||'')}</div></article>`; if(type==='file') return `<article class="custom-content-card"><span class="custom-type">FILE</span><h3>${escapeHtml(x.title||'Download')}</h3><p>${contentEmailLink(x.text||'')}</p>${safeUrl?`<a class="btn secondary" href="${safeUrl}" target="_blank" rel="noopener">${escapeHtml(x.linkText||'Open File')}</a>`:''}<div class="custom-date">${escapeHtml(x.createdAt||'')}</div></article>`; return `<article class="custom-content-card"><span class="custom-type">${escapeHtml(type==='announcement'?'ANNOUNCEMENT':'TEXT')}</span><h3>${escapeHtml(x.title||'')}</h3><p>${contentEmailLink(x.text||'')}</p>${x.linkUrl?`<a class="btn secondary" href="${escapeHtml(x.linkUrl)}" target="_blank" rel="noopener">${escapeHtml(x.linkText||'Read More')}</a>`:''}<div class="custom-date">${escapeHtml(x.createdAt||'')}</div></article>`;}).join(''):'<div class="card">No new updates yet.</div>'; }
+}
+function field(label,id,value,type='text'){return `<div class="formgroup"><label>${label}</label>${type==='textarea'?`<textarea id="${id}" class="input" rows="5">${escapeHtml(value||'')}</textarea>`:`<input id="${id}" class="input" type="${type}" value="${escapeHtml(value||'')}">`}</div>`}
+function repeatBlock(title,idx,item,fields){return `<div class="repeat-editor"><div class="repeat-editor-head"><b>${escapeHtml(title)} ${idx+1}</b><button type="button" class="btn danger small-btn" onclick="removeContentItem(${idx})">Delete</button></div>${fields.map(f=>field(f.label,`ce_${f.key}_${idx}`,item[f.key]||'',f.type||'text')).join('')}</div>`}
+function renderContentEditor(){
+  const c=siteContent[contentSection]; let h='';
+  if(contentSection==='hero'){h=field('Hero heading','ce_hero_title',c.title)+field('Hero text','ce_hero_text',c.text,'textarea');}
+  else if(['about','forEmployers','contact','privacy','terms'].includes(contentSection)){h=field('Eyebrow','ce_eyebrow',c.eyebrow)+field('Heading','ce_title',c.title); const arr=c.paragraphs; h+=`<div id="ce_repeat">${arr.map((x,i)=>repeatBlock('Paragraph',i,{text:x},[{label:'Text',key:'text',type:'textarea'}])).join('')}</div><button type="button" class="btn secondary" onclick="addContentItem()">+ Add Paragraph</button>`;}
+  else if(['howItWorks','forWorkers','safety'].includes(contentSection)){h=field('Eyebrow','ce_eyebrow',c.eyebrow)+field('Heading','ce_title',c.title)+(contentSection==='forWorkers'?field('Intro','ce_intro',c.intro,'textarea'):''); const arr=c.cards; h+=`<div id="ce_repeat">${arr.map((x,i)=>repeatBlock('Card',i,x,[{label:'Title',key:'title'},{label:'Text',key:'text',type:'textarea'}])).join('')}</div><button type="button" class="btn secondary" onclick="addContentItem()">+ Add Card</button>`; if(contentSection!=='forWorkers')h+=field('Bottom text','ce_footer',c.footer,'textarea');}
+  else if(contentSection==='faq'){h=field('Eyebrow','ce_eyebrow',c.eyebrow)+field('Heading','ce_title',c.title)+`<div id="ce_repeat">${c.items.map((x,i)=>repeatBlock('FAQ',i,{q:x.q,a:x.a},[{label:'Question',key:'q'},{label:'Answer',key:'a',type:'textarea'}])).join('')}</div><button type="button" class="btn secondary" onclick="addContentItem()">+ Add FAQ</button>`;}
+  else if(contentSection==='team'){h=field('Eyebrow','ce_eyebrow',c.eyebrow)+field('Heading','ce_title',c.title)+field('Text','ce_text',c.text,'textarea')+field('Button text','ce_button',c.button);}
+  else if(contentSection==='companies'){h=field('Eyebrow','ce_eyebrow',c.eyebrow)+field('Heading','ce_title',c.title)+field('Section note','ce_note',c.note,'textarea')+field('Disclaimer','ce_disclaimer',c.disclaimer,'textarea')+`<div id="ce_repeat">${c.cards.map((x,i)=>repeatBlock('Company card',i,x,[{label:'Badge / initials',key:'badge'},{label:'Name',key:'name'},{label:'Type label',key:'type'},{label:'Location',key:'location'},{label:'Status',key:'status'},{label:'Description',key:'description',type:'textarea'},{label:'Button 1 text',key:'link1Text'},{label:'Button 1 URL',key:'link1Url'},{label:'Button 2 text',key:'link2Text'},{label:'Button 2 URL',key:'link2Url'}])).join('')}</div><button type="button" class="btn secondary" onclick="addContentItem()">+ Add Company / Lead</button>`;}
+  else if(contentSection==='custom'){h=`<div class="notice">Add anything to the public website: normal text, announcement, image or downloadable file. Only the owner can save or delete these items.</div><div id="ce_repeat">${c.items.map((x,i)=>repeatBlock('Content item',i,x,[{label:'Type (text / announcement / image / file)',key:'type'},{label:'Title',key:'title'},{label:'Text / Description',key:'text',type:'textarea'},{label:'File/Image URL (filled after upload)',key:'url'},{label:'Button text',key:'linkText'},{label:'Button URL',key:'linkUrl'},{label:'Published (true/false)',key:'published'}])).join('')}</div><button type="button" class="btn secondary" onclick="addContentItem()">+ Add Text / Announcement</button><div class="repeat-editor" style="margin-top:14px"><b>Upload Image / File</b><p class="content-editor-note">Choose a file, upload it, then copy the generated URL into the selected content item's URL field. Recommended for images; small files work too.</p><input id="contentUploadFile" class="input" type="file" accept="image/*,.pdf,.txt,.doc,.docx"><button type="button" class="btn orange" style="margin-top:10px" onclick="uploadContentMedia()">Upload to Website</button><div id="contentUploadMsg" style="margin-top:8px"></div></div>`;}
+  $('contentManagerEditor').innerHTML=h;
+}
+function renderContentTabs(){ $('contentManagerTabs').innerHTML=CONTENT_SECTIONS.map(x=>`<button type="button" class="content-tab ${x[0]===contentSection?'active':''}" onclick="selectContentSection('${x[0]}')">${escapeHtml(x[1])}</button>`).join(''); }
+window.selectContentSection=function(k){captureContentEditor(); contentSection=k; renderContentTabs(); renderContentEditor();};
+function captureContentEditor(){
+  const c=siteContent[contentSection]; if(!c)return;
+  const val=id=>$(id)?.value ?? '';
+  if(contentSection==='hero'){c.title=val('ce_hero_title');c.text=val('ce_hero_text');return;}
+  if(['about','forEmployers','contact','privacy','terms'].includes(contentSection)){c.eyebrow=val('ce_eyebrow');c.title=val('ce_title');c.paragraphs=[...document.querySelectorAll('#ce_repeat .repeat-editor')].map((_,i)=>val(`ce_text_${i}`));return;}
+  if(['howItWorks','forWorkers','safety'].includes(contentSection)){c.eyebrow=val('ce_eyebrow');c.title=val('ce_title'); if(contentSection==='forWorkers')c.intro=val('ce_intro'); c.cards=[...document.querySelectorAll('#ce_repeat .repeat-editor')].map((_,i)=>({title:val(`ce_title_${i}`),text:val(`ce_text_${i}`)})); if(contentSection!=='forWorkers')c.footer=val('ce_footer');return;}
+  if(contentSection==='faq'){c.eyebrow=val('ce_eyebrow');c.title=val('ce_title');c.items=[...document.querySelectorAll('#ce_repeat .repeat-editor')].map((_,i)=>({q:val(`ce_q_${i}`),a:val(`ce_a_${i}`)}));return;}
+  if(contentSection==='team'){c.eyebrow=val('ce_eyebrow');c.title=val('ce_title');c.text=val('ce_text');c.button=val('ce_button');return;}
+  if(contentSection==='companies'){c.eyebrow=val('ce_eyebrow');c.title=val('ce_title');c.note=val('ce_note');c.disclaimer=val('ce_disclaimer');c.cards=[...document.querySelectorAll('#ce_repeat .repeat-editor')].map((_,i)=>({badge:val(`ce_badge_${i}`),name:val(`ce_name_${i}`),type:val(`ce_type_${i}`),location:val(`ce_location_${i}`),status:val(`ce_status_${i}`),description:val(`ce_description_${i}`),link1Text:val(`ce_link1Text_${i}`),link1Url:val(`ce_link1Url_${i}`),link2Text:val(`ce_link2Text_${i}`),link2Url:val(`ce_link2Url_${i}`)}));return;}
+  if(contentSection==='custom'){c.items=[...document.querySelectorAll('#ce_repeat .repeat-editor')].map((_,i)=>({type:val(`ce_type_${i}`)||'text',title:val(`ce_title_${i}`),text:val(`ce_text_${i}`),url:val(`ce_url_${i}`),linkText:val(`ce_linkText_${i}`),linkUrl:val(`ce_linkUrl_${i}`),published:String(val(`ce_published_${i}`)).toLowerCase()!=='false',createdAt:(c.items[i]&&c.items[i].createdAt)||new Date().toLocaleDateString('en-IN')}));return;}
+}
+window.addContentItem=function(){captureContentEditor();const c=siteContent[contentSection];if(['about','forEmployers','contact','privacy','terms'].includes(contentSection))c.paragraphs.push('New paragraph');else if(['howItWorks','forWorkers','safety'].includes(contentSection))c.cards.push({title:'New card',text:'New text'});else if(contentSection==='faq')c.items.push({q:'New question',a:'New answer'});else if(contentSection==='companies')c.cards.push({badge:'NEW',name:'New company',type:'HIRING LEAD',location:'',status:'',description:'',link1Text:'Email Support',link1Url:'mailto:kaammilega.official@gmail.com',link2Text:'',link2Url:''});else if(contentSection==='custom')c.items.push({type:'text',title:'New Content',text:'Write your content here.',url:'',linkText:'',linkUrl:'',published:true,createdAt:new Date().toLocaleDateString('en-IN')});renderContentEditor();};
+window.removeContentItem=function(i){captureContentEditor();const c=siteContent[contentSection];if(['about','forEmployers','contact','privacy','terms'].includes(contentSection))c.paragraphs.splice(i,1);else if(['howItWorks','forWorkers','safety'].includes(contentSection))c.cards.splice(i,1);else if(contentSection==='faq')c.items.splice(i,1);else if(contentSection==='companies')c.cards.splice(i,1);else if(contentSection==='custom')c.items.splice(i,1);renderContentEditor();};
+window.uploadContentMedia=async function(){
+  try{
+    const owner=await getOwnerUser(); if(!owner) throw new Error('Owner login required.');
+    const token=await getSession(); if(!token) throw new Error('Owner session expired.');
+    const file=$('contentUploadFile')?.files?.[0]; if(!file) throw new Error('Please choose an image or file first.');
+    if(file.size>6*1024*1024) throw new Error('Please keep the file under 6 MB for this upload.');
+    const safe=file.name.replace(/[^a-zA-Z0-9._-]/g,'_'); const path=`owner/${Date.now()}_${safe}`;
+    const uploadUrl=`${SUPABASE_URL}/storage/v1/object/site-media/${encodeURIComponent(path).replace(/%2F/g,'/')}`;
+    const r=await fetch(uploadUrl,{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token,'Content-Type':file.type||'application/octet-stream','x-upsert':'false'},body:file});
+    if(!r.ok){const raw=await r.text();throw new Error(raw||'File upload failed.');}
+    const url=`${SUPABASE_URL}/storage/v1/object/public/site-media/${path}`;
+    captureContentEditor();
+    const items=siteContent.custom.items; if(items.length){items[items.length-1].url=url;} else {items.push({type:file.type.startsWith('image/')?'image':'file',title:file.name,text:'',url,linkText:'Open File',linkUrl:'',published:true,createdAt:new Date().toLocaleDateString('en-IN')});}
+    renderContentEditor();
+    msg('contentUploadMsg','Uploaded successfully. URL was added to the latest content item. Press Save Changes to publish it.','success');
+  }catch(e){msg('contentUploadMsg',e.message||'Upload failed.','error');}
+};
+
+async function loadSiteContent(){
+  try{const r=await supa('site_content?content_key=eq.site&select=content&limit=1'); if(r.ok){const rows=await r.json(); if(Array.isArray(rows)&&rows[0]?.content)siteContent=Object.assign(cloneSiteDefaults(),rows[0].content);}}catch(e){console.warn('site content load failed',e)}
+  renderSiteContent();
+}
+async function saveSiteContent(){
+  captureContentEditor();
+  const owner=await getOwnerUser(); if(!owner)throw new Error('Owner login required.');
+  const token=await getSession(); if(!token)throw new Error('Owner session expired.');
+  const r=await supa('site_content?on_conflict=content_key',{method:'POST',headers:{'Authorization':'Bearer '+token,'Prefer':'resolution=merge-duplicates,return=representation'},body:JSON.stringify({content_key:'site',content:siteContent,updated_at:new Date().toISOString()})});
+  if(!r.ok){const raw=await r.text();throw new Error(raw||'Could not save website content.');}
+  renderSiteContent(); showToast('Website content saved successfully.');
+}
+$('websiteContentManageBtn')?.addEventListener('click',async()=>{const owner=await getOwnerUser();if(!owner){showToast('Owner login required.');return;}contentSection='hero';renderContentTabs();renderContentEditor();openModal('websiteContentModal');});
+$('saveWebsiteContent')?.addEventListener('click',async()=>{try{await saveSiteContent();}catch(e){msg('websiteContentMsg',e.message,'error');}});
+$('resetWebsiteContent')?.addEventListener('click',()=>{if(!confirm('Reset this section to the built-in default content?'))return;siteContent[contentSection]=JSON.parse(JSON.stringify(SITE_DEFAULTS[contentSection]));renderContentEditor();showToast('This section was reset. Press Save Changes to publish it.');});
+
+loadCompanyRequirements();
     showToast("Company requirement published.");
   }catch(e){msg("reqMsg",e.message,"error");}
 };
@@ -1198,6 +1273,7 @@ loadCompanyRequirements();
 
 restoreLoginState();
 updateOwnerUI();
+loadSiteContent();
 loadJobs();
 </script>
 

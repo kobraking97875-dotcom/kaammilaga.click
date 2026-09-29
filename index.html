@@ -19,7 +19,7 @@
   "@type":"Organization",
   "name":"KaamMilega",
   "url":"https://kaammilaga.click/",
-  "description":"Independent employment marketplace in India connecting job seekers, employers and contractors. Users can search jobs by skill and city, post vacancies and submit worker requirements.",
+  "description":"KaamMilega is an independent employment marketplace at https://kaammilaga.click/ connecting job seekers, employers and contractors in India. Users can search jobs by skill and city, post vacancies and submit worker requirements. KaamMilega is not a government agency and is not affiliated with similarly named websites unless explicitly stated on its website.",
   "email":"kaammilaga.official@gmail.com",
   "areaServed":"IN",
   "knowsAbout":["job search","skilled workers","employer hiring","urgent worker requirements","job posting"]
@@ -393,6 +393,49 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
   </div>
 </section>
 
+<section class="info-section anchor-offset" id="officialIdentity">
+  <span class="eyebrow">OFFICIAL WEBSITE &amp; IDENTITY</span>
+  <h2>Official KaamMilega</h2>
+  <p>KaamMilega is an independent employment marketplace serving job seekers, employers and contractors in India.</p>
+  <div class="info-grid">
+    <article class="info-card">
+      <h3>Official website</h3>
+      <p><b>KaamMilega</b><br>
+      <a href="https://kaammilaga.click/" rel="home">https://kaammilaga.click/</a></p>
+    </article>
+    <article class="info-card">
+      <h3>Official support</h3>
+      <p><b>Email:</b><br>
+      <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a></p>
+      <p class="muted">For job posting, worker requirements, employer coordination and website assistance.</p>
+    </article>
+    <article class="info-card">
+      <h3>Independent platform</h3>
+      <p>KaamMilega is independent and is not a government department or government agency.</p>
+      <p class="muted">KaamMilega is also not affiliated with <b>kaammilega.com</b> or other similarly named websites unless explicitly stated on this website.</p>
+    </article>
+  </div>
+</section>
+
+<section class="info-section anchor-offset" id="trustSafety">
+  <span class="eyebrow">TRUST &amp; SAFETY</span>
+  <h2>Use KaamMilega safely</h2>
+  <div class="info-grid">
+    <article class="info-card">
+      <h3>No job guarantee</h3>
+      <p>A job listing, support request or paid promotion does not guarantee an interview, selection, salary or employment. The employer makes the final hiring decision.</p>
+    </article>
+    <article class="info-card">
+      <h3>Verify every vacancy</h3>
+      <p>Before travelling, paying money or accepting an offer, confirm the employer, job role, location, salary, joining date and current vacancy status.</p>
+    </article>
+    <article class="info-card">
+      <h3>Protect your account</h3>
+      <p>Never share your OTP, password, payment PIN or other account credentials. Report suspicious job or payment requests to official KaamMilega support.</p>
+    </article>
+  </div>
+</section>
+
 <section class="section support-strip">
 <div><span class="eyebrow">CUSTOMER SUPPORT</span><h2>Need help with hiring?</h2><p class="muted">Contact KaamMilega support by email for job posting, urgent worker requirements and general assistance.</p></div>
 <a class="btn orange" href="mailto:kaammilaga.official@gmail.com?subject=KaamMilega%20Support">Email Support</a>
@@ -403,7 +446,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div><b>Customer Support</b><p>Email: <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a></p><p>Support for employers and workers.</p></div>
 <div><b>Trust & Safety</b><p>Keep payments and account credentials secure. Never share OTPs or passwords with anyone.</p></div>
 </div>
-<div class="footer-bottom">© 2026 KaamMilega. All rights reserved. · <a href="#aboutKaamMilega">About</a> · <a href="#howItWorks">How It Works</a> · <a href="#privacyPolicy">Privacy Policy</a> · <a href="#terms">Terms</a> · <a href="#faq">FAQ</a> · <a href="#contactInfo">Contact</a> · Hiring decisions are made by employers.</div></footer>
+<div class="footer-bottom">© 2026 KaamMilega. All rights reserved. · <a href="#aboutKaamMilega">About</a> · <a href="#howItWorks">How It Works</a> · <a href="#officialIdentity">Official Website</a><a href="#privacyPolicy">Privacy Policy</a> · <a href="#terms">Terms</a> · <a href="#faq">FAQ</a> · <a href="#contactInfo">Contact</a> · Hiring decisions are made by employers.</div></footer>
 
 
 <!-- SUPPORT -->
@@ -2938,7 +2981,7 @@ if(document.getElementById("ownerReqSaveEdit")){
   if(!fab||!panel||!msgs||!form)return;
   const endpoint=(window.KM_AI_ENDPOINT||((typeof SUPABASE_URL!=='undefined')?SUPABASE_URL+'/functions/v1/ai-assistant':'/functions/v1/ai-assistant'));
   const welcome='Namaste! 👋 Main KaamMilega AI Assistant hoon.\n\nAap job search, job posting, urgent hiring, Featured Jobs, profile/login, payments, safety ya website ke kisi bhi feature ke baare mein pooch sakte hain.';
-  const siteContext='KaamMilega is an independent employment marketplace in India. Workers can search jobs by skill and city. Employers can post jobs, use Featured Jobs, request workers urgently/company requirements, and contact support. Support email: kaammilaga.official@gmail.com. KaamMilega does not guarantee employment. Users should verify employer, vacancy, salary, location and joining details. Never share OTP, password or payment PIN. Standard job posting is available; Featured Job promotion may be paid. The website has login/signup, profiles, reviews, work-result videos, owner management, PayU checkout for featured promotion, and company hiring requirements.';
+  const siteContext='KaamMilega is an independent employment marketplace in India. Workers can search jobs by skill and city. Employers can post jobs, use Featured Jobs, request workers urgently/company requirements, and contact support. Official website: https://kaammilaga.click/. KaamMilega is independent and is not affiliated with kaammilega.com or similarly named websites unless explicitly stated on the website. Support email: kaammilaga.official@gmail.com. KaamMilega does not guarantee employment. Users should verify employer, vacancy, salary, location and joining details. Never share OTP, password or payment PIN. Standard job posting is available; Featured Job promotion may be paid. The website has login/signup, profiles, reviews, work-result videos, owner management, PayU checkout for featured promotion, and company hiring requirements.';
   const history=[];
   function add(text,who){const d=document.createElement('div');d.className='km-ai-msg '+who;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d}
   function open(){panel.classList.add('open');if(!msgs.children.length)add(welcome,'bot');setTimeout(()=>input.focus(),80)}

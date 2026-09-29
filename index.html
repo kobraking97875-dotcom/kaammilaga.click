@@ -301,7 +301,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 
 <section class="section" id="publicReviewsSection">
 <span class="eyebrow">JOB RATINGS & COMMENTS</span><h2 style="margin:5px 0">Worker & Employer Reviews</h2><p class="muted">Ratings and comments submitted on KaamMilega jobs appear here.</p>
-<div id="publicReviews" class="cards"><div class="card">Loading ratings...</div></div>
+<div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn ghost" id="publicReviewsRefresh" type="button">Refresh Ratings</button></div><div id="publicReviews" class="cards"><div class="card">Loading ratings...</div></div>
 <div id="publicRatingAction" class="notice" style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><b>Want to rate your job?</b><div class="muted" id="publicRatingStatus">Login to see your posted job and the rating button.</div></div><button class="btn secondary" id="publicRateJobBtn" type="button">Rate / Comment</button></div>
 </section>
 
@@ -1354,6 +1354,7 @@ if(document.getElementById("ownerReqSaveEdit")){
     <h2>Company Hiring Requirements</h2>
     <p class="muted">Manage every company requirement: complete, update, reopen or permanently delete.</p>
     <div id="ownerRequirementsMsg"></div>
+    <div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn ghost" id="ownerRequirementsRefresh" type="button">Refresh Company</button></div>
     <div id="ownerRequirementsList" class="owner-grid">
       <div class="card">Loading requirements...</div>
     </div>
@@ -1404,6 +1405,7 @@ if(document.getElementById("ownerReqSaveEdit")){
     <h2>User Work Result Videos</h2>
     <p class="muted">Keep a video active or delete it from the public website.</p>
     <div id="ownerVideosMsg"></div>
+    <div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn ghost" id="ownerVideosRefresh" type="button">Refresh Videos</button></div>
     <div id="ownerVideosList" class="owner-grid"><div class="card">Loading videos...</div></div>
   </div>
 </div>
@@ -1412,7 +1414,7 @@ if(document.getElementById("ownerReqSaveEdit")){
 <!-- REVIEW MODAL -->
 <div class="modal hidden" id="reviewModal"><div class="modal-card"><button class="modal-close" data-close="reviewModal">×</button><span class="eyebrow">JOB REVIEW</span><h2>Rate & Comment</h2><input type="hidden" id="reviewJobId"><div class="formgroup"><label>Rating</label><select id="reviewRating" class="input"><option value="5">★★★★★ — 5</option><option value="4">★★★★☆ — 4</option><option value="3">★★★☆☆ — 3</option><option value="2">★★☆☆☆ — 2</option><option value="1">★☆☆☆☆ — 1</option></select></div><div class="formgroup"><label>Comment</label><textarea id="reviewComment" class="input" rows="5" placeholder="Write your comment..."></textarea></div><button class="btn" id="submitReview" type="button">Submit Rating & Comment</button><div id="reviewMsg"></div></div></div>
 
-<div class="modal hidden" id="ownerReviewsModal"><div class="modal-card" style="max-width:980px"><button class="modal-close" data-close="ownerReviewsModal">×</button><span class="eyebrow">OWNER CONTROL</span><h2>Job Ratings & Comments</h2><p class="muted">All submitted ratings and comments.</p><div id="ownerReviewsMsg"></div><div id="ownerReviews" class="owner-grid"><div class="card">Loading reviews...</div></div></div></div>
+<div class="modal hidden" id="ownerReviewsModal"><div class="modal-card" style="max-width:980px"><button class="modal-close" data-close="ownerReviewsModal">×</button><span class="eyebrow">OWNER CONTROL</span><h2>Job Ratings & Comments</h2><p class="muted">All submitted ratings and comments.</p><div id="ownerReviewsMsg"></div><div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn ghost" id="ownerReviewsRefresh" type="button">Refresh Ratings</button></div><div id="ownerReviews" class="owner-grid"><div class="card">Loading reviews...</div></div></div></div>
 
 <script id="kaammilega-v7-functions">
 (function(){
@@ -2093,5 +2095,234 @@ if(document.getElementById("ownerReqSaveEdit")){
 })();
 </script>
 
+
+<script id="kaammilega-v11-final-stability-fix">
+(function(){
+  const $=id=>document.getElementById(id);
+  const ownerEmail='kaammilaga.official@gmail.com';
+  const cleanEmail=v=>String(v||'').trim().toLowerCase();
+  const show=(id,text,type)=>{ if(typeof window.msg==='function') window.msg(id,text,type); else { const el=$(id); if(el) el.innerHTML='<div class="notice '+(type||'')+'">'+String(text||'')+'</div>'; } };
+
+  // ---------- AUTH: reliable email/password login ----------
+  const loginBtn=$('loginSubmit');
+  if(loginBtn){
+    loginBtn.onclick=null;
+    loginBtn.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      const email=cleanEmail($('loginEmail')?.value), password=$('loginPassword')?.value||'';
+      if(!email||!password){show('loginMsg','Enter your email and password.','error');return;}
+      if(email===ownerEmail){show('loginMsg','Use the Owner Login button for the authorized owner account.','error');return;}
+      loginBtn.disabled=true; loginBtn.textContent='Logging in...';
+      try{
+        const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({email,password})});
+        const raw=await r.text(); let d={}; try{d=JSON.parse(raw)}catch(_){ }
+        if(!r.ok||!d.access_token){
+          const rawMsg=String(d.error_description||d.msg||d.message||d.error||raw||'Login failed.');
+          let friendly=rawMsg;
+          if(/invalid login credentials|user not found|email not found/i.test(rawMsg)) friendly='Email not found or password is incorrect. Make sure you are using the same email and password used during Sign Up.';
+          else if(/email not confirmed|confirm.*email/i.test(rawMsg)) friendly='Email is not verified yet. Please open the Supabase confirmation email, verify the email, then Login again.';
+          throw new Error(friendly);
+        }
+        localStorage.setItem('km_access_token',d.access_token);
+        if(d.refresh_token)localStorage.setItem('km_refresh_token',d.refresh_token);
+        if(typeof updateAuthUI==='function')await updateAuthUI();
+        $('loginModal')?.classList.add('hidden');
+        if(typeof loadMyJobReviewBox==='function')await loadMyJobReviewBox();
+        if(typeof setupRatingButton==='function')await setupRatingButton();
+        showToast('Login successful.');
+      }catch(err){show('loginMsg',err.message||'Login failed.','error');}
+      finally{loginBtn.disabled=false;loginBtn.textContent='Login';}
+    },true);
+  }
+
+  // Never allow the owner email to be created through the normal user Sign Up form.
+  const signupBtn=$('signupSubmit');
+  if(signupBtn){
+    signupBtn.addEventListener('click',function(e){
+      const email=cleanEmail($('signupEmail')?.value);
+      if(email===ownerEmail){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();show('loginMsg','The owner account can only be used through Owner Login.','error');return;}
+    },true);
+  }
+
+  // ---------- OWNER: only exact authorized email ----------
+  async function ownerCheck(){
+    const u=await getCurrentUser();
+    return u&&cleanEmail(u.email)===ownerEmail?u:null;
+  }
+
+  const ownerLogin=$('ownerLoginSubmit');
+  if(ownerLogin){
+    ownerLogin.onclick=null;
+    ownerLogin.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      const password=$('ownerPassword')?.value||'';
+      if(!password){show('ownerLoginMsg','Enter the owner password.','error');return;}
+      ownerLogin.disabled=true;ownerLogin.textContent='Logging in...';
+      try{
+        const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:ownerEmail,password})});
+        const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(_){ }
+        if(!r.ok||!d.access_token)throw new Error(d.error_description||d.msg||d.message||'Owner email/password is incorrect.');
+        if(cleanEmail(d.user?.email||ownerEmail)!==ownerEmail)throw new Error('This account is not authorized for Owner access.');
+        localStorage.setItem('km_access_token',d.access_token);if(d.refresh_token)localStorage.setItem('km_refresh_token',d.refresh_token);
+        ownerUser=d.user;
+        if(typeof updateOwnerUI==='function')await updateOwnerUI();
+        $('ownerLoginModal')?.classList.add('hidden');$('ownerPassword').value='';
+        openModal('ownerPanelModal');
+        await Promise.allSettled([
+          typeof loadOwnerJobs==='function'?loadOwnerJobs():Promise.resolve(),
+          typeof loadOwnerCompanyRequirements==='function'?loadOwnerCompanyRequirements():Promise.resolve(),
+          typeof loadPublicOwnerReviews==='function'?loadPublicOwnerReviews():Promise.resolve(),
+          typeof loadOwnerVideos==='function'?loadOwnerVideos():Promise.resolve()
+        ]);
+        showToast('Owner login successful.');
+      }catch(err){show('ownerLoginMsg',err.message||'Owner login failed.','error');}
+      finally{ownerLogin.disabled=false;ownerLogin.textContent='Login as Owner';}
+    },true);
+  }
+
+  // Owner navigation: no other account can open Owner Panel.
+  const ownerNav=$('ownerLoginBtn');
+  if(ownerNav){
+    ownerNav.onclick=null;
+    ownerNav.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      const u=await ownerCheck();
+      if(u){openModal('ownerPanelModal');await loadOwnerJobs();}
+      else openModal('ownerLoginModal');
+    },true);
+  }
+
+  // Keep normal Profile/Login visible even for owner.
+  const authNav=$('authNavBtn');
+  if(authNav)authNav.classList.remove('owner-hidden');
+
+  // ---------- OWNER MANAGEMENT BUTTONS ----------
+  const jobsBtn=$('ownerJobsManageBtn');
+  if(jobsBtn){
+    jobsBtn.onclick=null;
+    jobsBtn.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      if(!(await ownerCheck())){openModal('ownerLoginModal');return;}
+      const box=$('ownerJobs'); if(box)box.innerHTML='<div class="card">Loading owner jobs...</div>';
+      await loadOwnerJobs();
+      $('ownerJobs')?.scrollIntoView({behavior:'smooth',block:'start'});
+    },true);
+  }
+
+  const reqBtn=$('ownerRequirementsManageBtn');
+  if(reqBtn){
+    reqBtn.onclick=null;
+    reqBtn.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      if(!(await ownerCheck())){openModal('ownerLoginModal');return;}
+      openModal('ownerRequirementsModal');
+      await loadOwnerCompanyRequirements();
+    },true);
+  }
+
+  const revBtn=$('ownerReviewsManageBtn');
+  if(revBtn){
+    revBtn.onclick=null;
+    revBtn.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      if(!(await ownerCheck())){openModal('ownerLoginModal');return;}
+      openModal('ownerReviewsModal');
+      await loadOwnerReviews?.();
+      if(typeof loadPublicOwnerReviews==='function')await loadPublicOwnerReviews();
+    },true);
+  }
+
+  const vidBtn=$('ownerVideosManageBtn');
+  if(vidBtn){
+    vidBtn.onclick=null;
+    vidBtn.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      if(!(await ownerCheck())){openModal('ownerLoginModal');return;}
+      openModal('ownerVideosModal');
+      if(typeof loadOwnerVideos==='function')await loadOwnerVideos();
+    },true);
+  }
+
+  // Refresh videos inside Manage Videos
+  $('ownerVideosRefresh')?.addEventListener('click',async function(e){
+    e.preventDefault(); e.stopPropagation();
+    const o=await ownerCheck();
+    if(!o){openModal('ownerLoginModal');return;}
+    this.disabled=true; this.textContent='Refreshing...';
+    try{
+      await loadOwnerVideos();
+      showToast('Videos refreshed.');
+    }catch(err){
+      msg('ownerVideosMsg',err.message||'Could not refresh videos.','error');
+    }finally{
+      this.disabled=false; this.textContent='Refresh Videos';
+    }
+  },true);
+
+  // ---------- REFRESH BUTTONS ----------
+  $('ownerRefresh')?.addEventListener('click',async function(e){e.preventDefault();
+    const o=await ownerCheck();if(!o){openModal('ownerLoginModal');return;}
+    this.disabled=true;this.textContent='Refreshing...';
+    try{await loadOwnerJobs();if(typeof loadOwnerCompanyRequirements==='function')await loadOwnerCompanyRequirements();if(typeof loadPublicOwnerReviews==='function')await loadPublicOwnerReviews();if(typeof loadOwnerVideos==='function')await loadOwnerVideos();showToast('Owner panel refreshed.');}
+    finally{this.disabled=false;this.textContent='Refresh';}
+  },true);
+
+  $('ownerRequirementsRefresh')?.addEventListener('click',async function(e){e.preventDefault();this.disabled=true;this.textContent='Refreshing...';try{await loadOwnerCompanyRequirements();}finally{this.disabled=false;this.textContent='Refresh Company';}},true);
+  $('ownerReviewsRefresh')?.addEventListener('click',async function(e){e.preventDefault();this.disabled=true;this.textContent='Refreshing...';try{if(typeof loadPublicOwnerReviews==='function')await loadPublicOwnerReviews();}finally{this.disabled=false;this.textContent='Refresh Ratings';}},true);
+  $('publicReviewsRefresh')?.addEventListener('click',async function(e){e.preventDefault();this.disabled=true;this.textContent='Refreshing...';try{if(typeof loadPublicOwnerReviews==='function')await loadPublicOwnerReviews();}finally{this.disabled=false;this.textContent='Refresh Ratings';}},true);
+
+  // ---------- COMPANY REQUIREMENT: ONLY OWNER MAY POST ----------
+  const reqPost=$('ownerRequirementBtn');
+  if(reqPost){
+    reqPost.onclick=null;
+    reqPost.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      if(await ownerCheck())openModal('ownerRequirementModal');else openModal('ownerLoginModal');
+    },true);
+    // Hide posting control from normal users; it reappears after owner login/update.
+    reqPost.style.display='none';
+    window.__kmUpdateRequirementPostButton=async function(){reqPost.style.display=(await ownerCheck())?'inline-flex':'none';};
+    window.__kmUpdateRequirementPostButton();
+  }
+
+  // ---------- OWNER LOGOUT ----------
+  const ownerLogout=$('ownerLogout');
+  if(ownerLogout){
+    ownerLogout.onclick=null;
+    ownerLogout.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      const token=await getSession();
+      try{if(token)await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token}});}catch(_){ }
+      clearLocalAuth();ownerUser=null;
+      $('ownerPanelModal')?.classList.add('hidden');$('ownerLoginModal')?.classList.add('hidden');
+      if(typeof updateOwnerUI==='function')await updateOwnerUI();
+      if(typeof updateAuthUI==='function')await updateAuthUI();
+      if(window.__kmUpdateRequirementPostButton)await window.__kmUpdateRequirementPostButton();
+      showToast('Owner logged out successfully.');
+    },true);
+  }
+
+  // ---------- PUBLIC REVIEW LOADING ----------
+  if(typeof loadPublicOwnerReviews==='function'){
+    const old=loadPublicOwnerReviews;
+    window.loadPublicOwnerReviews=async function(){
+      const box=$('publicReviews');if(box)box.innerHTML='<div class="card">Loading ratings...</div>';
+      try{return await old();}catch(e){if(box)box.innerHTML='<div class="card">Could not load ratings. Tap Refresh Ratings to try again.</div>';throw e;}
+    };
+  }
+
+  // ---------- OWNER COMPANY REQUIREMENT LOADING ----------
+  if(typeof loadOwnerCompanyRequirements==='function'){
+    const oldReq=loadOwnerCompanyRequirements;
+    window.loadOwnerCompanyRequirements=async function(){
+      const box=$('ownerRequirementsList');if(box)box.innerHTML='<div class="card">Loading company requirements...</div>';
+      try{return await oldReq();}catch(e){if(box)box.innerHTML='<div class="card">Could not load company requirements. Tap Refresh Company.</div>';throw e;}
+    };
+  }
+
+  // Refresh the owner-only post control after auth changes.
+  setInterval(()=>{if(window.__kmUpdateRequirementPostButton)window.__kmUpdateRequirementPostButton();},1200);
+})();
+</script>
 </body>
 </html>

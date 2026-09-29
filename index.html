@@ -302,6 +302,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <section class="section" id="publicReviewsSection">
 <span class="eyebrow">JOB RATINGS & COMMENTS</span><h2 style="margin:5px 0">Worker & Employer Reviews</h2><p class="muted">Ratings and comments submitted on KaamMilega jobs appear here.</p>
 <div id="publicReviews" class="cards"><div class="card">Loading ratings...</div></div>
+<div id="publicRatingAction" class="notice" style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><b>Want to rate your job?</b><div class="muted" id="publicRatingStatus">Login to see your posted job and the rating button.</div></div><button class="btn secondary" id="publicRateJobBtn" type="button">Rate / Comment</button></div>
 </section>
 
 <section class="info-section anchor-offset" id="aboutKaamMilega">
@@ -433,12 +434,13 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </div>
 <div class="notice" style="margin-top:18px"><b>Owner:</b> Virjul Kumar Yadav · <b>Email:</b> kaammilaga.official@gmail.com</div>
 <div id="ownerPanelMsg"></div>
-<div id="ownerJobs" class="owner-grid"><div class="card">Loading owner jobs...</div></div>
-<div class="owner-control-grid">
+<div class="owner-control-grid" style="margin-bottom:16px">
+  <div class="owner-control-card"><span class="owner-badge">JOB POSTS</span><h3>Manage Jobs</h3><p class="muted">Confirm, activate, update, complete or delete all job posts.</p><button class="btn" id="ownerJobsManageBtn" type="button">Manage Jobs</button></div>
   <div class="owner-control-card"><span class="owner-badge">COMPANY REQUIREMENTS</span><h3>Manage Company Requirements</h3><p class="muted">Complete, update, reopen or delete company worker requirements.</p><button class="btn" id="ownerRequirementsManageBtn" type="button">Manage Company</button></div>
   <div class="owner-control-card"><span class="owner-badge">RATINGS & COMMENTS</span><h3>Job Reviews</h3><p class="muted">View ratings and comments submitted for jobs.</p><button class="btn secondary" id="ownerReviewsManageBtn" type="button">Manage Ratings</button></div>
   <div class="owner-control-card"><span class="owner-badge">WORK RESULT VIDEOS</span><h3>User Video Submissions</h3><p class="muted">Activate or delete videos uploaded by users.</p><button class="btn orange" id="ownerVideosManageBtn" type="button">Manage Videos</button></div>
 </div>
+<div id="ownerJobs" class="owner-grid"><div class="card">Loading owner jobs...</div></div>
 
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
   <button class="btn danger" id="ownerLogout">Owner Logout</button>
@@ -507,7 +509,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <!-- JOB -->
 <div id="jobModal" class="modal hidden"><div class="modalbox">
 <button class="close" data-close>×</button><h2>Post a Job</h2>
-<div class="row"><div class="formgroup"><label>Job Title</label><input id="jobTitle" class="input" placeholder="MIG Welder"></div><div class="formgroup"><label>Category</label><input id="jobCategory" class="input" placeholder="Welder"></div></div>
+<div class="row"><div class="formgroup"><label>Job Title</label><select id="jobTitle" class="input"><option value="">Select Job Title</option><option>MIG Welder</option><option>TIG Welder</option><option>Arc Welder</option><option>Welder Helper</option><option>Fitter</option><option>Electrician</option><option>Plumber</option><option>Fabricator</option><option>Machine Operator</option><option>Driver</option><option>Delivery Executive</option><option>Helper</option><option>Supervisor</option><option>Security Guard</option><option>Painter</option><option>Carpenter</option><option>Other Skilled Worker</option></select></div><div class="formgroup"><label>Category</label><input id="jobCategory" class="input" placeholder="Welder" readonly></div></div>
 <div class="row"><div class="formgroup"><label>City</label><input id="jobCity" class="input" placeholder="Ahmedabad"></div><div class="formgroup"><label>Salary</label><input id="jobSalary" class="input" placeholder="₹20,000/month"></div></div>
 <div class="row"><div class="formgroup"><label>Job Type</label><select id="jobType"><option>Full Time</option><option>Part Time</option><option>Contract</option><option>Daily Wage</option></select></div><div class="formgroup"><label>Contact Phone</label><input id="jobPhone" class="input" placeholder="Mobile / WhatsApp"></div></div>
 <div class="formgroup"><label>Description</label><textarea id="jobDescription" rows="4" placeholder="Job requirements..."></textarea></div>
@@ -1487,7 +1489,7 @@ if(document.getElementById("ownerReqSaveEdit")){
 
   // ---------------- ONE JOB POST PER USER ----------------
   async function getMyJobs(userId, token){
-    const r = await supa("jobs?employer_id=eq."+encodeURIComponent(userId)+"&select=id,title,status,category,city,created_at&order=created_at.desc&limit=2",{
+    const r = await supa("jobs?employer_id=eq."+encodeURIComponent(userId)+"&select=id,title,status,category,city,salary,job_type,description,contact_phone,created_at&order=created_at.desc&limit=20",{
       headers:{"Authorization":"Bearer "+token}
     });
     if(!r.ok) return [];
@@ -1549,21 +1551,35 @@ if(document.getElementById("ownerReqSaveEdit")){
   }
 
   async function loadMyJobReviewBox(){
-    const box=$id("myJobReviewBox"); if(!box)return;
+    const box=$id("myJobReviewBox");
+    const publicBtn=$id("publicRateJobBtn");
+    const publicStatus=$id("publicRatingStatus");
     const user=await getCurrentUser();
-    if(!user){box.innerHTML="<b>My Job</b><div class='muted' style='margin-top:5px'>Login to see your job and rating option.</div>";return;}
+    if(!user){
+      if(box) box.innerHTML="<b>My Job</b><div class='muted' style='margin-top:5px'>Login to see your posted job and rating option.</div>";
+      if(publicStatus) publicStatus.textContent="Login to see your posted job and the rating button.";
+      if(publicBtn) publicBtn.onclick=()=>openModal("loginModal");
+      return;
+    }
     const token=await getSession();
     const jobs=await getMyJobs(user.id,token);
-    if(!jobs.length){box.innerHTML="<b>My Job</b><div class='muted' style='margin-top:5px'>You have not posted a job yet.</div>";return;}
+    if(!jobs.length){
+      if(box) box.innerHTML="<b>My Job</b><div class='muted' style='margin-top:5px'>You have not posted a job yet.</div>";
+      if(publicStatus) publicStatus.textContent="You have not posted a job yet.";
+      if(publicBtn) publicBtn.onclick=()=>openModal("jobModal");
+      return;
+    }
     const j=jobs[0];
     let review=null;
-    const rr=await supa("job_reviews?reviewer_id=eq."+encodeURIComponent(user.id)+"&select=id,job_id,rating,comment&order=created_at.desc&limit=1",{headers:{"Authorization":"Bearer "+token}});
+    const rr=await supa("job_reviews?reviewer_id=eq."+encodeURIComponent(user.id)+"&job_id=eq."+encodeURIComponent(j.id)+"&select=id,job_id,rating,comment&order=created_at.desc&limit=1",{headers:{"Authorization":"Bearer "+token}});
     if(rr.ok){const a=await rr.json(); review=Array.isArray(a)&&a[0]?a[0]:null;}
-    box.innerHTML=`<b>My Job</b><div style="margin-top:6px"><strong>${esc(j.title)}</strong> · ${esc(j.city||"")} · <span class="tag">${esc(j.status||"")}</span></div>
-      ${review?`<div class="rating-box"><div class="review-stars">${"★".repeat(review.rating)}${"☆".repeat(5-review.rating)}</div><div>${esc(review.comment||"")}</div></div>`:
-      `<button class="btn secondary" type="button" style="margin-top:10px" data-my-review="${esc(j.id)}">${j.status==="completed"?"Rate / Comment on Completed Job":"Rate / Comment"}</button>`}`;
-    const b=box.querySelector("[data-my-review]");
-    if(b)b.onclick=()=>openReviewForJob(j.id);
+    const ratingButton=review?"":`<button class="btn secondary" type="button" style="margin-top:10px" id="myJobRateBtn">Rate / Comment</button>`;
+    if(box) box.innerHTML=`<b>My Job</b><div style="margin-top:6px"><strong>${esc(j.title||"Job")}</strong> · ${esc(j.city||"")} · <span class="tag">${esc(j.status||"")}</span></div>
+      ${review?`<div class="rating-box"><div class="review-stars">${"★".repeat(Number(review.rating)||0)}${"☆".repeat(5-(Number(review.rating)||0))}</div><div>${esc(review.comment||"")}</div></div>`:ratingButton}`;
+    if(publicStatus) publicStatus.textContent=review?"You already submitted a rating for your job.":`Your job: ${j.title||"Job"} (${j.status||"status unknown"})`;
+    const handler=()=>openReviewForJob(j.id);
+    const b=$id("myJobRateBtn"); if(b)b.onclick=handler;
+    if(publicBtn) publicBtn.onclick=review?()=>showToast("You have already rated this job."):handler;
   }
 
   async function openReviewForJob(jobId){
@@ -1597,6 +1613,11 @@ if(document.getElementById("ownerReqSaveEdit")){
   };
 
   // ---------------- WORK RESULT VIDEO UPLOAD ----------------
+  let selectedVideoFile=null;
+  const videoFileInput=$id("videoFile");
+  if(videoFileInput){
+    videoFileInput.addEventListener("change",()=>{ selectedVideoFile=videoFileInput.files?.[0]||null; });
+  }
   const videoBtn=$id("videoUploadBtn");
   if(videoBtn) videoBtn.onclick=async()=>{
     const user=await getCurrentUser();
@@ -1604,25 +1625,32 @@ if(document.getElementById("ownerReqSaveEdit")){
     const title=($id("videoTitle")?.value||"").trim();
     const result=$id("videoResult")?.value||"still_searching";
     const note=($id("videoNote")?.value||"").trim();
-    const file=$id("videoFile")?.files?.[0];
+    const file=selectedVideoFile || $id("videoFile")?.files?.[0] || null;
     if(!title||!file){msg("videoMsg","Please enter a video title and choose a video.","error");return;}
     if(!file.type.startsWith("video/")){msg("videoMsg","Only video files are allowed.","error");return;}
     if(file.size>50*1024*1024){msg("videoMsg","Video must be 50 MB or smaller.","error");return;}
     try{
       const token=await getSession();
       const safe=(file.name.split(".").pop()||"mp4").toLowerCase().replace(/[^a-z0-9]/g,"")||"mp4";
-      const path=`${user.id}/${crypto.randomUUID()}.${safe}`;
+      const uid=(crypto.randomUUID?crypto.randomUUID():String(Date.now())+"-"+Math.random().toString(36).slice(2));
+      const path=`${user.id}/${uid}.${safe}`;
       const up=await fetch(`${SUPABASE_URL}/storage/v1/object/work-result-videos/${path}`,{
-        method:"POST",headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token,"Content-Type":file.type,"x-upsert":"false"},body:file
+        method:"POST",
+        headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token,"Content-Type":file.type||"video/mp4","x-upsert":"false"},
+        body:file
       });
-      if(!up.ok) throw new Error("Video upload failed. Run the v7 SQL setup once in Supabase.");
+      if(!up.ok){
+        const raw=await up.text();
+        let d={}; try{d=JSON.parse(raw)}catch(_){}
+        throw new Error(d.message||d.error||raw||"Video upload failed. Check the work-result-videos Storage policies.");
+      }
       const publicUrl=`${SUPABASE_URL}/storage/v1/object/public/work-result-videos/${path}`;
       const r=await supa("work_result_videos",{method:"POST",headers:{"Authorization":"Bearer "+token,"Prefer":"return=minimal"},body:JSON.stringify({user_id:user.id,title,result,note,storage_path:path,public_url:publicUrl,status:"pending"})});
       if(!r.ok){
         await fetch(`${SUPABASE_URL}/storage/v1/object/work-result-videos/${path}`,{method:"DELETE",headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}});
         const raw=await r.text(); throw new Error(raw||"Could not save video record.");
       }
-      $id("videoTitle").value="";$id("videoNote").value="";$id("videoFile").value="";
+      $id("videoTitle").value="";$id("videoNote").value="";$id("videoFile").value="";selectedVideoFile=null;
       msg("videoMsg","Video uploaded. It is waiting for owner approval.","success");
       showToast("Video sent to owner for approval.");
       await loadPublicVideos();
@@ -1743,6 +1771,325 @@ if(document.getElementById("ownerReqSaveEdit")){
   // If profile modal opens through the existing UI, refresh the job/review block shortly after.
   const authBtn=$id("authNavBtn");
   if(authBtn) authBtn.addEventListener("click",()=>setTimeout(loadMyJobReviewBox,400));
+})();
+</script>
+
+<script id="kaammilega-v9-fixes">
+(function(){
+  const $=id=>document.getElementById(id);
+  const ownerEmail="kaammilaga.official@gmail.com";
+  const categoryMap={
+    "MIG Welder":"Welder","TIG Welder":"Welder","Arc Welder":"Welder","Welder Helper":"Welder",
+    "Fitter":"Fitter","Electrician":"Electrician","Plumber":"Plumber","Fabricator":"Fabricator",
+    "Machine Operator":"Machine Operator","Driver":"Driver","Delivery Executive":"Delivery",
+    "Helper":"Helper","Supervisor":"Supervisor","Security Guard":"Security","Painter":"Painter",
+    "Carpenter":"Carpenter","Other Skilled Worker":"Skilled Worker"
+  };
+  const title=$("jobTitle"), cat=$("jobCategory");
+  if(title&&cat){
+    const sync=()=>{cat.value=categoryMap[title.value]||"";};
+    title.addEventListener("change",sync); sync();
+  }
+
+  if(typeof loadOwnerReviews!=="undefined"){}
+  async function ownerLogin(){
+    const email=ownerEmail, password=$("ownerPassword")?.value||"";
+    if(!password){ if(window.msg)msg("ownerLoginMsg","Enter the owner password.","error"); return; }
+    const btn=$("ownerLoginSubmit"); if(btn){btn.disabled=true;btn.textContent="Logging in...";}
+    try{
+      const r=await fetch(SUPABASE_URL+"/auth/v1/token?grant_type=password",{method:"POST",headers:{"apikey":SUPABASE_ANON_KEY,"Content-Type":"application/json"},body:JSON.stringify({email,password})});
+      const raw=await r.text(); let d={}; try{d=JSON.parse(raw)}catch(_){}
+      if(!r.ok||!d.access_token) throw new Error(d.error_description||d.msg||d.message||d.error||raw||"Owner login failed.");
+      if(String(d.user?.email||email).toLowerCase()!==ownerEmail) throw new Error("This account is not authorized for Owner access.");
+      localStorage.setItem("km_access_token",d.access_token);
+      if(d.refresh_token)localStorage.setItem("km_refresh_token",d.refresh_token);
+      if(typeof updateOwnerUI==='function') await updateOwnerUI();
+      $("ownerLoginModal")?.classList.add("hidden");
+      $("ownerPassword").value="";
+      if(typeof openModal==='function')openModal("ownerPanelModal");
+      if(typeof loadOwnerJobs==='function') await loadOwnerJobs();
+      if(window.showToast)showToast("Owner login successful.");
+    }catch(e){ if(window.msg)msg("ownerLoginMsg",e.message||"Owner login failed.","error"); }
+    finally{ if(btn){btn.disabled=false;btn.textContent="Login as Owner";} }
+  }
+  const ol=$("ownerLoginSubmit");
+  if(ol){ol.onclick=null;ol.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();ownerLogin();},true);ol.type="button";}
+
+  // Keep all three owner-management controls visible and clickable.
+  const panel=$("ownerPanelModal"), controls=panel?.querySelector(".owner-control-grid"), jobs=$("ownerJobs");
+  if(panel&&controls&&jobs&&controls.nextElementSibling!==jobs){ panel.querySelector(".owner-control-grid")?.after(jobs); }
+
+  // Public rating button stays useful even if profile is not opened.
+  const pubBtn=$("publicRateJobBtn");
+  if(pubBtn)pubBtn.onclick=async()=>{
+    const user=await getCurrentUser();
+    if(!user){ if(typeof openModal==='function')openModal("loginModal"); return; }
+    const token=await getSession();
+    const r=await supa("jobs?employer_id=eq."+encodeURIComponent(user.id)+"&select=id&order=created_at.desc&limit=1",{headers:{"Authorization":"Bearer "+token}});
+    const rows=r.ok?await r.json():[];
+    if(Array.isArray(rows)&&rows[0]?.id){ if(typeof openReviewForJob==='function')openReviewForJob(rows[0].id); }
+    else if(typeof openModal==='function')openModal("jobModal");
+  };
+})();
+</script>
+
+<script id="kaammilega-v10-final-fix">
+(function(){
+  const $=id=>document.getElementById(id);
+  const ownerEmail="kaammilaga.official@gmail.com";
+  const esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
+  const showMsg=(id,text,type="notice")=>{if(window.msg)msg(id,text,type);else if($(id))$(id).innerHTML='<div class="notice '+type+'">'+esc(text)+'</div>';};
+  const getToken=()=>typeof getSession==='function'?getSession():Promise.resolve(localStorage.getItem("km_access_token"));
+
+  /* ---------- USER LOGIN: always visible and directly clickable ---------- */
+  const auth=$('authNavBtn');
+  if(auth){
+    auth.classList.remove('owner-hidden');
+    auth.addEventListener('click',async function(e){
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      try{
+        const u=await getCurrentUser();
+        if(u) { if(typeof loadProfileModal==='function') await loadProfileModal(); else openModal('profileModal'); }
+        else openModal('loginModal');
+      }catch(_){ openModal('loginModal'); }
+    },true);
+  }
+
+  /* ---------- OWNER LOGIN: one reliable handler ---------- */
+  const ownerBtn=$('ownerLoginSubmit');
+  async function doOwnerLogin(){
+    const password=($('ownerPassword')?.value||'').trim();
+    if(!password){showMsg('ownerLoginMsg','Enter the owner password.','error');return;}
+    if(ownerBtn){ownerBtn.disabled=true;ownerBtn.textContent='Logging in...';}
+    try{
+      const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{
+        method:'POST',
+        headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'},
+        body:JSON.stringify({email:ownerEmail,password})
+      });
+      const raw=await r.text(); let d={}; try{d=JSON.parse(raw)}catch(_){ }
+      if(!r.ok || !d.access_token){
+        throw new Error(d.error_description||d.msg||d.message||d.error||raw||'Owner login failed.');
+      }
+      if(String(d.user?.email||ownerEmail).toLowerCase()!==ownerEmail) throw new Error('This account is not authorized for Owner access.');
+      localStorage.setItem('km_access_token',d.access_token);
+      if(d.refresh_token)localStorage.setItem('km_refresh_token',d.refresh_token);
+      if(typeof updateOwnerUI==='function') await updateOwnerUI();
+      // Keep normal user login visible even while owner is logged in.
+      if(auth){auth.classList.remove('owner-hidden');auth.textContent='Profile';auth.dataset.open='profileModal';}
+      $('ownerLoginModal')?.classList.add('hidden');
+      if($('ownerPassword'))$('ownerPassword').value='';
+      openModal('ownerPanelModal');
+      if(typeof loadOwnerJobs==='function')await loadOwnerJobs();
+      if(typeof loadOwnerCompanyRequirements==='function')await loadOwnerCompanyRequirements();
+      if(typeof loadPublicOwnerReviews==='function')await loadPublicOwnerReviews();
+      if(typeof loadOwnerVideos==='function')await loadOwnerVideos();
+      if(window.showToast)showToast('Owner login successful.');
+    }catch(e){showMsg('ownerLoginMsg',e.message||'Owner login failed.','error');}
+    finally{if(ownerBtn){ownerBtn.disabled=false;ownerBtn.textContent='Login as Owner';}}
+  }
+  if(ownerBtn){
+    ownerBtn.type='button';
+    ownerBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();doOwnerLogin();},true);
+  }
+  const ownerNav=$('ownerLoginBtn');
+  if(ownerNav){
+    ownerNav.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      const u=await getCurrentUser();
+      if(u && String(u.email||'').toLowerCase()===ownerEmail){
+        openModal('ownerPanelModal');
+        if(typeof loadOwnerJobs==='function')await loadOwnerJobs();
+      }else openModal('ownerLoginModal');
+    },true);
+  }
+
+  /* ---------- OWNER PANEL: keep all three management cards visible ---------- */
+  function fixOwnerControls(){
+    const panel=$('ownerPanelModal'), controls=panel?.querySelector('.owner-control-grid'), jobs=$('ownerJobs');
+    if(!controls)return;
+    controls.style.display='grid';
+    controls.style.gridTemplateColumns='repeat(4,minmax(0,1fr))';
+    controls.style.gap='12px';
+    controls.style.marginBottom='16px';
+    if(jobs && controls.nextElementSibling!==jobs) controls.parentNode.insertBefore(controls,jobs);
+    controls.querySelectorAll('.owner-control-card').forEach(c=>{c.style.display='block';c.style.visibility='visible';c.style.opacity='1';});
+  }
+  fixOwnerControls();
+  window.addEventListener('resize',()=>{const c=$('ownerPanelModal')?.querySelector('.owner-control-grid');if(c)c.style.gridTemplateColumns=innerWidth<=800?'1fr':(innerWidth<=1100?'repeat(2,minmax(0,1fr))':'repeat(4,minmax(0,1fr))');});
+
+  const jobsBtn=$('ownerJobsManageBtn');
+  if(jobsBtn)jobsBtn.addEventListener('click',async function(e){e.preventDefault();e.stopPropagation();
+    const u=await getCurrentUser(); if(!u||String(u.email||'').toLowerCase()!==ownerEmail){openModal('ownerLoginModal');return;}
+    if(typeof loadOwnerJobs==='function')await loadOwnerJobs();
+    const jobsBox=$('ownerJobs'); if(jobsBox){jobsBox.scrollIntoView({behavior:'smooth',block:'start'});}
+  },true);
+
+  const reqBtn=$('ownerRequirementsManageBtn');
+  if(reqBtn)reqBtn.addEventListener('click',async function(e){e.preventDefault();e.stopPropagation();
+    const u=await getCurrentUser(); if(!u||String(u.email||'').toLowerCase()!==ownerEmail){openModal('ownerLoginModal');return;}
+    openModal('ownerRequirementsModal'); if(typeof loadOwnerCompanyRequirements==='function')await loadOwnerCompanyRequirements();
+  },true);
+  const revBtn=$('ownerReviewsManageBtn');
+  if(revBtn)revBtn.addEventListener('click',async function(e){e.preventDefault();e.stopPropagation();
+    const u=await getCurrentUser(); if(!u||String(u.email||'').toLowerCase()!==ownerEmail){openModal('ownerLoginModal');return;}
+    openModal('ownerReviewsModal'); await loadPublicOwnerReviews();
+  },true);
+  const vidBtn=$('ownerVideosManageBtn');
+  if(vidBtn)vidBtn.addEventListener('click',async function(e){e.preventDefault();e.stopPropagation();
+    const u=await getCurrentUser(); if(!u||String(u.email||'').toLowerCase()!==ownerEmail){openModal('ownerLoginModal');return;}
+    openModal('ownerVideosModal'); if(typeof loadOwnerVideos==='function')await loadOwnerVideos();
+  },true);
+
+  /* ---------- JOB TITLE + CATEGORY ---------- */
+  const title=$('jobTitle'), cat=$('jobCategory');
+  const categoryMap={
+    'MIG Welder':'Welder','TIG Welder':'Welder','Arc Welder':'Welder','Welder Helper':'Welder',
+    'Fitter':'Fitter','Electrician':'Electrician','Plumber':'Plumber','Fabricator':'Fabricator',
+    'Machine Operator':'Machine Operator','Driver':'Driver','Delivery Executive':'Delivery','Helper':'Helper',
+    'Supervisor':'Supervisor','Security Guard':'Security','Painter':'Painter','Carpenter':'Carpenter','Other Skilled Worker':'Skilled Worker'
+  };
+  if(title&&cat){
+    if(title.tagName!=='SELECT'){
+      const wrap=title.parentElement;
+      const sel=document.createElement('select'); sel.id='jobTitle';sel.className=title.className;sel.innerHTML='<option value="">Select Job Title</option>'+Object.keys(categoryMap).map(x=>'<option>'+esc(x)+'</option>').join('');
+      title.replaceWith(sel);
+    }
+    const t=$('jobTitle'),c=$('jobCategory');
+    const sync=()=>{c.value=categoryMap[t.value]||'';}; t.addEventListener('change',sync); sync();
+  }
+
+  /* ---------- PUBLIC JOBS: don't let a profile query hide valid jobs ---------- */
+  window.loadJobs=async function(){
+    const box=$('jobs'); if(!box)return;
+    try{
+      const r=await supa('jobs?select=id,title,category,city,salary,job_type,description,contact_phone,employer_id,status,created_at&status=eq.active&order=created_at.desc&limit=1000');
+      const raw=await r.text(); let data=[]; try{data=JSON.parse(raw)}catch(_){ }
+      if(!r.ok)throw new Error(raw||'Jobs are temporarily unavailable.');
+      if(!Array.isArray(data)||!data.length){box.innerHTML='<div class="card"><h3>No jobs yet</h3><p class="muted">New active jobs will appear here.</p></div>';return;}
+      let profiles={};
+      const ids=[...new Set(data.map(j=>j.employer_id).filter(Boolean))];
+      if(ids.length){
+        try{
+          const pr=await supa('public_profiles?id=in.'+encodeURIComponent('('+ids.join(',')+')')+'&select=id,name,city,skills,avatar_url');
+          if(pr.ok){const rows=await pr.json();if(Array.isArray(rows))rows.forEach(p=>profiles[p.id]=p);}
+        }catch(_){ }
+      }
+      box.innerHTML=data.map(j=>{
+        const p=profiles[j.employer_id]||{};const skills=Array.isArray(p.skills)?p.skills.join(', '):'';const avatar=p.avatar_url||avatarPlaceholder(p.name||'E');
+        return `<article class="card job"><div style="flex:1"><span class="tag">${esc(j.category||'Job')}</span><h3>${esc(j.title||'Job')}</h3><p class="muted">${esc(j.city||'')} · ${esc(j.salary||'Salary not specified')} · ${esc(j.job_type||'')}</p><p>${esc(j.description||'')}</p><div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid #edf1f6"><img class="avatar" style="width:44px;height:44px" src="${esc(avatar)}" alt="Employer profile"><div><b>${esc(p.name||'Employer')}</b><div class="muted" style="font-size:12px">${esc(p.city||j.city||'')}${skills?' · '+esc(skills):''}</div></div></div></div><div><button class="btn secondary applyBtn" data-phone="${esc(j.contact_phone||'')}">Contact</button></div></article>`;
+      }).join('');
+      box.querySelectorAll('.applyBtn').forEach(b=>b.onclick=()=>{const p=b.dataset.phone;if(p)location.href='https://wa.me/'+p.replace(/\D/g,'');});
+    }catch(e){box.innerHTML='<div class="card"><h3>Jobs are temporarily unavailable</h3><p class="muted">'+esc(e.message||'Please try again shortly.')+'</p></div>';}
+  };
+
+  /* ---------- VIDEO UPLOAD: use the actual file input directly ---------- */
+  const videoBtn=$('videoUploadBtn');
+  async function uploadVideo(){
+    const user=await getCurrentUser();
+    if(!user){showMsg('videoMsg','Please Login / Sign Up first.','error');openModal('loginModal');return;}
+    const title=($('videoTitle')?.value||'').trim();
+    const result=$('videoResult')?.value||'still_searching';
+    const note=($('videoNote')?.value||'').trim();
+    const file=$('videoFile')?.files?.[0]||null;
+    if(!title){showMsg('videoMsg','Please enter a video title.','error');return;}
+    if(!file){showMsg('videoMsg','Please choose a video file.','error');return;}
+    if(!String(file.type||'').startsWith('video/')){showMsg('videoMsg','Only video files are allowed.','error');return;}
+    if(file.size>50*1024*1024){showMsg('videoMsg','Video must be 50 MB or smaller.','error');return;}
+    if(videoBtn){videoBtn.disabled=true;videoBtn.textContent='Uploading...';}
+    try{
+      const token=await getSession(); if(!token)throw new Error('Your login session expired. Please login again.');
+      const ext=(file.name.split('.').pop()||'mp4').toLowerCase().replace(/[^a-z0-9]/g,'')||'mp4';
+      const uid=(crypto.randomUUID?crypto.randomUUID():Date.now()+'-'+Math.random().toString(36).slice(2));
+      const path=user.id+'/'+uid+'.'+ext;
+      const up=await fetch(SUPABASE_URL+'/storage/v1/object/work-result-videos/'+path,{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token,'Content-Type':file.type||'video/mp4','x-upsert':'false'},body:file});
+      if(!up.ok){const raw=await up.text();let d={};try{d=JSON.parse(raw)}catch(_){ }throw new Error(d.message||d.error||d.error_description||raw||'Storage upload failed.');}
+      const publicUrl=SUPABASE_URL+'/storage/v1/object/public/work-result-videos/'+path;
+      const db=await supa('work_result_videos',{method:'POST',headers:{'Authorization':'Bearer '+token,'Prefer':'return=representation'},body:JSON.stringify({user_id:user.id,title,result,note,storage_path:path,public_url:publicUrl,status:'pending'})});
+      if(!db.ok){await fetch(SUPABASE_URL+'/storage/v1/object/work-result-videos/'+path,{method:'DELETE',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token}});const raw=await db.text();throw new Error(raw||'Video record could not be saved.');}
+      $('videoTitle').value='';$('videoNote').value='';$('videoFile').value='';
+      showMsg('videoMsg','Video uploaded successfully. It is waiting for owner approval.','success');
+      if(window.showToast)showToast('Video sent to owner for approval.');
+      if(typeof loadOwnerVideos==='function')loadOwnerVideos();
+    }catch(e){showMsg('videoMsg',e.message||'Video upload failed.','error');}
+    finally{if(videoBtn){videoBtn.disabled=false;videoBtn.textContent='Upload Work Result Video';}}
+  }
+  if(videoBtn){videoBtn.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();uploadVideo();},true);}
+
+  /* ---------- PUBLIC REVIEWS + RATING BUTTON ---------- */
+  window.loadPublicOwnerReviews=async function(){
+    const box=$('publicReviews'); if(!box)return;
+    try{
+      const r=await supa('job_reviews?select=id,job_id,rating,comment,job_title_snapshot,job_category_snapshot,job_city_snapshot,created_at&order=created_at.desc&limit=100');
+      const raw=await r.text();let rows=[];try{rows=JSON.parse(raw)}catch(_){ }
+      if(!r.ok)throw new Error(raw||'Ratings are temporarily unavailable.');
+      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card"><p class="muted">No ratings yet. Once a user rates a job, the rating will appear here.</p></div>';return;}
+      box.innerHTML=rows.map(x=>{const n=Math.max(0,Math.min(5,Number(x.rating)||0));return `<article class="card"><div class="review-stars">${'★'.repeat(n)}${'☆'.repeat(5-n)}</div><h3>${esc(x.job_title_snapshot||'Job Review')}</h3><p class="muted">${esc(x.job_category_snapshot||'Job')}${x.job_city_snapshot?' · '+esc(x.job_city_snapshot):''}</p><p>${esc(x.comment||'')}</p><div class="muted" style="font-size:12px;margin-top:8px">${new Date(x.created_at).toLocaleDateString()}</div></article>`;}).join('');
+    }catch(e){box.innerHTML='<div class="card"><p class="muted">Ratings are temporarily unavailable.</p><p style="font-size:12px">'+esc(e.message||'')+'</p></div>';}
+  };
+
+  async function setupRatingButton(){
+    const btn=$('publicRateJobBtn'),status=$('publicRatingStatus'); if(!btn)return;
+    btn.onclick=async function(e){e.preventDefault();e.stopPropagation();
+      const user=await getCurrentUser();
+      if(!user){openModal('loginModal');return;}
+      const token=await getSession();
+      const r=await supa('jobs?employer_id=eq.'+encodeURIComponent(user.id)+'&select=id,title,status,category,city&order=created_at.desc&limit=1',{headers:{'Authorization':'Bearer '+token}});
+      const rows=r.ok?await r.json():[];
+      if(!Array.isArray(rows)||!rows[0]){if(status)status.textContent='You have not posted a job yet. Post one first.';openModal('jobModal');return;}
+      const j=rows[0];
+      const rr=await supa('job_reviews?reviewer_id=eq.'+encodeURIComponent(user.id)+'&job_id=eq.'+encodeURIComponent(j.id)+'&select=id,rating,comment&limit=1',{headers:{'Authorization':'Bearer '+token}});
+      const already=rr.ok?(await rr.json())[0]:null;
+      if(already){if(status)status.textContent='You already rated this job.';if(window.showToast)showToast('You already rated this job.');return;}
+      if(status)status.textContent='Your job: '+(j.title||'Job')+' — choose a rating and write a comment.';
+      if($('reviewJobId'))$('reviewJobId').value=j.id;
+      if($('reviewRating'))$('reviewRating').value='5';
+      if($('reviewComment'))$('reviewComment').value='';
+      openModal('reviewModal');
+    };
+    const user=await getCurrentUser();
+    if(!user){status.textContent='Login / Sign Up to rate your posted job.';return;}
+    const token=await getSession();
+    const r=await supa('jobs?employer_id=eq.'+encodeURIComponent(user.id)+'&select=id,title,status&order=created_at.desc&limit=1',{headers:{'Authorization':'Bearer '+token}});
+    const rows=r.ok?await r.json():[];
+    status.textContent=Array.isArray(rows)&&rows[0]?'Your job: '+(rows[0].title||'Job')+' — click Rate / Comment.':'You have not posted a job yet.';
+  }
+  setupRatingButton();
+  loadPublicOwnerReviews();
+
+  /* ---------- RATING SUBMIT ---------- */
+  const reviewSubmit=$('submitReview');
+  if(reviewSubmit){reviewSubmit.addEventListener('click',async function(e){
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    const user=await getCurrentUser(), jobId=$('reviewJobId')?.value, rating=Number($('reviewRating')?.value), comment=($('reviewComment')?.value||'').trim();
+    if(!user){showMsg('reviewMsg','Please Login / Sign Up first.','error');openModal('loginModal');return;}
+    if(!jobId||!rating||!comment){showMsg('reviewMsg','Please select a rating and write a comment.','error');return;}
+    try{
+      const token=await getSession();
+      const r=await supa('job_reviews',{method:'POST',headers:{'Authorization':'Bearer '+token,'Prefer':'return=representation'},body:JSON.stringify({job_id:Number(jobId),reviewer_id:user.id,rating,comment})});
+      if(!r.ok){const raw=await r.text();let d={};try{d=JSON.parse(raw)}catch(_){ }throw new Error(d.message||d.hint||d.details||raw||'Could not save rating.');}
+      $('reviewModal')?.classList.add('hidden');$('reviewComment').value='';
+      showMsg('reviewMsg','Rating and comment saved successfully.','success');
+      if(window.showToast)showToast('Rating and comment saved.');
+      await loadPublicOwnerReviews();await setupRatingButton();
+    }catch(e){showMsg('reviewMsg',e.message||'Could not save rating.','error');}
+  },true);}
+
+  /* ---------- KEEP PREVIOUS JOBS VISIBLE ---------- */
+  if($('searchBtn'))$('searchBtn').addEventListener('click',function(e){
+    e.preventDefault();e.stopImmediatePropagation();
+    const skill=($('searchSkill')?.value||'').trim().toLowerCase(), city=($('searchCity')?.value||'').trim().toLowerCase();
+    (async()=>{
+      const r=await supa('jobs?select=id,title,category,city,salary,job_type,description,contact_phone,employer_id,status&status=eq.active&order=created_at.desc&limit=1000');
+      const all=r.ok?await r.json():[];const rows=(Array.isArray(all)?all:[]).filter(j=>(!skill||String(j.title||'').toLowerCase().includes(skill)||String(j.category||'').toLowerCase().includes(skill))&&(!city||String(j.city||'').toLowerCase().includes(city)));
+      const box=$('jobs');if(!rows.length){box.innerHTML='<div class="card">No matching jobs found.</div>';return;}
+      box.innerHTML=rows.map(j=>`<article class="card job"><div><span class="tag">${esc(j.category||'Job')}</span><h3>${esc(j.title||'Job')}</h3><p class="muted">${esc(j.city||'')} · ${esc(j.salary||'')} · ${esc(j.job_type||'')}</p><p>${esc(j.description||'')}</p></div><button class="btn secondary applyBtn" data-phone="${esc(j.contact_phone||'')}">Contact</button></article>`).join('');
+      box.querySelectorAll('.applyBtn').forEach(b=>b.onclick=()=>{if(b.dataset.phone)location.href='https://wa.me/'+b.dataset.phone.replace(/\D/g,'');});
+    })();
+  },true);
+
+  /* Refresh public jobs and keep user login visible on page load. */
+  setTimeout(()=>{fixOwnerControls();if(typeof loadJobs==='function')loadJobs();if(typeof updateAuthUI==='function')updateAuthUI().then(()=>{if(auth)auth.classList.remove('owner-hidden');});setupRatingButton();},250);
 })();
 </script>
 

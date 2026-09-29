@@ -2549,5 +2549,163 @@ if(document.getElementById("ownerReqSaveEdit")){
 })();
 </script>
 
+
+
+<script id="kaammilega-final-stability-fix-20260930">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const OWNER='kaammilaga.official@gmail.com';
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const show=(id,t,type)=>{if(typeof window.msg==='function')window.msg(id,t,type||'notice');else{const e=$(id);if(e)e.innerHTML='<div class="notice '+(type||'notice')+'">'+esc(t)+'</div>';}};
+
+  async function owner(){
+    try{
+      const u=await getCurrentUser();
+      return u&&String(u.email||'').trim().toLowerCase()===OWNER?u:null;
+    }catch(_){return null;}
+  }
+  async function req(path,opts={}){
+    const token=opts.token||await getSession();
+    const headers=Object.assign({'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'},opts.headers||{});
+    if(token)headers.Authorization='Bearer '+token;
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),15000);
+    try{return await fetch(SUPABASE_URL+'/rest/v1/'+path,Object.assign({},opts,{headers,signal:controller.signal}));}
+    finally{clearTimeout(timer);}
+  }
+
+  // ---------- PUBLIC COMPANY REQUIREMENTS ----------
+  window.loadCompanyRequirements=async function(){
+    const box=$('companyRequirements'); if(!box)return;
+    box.innerHTML='<div class="card">Loading company requirements...</div>';
+    try{
+      const r=await req('company_requirements?select=*&status=eq.active&order=created_at.desc');
+      const raw=await r.text(); let rows=[]; try{rows=raw?JSON.parse(raw):[]}catch(_){ }
+      if(!r.ok)throw new Error((rows&&rows.message)||raw||'Company requirements could not be loaded.');
+      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No active company requirements yet.</div>';return;}
+      box.innerHTML=rows.map(x=>`<article class="requirement-card"><div class="requirement-top"><div><span class="eyebrow">HIRING REQUIREMENT</span><h3 style="margin:5px 0">${esc(x.company_name)}</h3></div><span class="requirement-status">ACTIVE</span></div><div class="requirement-meta"><div><div class="requirement-label">Members Needed</div><div class="requirement-value">${esc(x.members_needed)}</div></div><div><div class="requirement-label">Worker Required</div><div class="requirement-value">${esc(x.worker_requirement)}</div></div><div><div class="requirement-label">Calling</div><div class="requirement-value">${esc(x.caller_role)} — ${esc(x.caller_name)}</div></div><div><div class="requirement-label">Salary / Rate</div><div class="requirement-value">${esc(x.salary)}</div></div><div><div class="requirement-label">Location</div><div class="requirement-value">${esc(x.location)}</div></div><div><div class="requirement-label">Joining</div><div class="requirement-value">${esc(x.joining_date||'As per company')}</div></div></div>${x.details?`<p style="margin:14px 0 0">${esc(x.details)}</p>`:''}<div class="requirement-owner">Posted through KaamMilega Owner Hiring Desk</div></article>`).join('');
+    }catch(e){box.innerHTML='<div class="card"><div class="notice error">Company requirements could not be loaded. Tap Refresh.</div></div>';console.error('company requirements',e);}
+  };
+
+  // ---------- OWNER COMPANY REQUIREMENTS ----------
+  window.loadOwnerCompanyRequirements=async function(){
+    const box=$('ownerRequirementsList'); if(!box)return;
+    if(!(await owner())){box.innerHTML='<div class="card">Owner session is not active. Please login again.</div>';return;}
+    box.innerHTML='<div class="card">Loading company requirements...</div>';
+    try{
+      const r=await req('company_requirements?select=*&order=created_at.desc');
+      const raw=await r.text(); let rows=[]; try{rows=raw?JSON.parse(raw):[]}catch(_){ }
+      if(!r.ok)throw new Error((rows&&rows.message)||raw||'Could not load company requirements.');
+      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No company requirements found.</div>';return;}
+      box.innerHTML=rows.map(x=>`<article class="owner-job"><div class="owner-job-head"><div><span class="owner-badge">${esc(x.status||'active').toUpperCase()}</span><h3 style="margin:8px 0 4px">${esc(x.company_name)}</h3><div class="owner-small">${esc(x.location)} · ${esc(x.members_needed)} members · ${esc(x.worker_requirement)}</div></div><div class="owner-small">ID: ${esc(x.id)}</div></div><div style="margin-top:10px"><b>Calling:</b> ${esc(x.caller_role)} — ${esc(x.caller_name)}<br><b>Salary / Rate:</b> ${esc(x.salary)}<br><b>Joining:</b> ${esc(x.joining_date||'As per company')}${x.details?`<br><b>Details:</b> ${esc(x.details)}`:''}</div><div class="owner-actions">${x.status==='completed'?`<button class="btn" onclick="ownerReopenRequirement('${esc(x.id)}')">Re-Open</button>`:`<button class="btn secondary" onclick="ownerCompleteRequirement('${esc(x.id)}')">Mark Complete</button>`}<button class="btn secondary" onclick="ownerEditRequirement('${esc(x.id)}')">Update</button><button class="btn danger" onclick="ownerDeleteRequirement('${esc(x.id)}')">Delete</button></div></article>`).join('');
+    }catch(e){box.innerHTML='<div class="card"><div class="notice error">Could not load company requirements. Tap Refresh Company.</div></div>';show('ownerRequirementsMsg',e.message,'error');}
+  };
+
+  // ---------- OWNER REVIEWS (make it global; old version was trapped inside an IIFE) ----------
+  window.loadOwnerReviews=async function(){
+    const box=$('ownerReviews'); if(!box)return;
+    if(!(await owner())){box.innerHTML='<div class="card">Owner session is not active. Please login again.</div>';return;}
+    box.innerHTML='<div class="card">Loading ratings...</div>';
+    try{
+      const r=await req('job_reviews?select=*&order=created_at.desc&limit=500');
+      const raw=await r.text(); let rows=[]; try{rows=raw?JSON.parse(raw):[]}catch(_){ }
+      if(!r.ok)throw new Error((rows&&rows.message)||raw||'Could not load ratings.');
+      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No reviews yet.</div>';return;}
+      box.innerHTML=rows.map(x=>{const n=Math.max(0,Math.min(5,Number(x.rating)||0));return `<article class="owner-job"><div class="review-stars">${'★'.repeat(n)}${'☆'.repeat(5-n)}</div><h3>${esc(x.job_title_snapshot||'Job Review')}</h3><p>${esc(x.comment||'')}</p><div class="owner-small">${esc(x.reviewer_id||'')} · ${x.created_at?new Date(x.created_at).toLocaleString():''}</div></article>`;}).join('');
+    }catch(e){box.innerHTML='<div class="card"><div class="notice error">Could not load ratings. Tap Refresh Ratings.</div></div>';show('ownerReviewsMsg',e.message,'error');}
+  };
+
+  // ---------- OWNER VIDEOS (make it global; this fixes "Video manager is unavailable") ----------
+  window.loadOwnerVideos=async function(){
+    const box=$('ownerVideosList'); if(!box)return;
+    if(!(await owner())){box.innerHTML='<div class="card">Owner session is not active. Please login again.</div>';return;}
+    box.innerHTML='<div class="card">Loading videos...</div>';
+    try{
+      const r=await req('work_result_videos?select=*&order=created_at.desc&limit=500');
+      const raw=await r.text(); let rows=[]; try{rows=raw?JSON.parse(raw):[]}catch(_){ }
+      if(!r.ok)throw new Error((rows&&rows.message)||raw||'Could not load videos.');
+      if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No user videos found.</div>';return;}
+      box.innerHTML=rows.map(v=>{const label=v.result==='work_got'?'Kaam Mila':v.result==='work_not_got'?'Kaam Nahi Mila':'Abhi Job Search Kar Raha Hoon';return `<article class="owner-video"><div class="owner-job-head"><div><span class="owner-badge">${esc(v.status||'pending').toUpperCase()}</span><h3 style="margin:8px 0 4px">${esc(v.title)}</h3><div class="owner-small">${esc(label)} · ${v.created_at?new Date(v.created_at).toLocaleString():''}</div></div><div class="owner-small">${esc(v.user_id||'')}</div></div>${v.note?`<p>${esc(v.note)}</p>`:''}${v.public_url?`<video controls preload="metadata" style="width:100%;max-height:300px;margin-top:10px;border-radius:12px;background:#000" src="${esc(v.public_url)}"></video>`:''}<div class="owner-actions"><button class="btn" onclick="ownerSetVideoStatus('${esc(v.id)}','active')">Keep Active</button><button class="btn danger" onclick="ownerDeleteVideo('${esc(v.id)}')">Delete</button></div></article>`;}).join('');
+    }catch(e){box.innerHTML='<div class="card"><div class="notice error">Could not load videos. Tap Refresh Videos.</div></div>';show('ownerVideosMsg',e.message,'error');}
+  };
+
+  // ---------- OWNER VIDEO ACTIONS ----------
+  window.ownerSetVideoStatus=async function(id,status){
+    try{
+      if(!(await owner()))throw new Error('Owner login required.');
+      const r=await req('work_result_videos?id=eq.'+encodeURIComponent(id),{method:'PATCH',body:JSON.stringify({status}),headers:{'Prefer':'return=minimal'}});
+      const raw=await r.text();if(!r.ok)throw new Error(raw||'Could not update video.');
+      await loadOwnerVideos();await loadPublicVideosSafe();if(window.showToast)showToast('Video activated.');
+    }catch(e){show('ownerVideosMsg',e.message,'error');}
+  };
+  window.ownerDeleteVideo=async function(id){
+    if(!confirm('Delete this video permanently from the website?'))return;
+    try{
+      if(!(await owner()))throw new Error('Owner login required.');
+      const rr=await req('work_result_videos?id=eq.'+encodeURIComponent(id)+'&select=storage_path&limit=1');
+      const raw=await rr.text();let rows=[];try{rows=raw?JSON.parse(raw):[]}catch(_){ }
+      const path=Array.isArray(rows)&&rows[0]?.storage_path;
+      const token=await getSession();
+      if(path)await fetch(SUPABASE_URL+'/storage/v1/object/work-result-videos/'+path,{method:'DELETE',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token}});
+      const r=await req('work_result_videos?id=eq.'+encodeURIComponent(id),{method:'DELETE'});const d=await r.text();if(!r.ok)throw new Error(d||'Could not delete video.');
+      await loadOwnerVideos();await loadPublicVideosSafe();if(window.showToast)showToast('Video deleted.');
+    }catch(e){show('ownerVideosMsg',e.message,'error');}
+  };
+
+  async function loadPublicVideosSafe(){
+    const box=$('publicVideos');if(!box)return;
+    try{const r=await req('work_result_videos?select=id,title,result,note,public_url,created_at&status=eq.active&order=created_at.desc&limit=50');const raw=await r.text();let rows=[];try{rows=raw?JSON.parse(raw):[]}catch(_){ }if(!r.ok)throw new Error(raw||'Videos unavailable.');if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card"><p class="muted">No approved work-result videos yet.</p></div>';return;}box.innerHTML=rows.map(v=>`<article class="update-card video-card"><span class="eyebrow">WORK RESULT</span><h3>${esc(v.title)}</h3><span class="tag">${esc(v.result==='work_got'?'Kaam Mila':v.result==='work_not_got'?'Kaam Nahi Mila':'Abhi Job Search Kar Raha Hoon')}</span>${v.note?`<p class="muted">${esc(v.note)}</p>`:''}<video controls preload="metadata" src="${esc(v.public_url)}"></video></article>`).join('');}catch(e){box.innerHTML='<div class="card">Videos are temporarily unavailable.</div>';}
+  }
+
+  // ---------- POST JOB: ensure the required profiles row exists before jobs INSERT ----------
+  const post=$('submitJob');
+  if(post){post.onclick=null;post.addEventListener('click',async function(e){
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    const token=await getSession();if(!token){show('jobMsg','Please Sign Up or Login first.','error');return;}
+    const user=await getCurrentUser();if(!user?.id){show('jobMsg','Session expired. Please login again.','error');return;}
+    try{
+      const mine=await req('jobs?employer_id=eq.'+encodeURIComponent(user.id)+'&select=id,status&limit=2');
+      const mineRows=mine.ok?await mine.json():[];if(Array.isArray(mineRows)&&mineRows.length){show('jobMsg','This account has already posted one job. One user can keep only one job post on KaamMilega.','error');return;}
+      const title=$('jobTitle')?.value.trim()||'',category=$('jobCategory')?.value.trim()||'',city=$('jobCity')?.value.trim()||'';
+      if(!title||!category||!city){show('jobMsg','Please select Job Title and enter City.','error');return;}
+      const pr=await req('profiles?id=eq.'+encodeURIComponent(user.id)+'&select=id,name,phone,role,city,skills,avatar_url&limit=1');
+      const prRows=pr.ok?await pr.json():[];const old=Array.isArray(prRows)&&prRows[0]?prRows[0]:{};
+      const name=old.name||user.user_metadata?.name||String(user.email||'').split('@')[0]||'Employer';
+      const skills=Array.isArray(old.skills)?old.skills:[];
+      const profileBody={id:user.id,name,phone:old.phone||user.phone||$('jobPhone')?.value.trim()||'',role:'employer',city:old.city||city,skills,avatar_url:old.avatar_url||null};
+      const pu=await req('profiles',{method:'POST',body:JSON.stringify(profileBody),headers:{'Prefer':'resolution=merge-duplicates,return=minimal'}});
+      const puraw=await pu.text();if(!pu.ok)throw new Error(puraw||'Could not create your profile.');
+      const jr=await req('jobs',{method:'POST',body:JSON.stringify({employer_id:user.id,title,category,city,salary:$('jobSalary')?.value.trim()||'',job_type:$('jobType')?.value||'Full Time',description:$('jobDescription')?.value.trim()||'',contact_phone:$('jobPhone')?.value.trim()||user.phone||'',status:'pending_owner'}),headers:{'Prefer':'return=minimal'}});
+      const jraw=await jr.text();if(!jr.ok){let d={};try{d=JSON.parse(jraw)}catch(_){ }throw new Error(d.message||d.hint||d.details||jraw||'Could not publish job.');}
+      $('jobModal')?.classList.add('hidden');show('jobMsg','Job posted. Owner approval is required before it becomes public.','success');if(typeof loadJobs==='function')await loadJobs();if(window.showToast)showToast('Job submitted successfully.');
+    }catch(e){show('jobMsg',e.message||'Could not publish job.','error');}
+  },true);}
+
+  // ---------- COMPANY REQUIREMENT PUBLISH ----------
+  const saveReq=$('saveRequirement');
+  if(saveReq){saveReq.onclick=null;saveReq.addEventListener('click',async function(e){
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    if(!(await owner())){openModal('ownerLoginModal');return;}
+    const body={company_name:$('reqCompany')?.value.trim()||'',members_needed:Number($('reqMembers')?.value||0),caller_role:$('reqCallerRole')?.value||'HR',caller_name:$('reqCallerName')?.value.trim()||'',worker_requirement:$('reqWorker')?.value.trim()||'',salary:$('reqSalary')?.value.trim()||'',location:$('reqLocation')?.value.trim()||'',joining_date:$('reqJoining')?.value||null,details:$('reqDetails')?.value.trim()||'',status:'active'};
+    if(!body.company_name||!body.members_needed||!body.caller_name||!body.worker_requirement||!body.salary||!body.location){show('reqMsg','Please fill all fields marked *.','error');return;}
+    saveReq.disabled=true;saveReq.textContent='Publishing...';
+    try{const r=await req('company_requirements',{method:'POST',body:JSON.stringify(body),headers:{'Prefer':'return=representation'}});const raw=await r.text();if(!r.ok)throw new Error(raw||'Could not publish requirement.');$('ownerRequirementModal')?.classList.add('hidden');show('reqMsg','Company requirement published successfully.','success');await loadCompanyRequirements();await loadOwnerCompanyRequirements();if(window.showToast)showToast('Company requirement published.');}catch(e){show('reqMsg',e.message||'Could not publish requirement.','error');}finally{saveReq.disabled=false;saveReq.textContent='Publish Requirement';}
+  },true);}
+
+  // Refresh all four owner sections with the real global functions.
+  const bind=(id,fn,label)=>{const b=$(id);if(!b)return;b.onclick=null;b.addEventListener('click',async function(e){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();const o=await owner();if(!o){openModal('ownerLoginModal');return;}this.disabled=true;this.textContent='Refreshing...';try{await fn();if(window.showToast)showToast(label+' refreshed.');}catch(err){show('ownerPanelMsg',err.message||('Could not refresh '+label+'.'),'error');}finally{this.disabled=false;this.textContent=id==='ownerRefresh'?'Refresh':label==='Jobs'?'Refresh Jobs':label==='Company'?'Refresh Company':label==='Ratings'?'Refresh Ratings':'Refresh Videos';}},true);};
+  bind('ownerJobsRefresh',window.loadOwnerJobs,'Jobs');
+  bind('ownerRequirementsRefresh',window.loadOwnerCompanyRequirements,'Company');
+  bind('ownerReviewsRefresh',window.loadOwnerReviews,'Ratings');
+  bind('ownerVideosRefresh',window.loadOwnerVideos,'Videos');
+  bind('ownerRefresh',async()=>{await Promise.all([window.loadOwnerJobs?.(),window.loadOwnerCompanyRequirements?.(),window.loadOwnerReviews?.(),window.loadOwnerVideos?.()]);},'Owner panel');
+
+  // Run public company refresh after the final functions exist.
+  setTimeout(()=>window.loadCompanyRequirements(),50);
+  setTimeout(()=>window.loadPublicOwnerReviews?.(),50);
+  setTimeout(()=>loadPublicVideosSafe(),50);
+})();
+</script>
 </body>
 </html>

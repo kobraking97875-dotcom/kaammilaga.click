@@ -410,7 +410,35 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <!-- JOB -->
 <div id="jobModal" class="modal hidden"><div class="modalbox">
 <button class="close" data-close>×</button><h2>Post a Job</h2>
-<div class="row"><div class="formgroup"><label>Job Title</label><input id="jobTitle" class="input" placeholder="MIG Welder"></div><div class="formgroup"><label>Category</label><input id="jobCategory" class="input" placeholder="Welder"></div></div>
+<div class="row">
+<div class="formgroup">
+<label>Which job is needed?</label>
+<select id="jobTitle" class="input" required>
+<option value="">Select a job</option>
+<option value="MIG Welder">MIG Welder</option>
+<option value="TIG Welder">TIG Welder</option>
+<option value="Arc Welder">Arc Welder</option>
+<option value="Welder Helper">Welder Helper</option>
+<option value="Fitter">Fitter</option>
+<option value="Electrician">Electrician</option>
+<option value="Plumber">Plumber</option>
+<option value="Fabricator">Fabricator</option>
+<option value="Machine Operator">Machine Operator</option>
+<option value="Driver">Driver</option>
+<option value="Delivery Executive">Delivery Executive</option>
+<option value="Helper">Helper</option>
+<option value="Supervisor">Supervisor</option>
+<option value="Security Guard">Security Guard</option>
+<option value="Painter">Painter</option>
+<option value="Carpenter">Carpenter</option>
+<option value="Other Skilled Worker">Other Skilled Worker</option>
+</select>
+</div>
+<div class="formgroup">
+<label>Category</label>
+<input id="jobCategory" class="input" placeholder="Auto selected" readonly>
+</div>
+</div>
 <div class="row"><div class="formgroup"><label>City</label><input id="jobCity" class="input" placeholder="Ahmedabad"></div><div class="formgroup"><label>Salary</label><input id="jobSalary" class="input" placeholder="₹20,000/month"></div></div>
 <div class="row"><div class="formgroup"><label>Job Type</label><select id="jobType"><option>Full Time</option><option>Part Time</option><option>Contract</option><option>Daily Wage</option></select></div><div class="formgroup"><label>Contact Phone</label><input id="jobPhone" class="input" placeholder="Mobile / WhatsApp"></div></div>
 <div class="formgroup"><label>Description</label><textarea id="jobDescription" rows="4" placeholder="Job requirements..."></textarea></div>
@@ -1412,5 +1440,24 @@ if(document.getElementById("ownerReqSaveEdit")){
   </div>
 </div>
 
+
+<script>
+(function(){
+  const categoryMap={
+    "MIG Welder":"Welder","TIG Welder":"Welder","Arc Welder":"Welder",
+    "Welder Helper":"Welder Helper","Fitter":"Fitter","Electrician":"Electrical",
+    "Plumber":"Plumbing","Fabricator":"Fabrication","Machine Operator":"Machine Operator",
+    "Driver":"Driver","Delivery Executive":"Delivery","Helper":"Helper",
+    "Supervisor":"Supervisor","Security Guard":"Security","Painter":"Painting",
+    "Carpenter":"Carpentry","Other Skilled Worker":"Skilled Worker"
+  };
+  document.addEventListener("change",function(e){
+    if(e.target && e.target.id==="jobTitle"){
+      const cat=document.getElementById("jobCategory");
+      if(cat) cat.value=categoryMap[e.target.value]||"";
+    }
+  });
+})();
+</script>
 </body>
 </html>

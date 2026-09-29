@@ -59,7 +59,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <button class="btn ghost" data-open="supportModal">Customer Support</button>
 <button class="btn orange" data-open="urgentModal">Need Workers Urgently</button>
 <button class="btn ghost" id="ownerLoginBtn" data-open="ownerLoginModal">Owner Login</button>
-<button class="btn" data-open="jobModal">Post a Job</button>
+<button class="btn" type="button" onclick="openModal('jobModal')">Post a Job</button>
 </div>
 </div></header>
 
@@ -84,7 +84,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </section>
 
 <section class="section">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2>Latest Jobs</h2><button class="btn secondary" data-open="jobModal">Post a Job</button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2>Latest Jobs</h2><button class="btn secondary" type="button" onclick="openModal('jobModal')">Post a Job</button></div>
 <div id="jobs" class="cards"><div class="card">Loading jobs...</div></div>
 </section>
 
@@ -117,7 +117,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <section class="section">
 <h2>For Employers</h2>
 <div class="cards">
-<div class="card"><h3>Post a Job</h3><p class="muted">Reach workers by skill and location.</p><button class="btn" data-open="jobModal">Post Job</button></div>
+<div class="card"><h3>Post a Job</h3><p class="muted">Reach workers by skill and location.</p><button class="btn" type="button" onclick="openModal('jobModal')">Post Job</button></div>
 <div class="card"><h3>Featured Jobs</h3><p class="muted">Promote a job for 7, 15 or 30 days.</p><button class="btn orange" data-open="featuredModal">Feature a Job</button></div>
 <div class="card"><h3>Urgent Hiring</h3><p class="muted">Tell our team exactly which workers you need.</p><button class="btn" data-open="urgentModal">Request Workers</button></div>
 <div class="card"><h3>Customer Support</h3><p class="muted">Get direct email assistance from KaamMilega support.</p><button class="btn secondary" data-open="supportModal">Contact Support</button></div>
@@ -254,7 +254,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div class="card" style="margin:16px 0;background:#f7fbff;border-color:#cfe0f5">
   <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap">
     <div><span class="owner-badge">WEBSITE CONTENT</span><h3 style="margin:8px 0 4px">Website Content Manager</h3><p class="owner-small" style="margin:0">Only the owner can edit, add or delete the website's About, How It Works, Workers, Employers, Safety, FAQ, Contact, Privacy, Terms, Team and Company Hiring Leads content.</p></div>
-    <button class="btn" id="websiteContentManageBtn" type="button">Manage Website Content</button>
+    <button class="btn" id="websiteContentManageBtn" type="button" onclick="openWebsiteContentManager()">Manage Website Content</button>
   </div>
 </div>
 <div id="ownerPanelMsg"></div>
@@ -1253,7 +1253,13 @@ function deepMergeContent(base, incoming){
   const out=Array.isArray(base)?base.slice():{...base};
   Object.keys(incoming).forEach(k=>{
     const v=incoming[k];
-    if(v && typeof v==='object' && !Array.isArray(v) && out[k] && typeof out[k]==='object' && !Array.isArray(out[k])){
+    if(Array.isArray(v)){
+      // Old saved content sometimes contains empty arrays. Keep the built-in
+      // website content visible instead of replacing it with a blank section.
+      if(v.length || !Array.isArray(out[k]) || out[k].length===0) out[k]=v;
+      return;
+    }
+    if(v && typeof v==='object' && out[k] && typeof out[k]==='object' && !Array.isArray(out[k])){
       out[k]=deepMergeContent(out[k],v);
     }else if(v!==undefined){
       out[k]=v;
@@ -1302,12 +1308,19 @@ async function saveSiteContent(){
   renderSiteContent();
   showToast('Website content saved successfully.');
 }
-$('websiteContentManageBtn')?.addEventListener('click',()=>{
-  contentSection='hero';
-  renderContentTabs();
-  renderContentEditor();
-  openModal('websiteContentModal');
-});
+window.openWebsiteContentManager = async function(){
+  try{
+    const owner = await getOwnerUser();
+    if(!owner){ showToast('Owner login required. Please login as owner.'); return; }
+    contentSection='hero';
+    renderContentTabs();
+    renderContentEditor();
+    openModal('websiteContentModal');
+  }catch(e){
+    showToast(e.message || 'Could not open Website Content Manager.');
+  }
+};
+$('websiteContentManageBtn')?.addEventListener('click', window.openWebsiteContentManager);
 $('saveWebsiteContent')?.addEventListener('click',async()=>{try{await saveSiteContent();}catch(e){msg('websiteContentMsg',e.message,'error');}});
 $('resetWebsiteContent')?.addEventListener('click',()=>{if(!confirm('Reset this section to the built-in default content?'))return;siteContent[contentSection]=JSON.parse(JSON.stringify(SITE_DEFAULTS[contentSection]));renderContentEditor();showToast('This section was reset. Press Save Changes to publish it.');});
 

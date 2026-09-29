@@ -2575,6 +2575,97 @@ if(document.getElementById("ownerReqSaveEdit")){
     finally{clearTimeout(timer);}
   }
 
+  // ---------- OWNER JOBS FINAL FIX ----------
+  // Use the same working owner session check as Company/Ratings/Videos.
+  window.loadOwnerJobs = async function(){
+    const box=$('ownerJobs'); if(!box)return;
+    if(!(await owner())){
+      box.innerHTML='<div class="card"><div class="notice error">Owner session is not active. Please login again.</div></div>';
+      return;
+    }
+    box.innerHTML='<div class="card">Loading jobs...</div>';
+    try{
+      const r=await req('jobs?select=id,title,category,city,salary,job_type,description,contact_phone,status,created_at,employer_id&order=created_at.desc&limit=1000');
+      const raw=await r.text();
+      let rows=[]; try{rows=raw?JSON.parse(raw):[]}catch(_){ }
+      if(!r.ok)throw new Error((rows&&rows.message)||raw||'Could not load jobs.');
+      if(!Array.isArray(rows)||!rows.length){
+        box.innerHTML='<div class="card"><h3>No job posts</h3><p class="muted">No jobs are currently stored.</p></div>';
+        return;
+      }
+      box.innerHTML=rows.map(j=>{
+        const st=String(j.status||'pending_owner');
+        const label=st==='active'?'CONFIRMED / ACTIVE':st==='completed'?'COMPLETED':'PENDING OWNER';
+        const cls=st==='active'?'status-active':st==='completed'?'status-completed':'status-pending';
+        const id=esc(j.id);
+        return `<article class="owner-job">
+          <div class="owner-job-head">
+            <div>
+              <span class="tag">${esc(j.category||'Job')}</span>
+              <h3 style="margin:7px 0">${esc(j.title||'Untitled')}</h3>
+              <div class="owner-small">${esc(j.city||'')} · ${esc(j.salary||'Salary not specified')} · ${esc(j.job_type||'')}</div>
+              <div class="owner-small" style="margin-top:5px">ID: ${id}</div>
+            </div>
+            <span class="notice ${cls}" style="margin:0">${label}</span>
+          </div>
+          <p>${esc(j.description||'')}</p>
+          <div class="owner-actions">
+            ${st!=='active' && st!=='completed'?`<button class="btn" onclick="ownerSetStatus('${id}','active')">Confirm / Activate</button>`:''}
+            ${st!=='completed'?`<button class="btn secondary" onclick="ownerSetStatus('${id}','completed')">Mark Complete</button>`:''}
+            ${st==='completed'?`<button class="btn" onclick="ownerSetStatus('${id}','active')">Re-Open</button>`:''}
+            <button class="btn ghost" onclick="ownerEditJob('${id}')">Update</button>
+            <button class="btn danger" onclick="ownerDeleteJob('${id}')">Delete</button>
+          </div>
+        </article>`;
+      }).join('');
+    }catch(e){
+      box.innerHTML='<div class="card"><div class="notice error">Could not load jobs. Tap Refresh Jobs.</div></div>';
+      show('ownerPanelMsg',e.message||'Could not load jobs.','error');
+    }
+  };
+
+  async function ownerJobMutation(method,path,body){
+    if(!(await owner()))throw new Error('Owner login required.');
+    const opts={method,headers:{'Prefer':'return=minimal'}};
+    if(body!==undefined){opts.body=JSON.stringify(body);opts.headers['Content-Type']='application/json';}
+    const r=await req(path,opts);
+    const raw=await r.text();
+    if(!r.ok){let d={};try{d=JSON.parse(raw)}catch(_){}throw new Error(d.message||d.hint||d.details||raw||'Owner job action failed.');}
+    return raw;
+  }
+
+  window.ownerSetStatus=async function(id,status){
+    const text=status==='completed'?'Mark this job as completed? It will disappear from public listings.':status==='active'?'Confirm/activate this job and make it visible publicly?':'Update job status?';
+    if(!confirm(text))return;
+    try{
+      await ownerJobMutation('PATCH','jobs?id=eq.'+encodeURIComponent(id),{status});
+      await window.loadOwnerJobs();
+      if(typeof window.loadJobs==='function')await window.loadJobs();
+      if(window.showToast)showToast(status==='completed'?'Job marked completed.':'Job activated and published.');
+    }catch(e){show('ownerPanelMsg',e.message||'Could not update job.','error');}
+  };
+
+  window.ownerDeleteJob=async function(id){
+    if(!confirm('Delete this job permanently? This cannot be undone.'))return;
+    try{
+      await ownerJobMutation('DELETE','jobs?id=eq.'+encodeURIComponent(id));
+      await window.loadOwnerJobs();
+      if(typeof window.loadJobs==='function')await window.loadJobs();
+      if(window.showToast)showToast('Job deleted permanently.');
+    }catch(e){show('ownerPanelMsg',e.message||'Could not delete job.','error');}
+  };
+
+  window.ownerEditJob=async function(id){
+    if(!(await owner())){show('ownerPanelMsg','Owner login required.','error');return;}
+    const r=await req('jobs?id=eq.'+encodeURIComponent(id)+'&select=id,title,category,city,salary,job_type,description,contact_phone,status&limit=1');
+    const raw=await r.text();let rows=[];try{rows=raw?JSON.parse(raw):[]}catch(_){ }
+    if(!r.ok)throw new Error(raw||'Could not load job.');
+    const j=Array.isArray(rows)?rows[0]:null;
+    if(!j){show('ownerPanelMsg','Job not found.','error');return;}
+    $('ownerEditId').value=j.id;$('ownerEditTitle').value=j.title||'';$('ownerEditCategory').value=j.category||'';$('ownerEditCity').value=j.city||'';$('ownerEditSalary').value=j.salary||'';$('ownerEditType').value=j.job_type||'Full Time';$('ownerEditPhone').value=j.contact_phone||'';$('ownerEditDescription').value=j.description||'';$('ownerEditStatus').value=j.status||'pending_owner';
+    openModal('ownerEditModal');
+  };
+
   // ---------- PUBLIC COMPANY REQUIREMENTS ----------
   window.loadCompanyRequirements=async function(){
     const box=$('companyRequirements'); if(!box)return;

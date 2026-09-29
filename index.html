@@ -979,7 +979,7 @@ Details: ${$("uDetails").value}`);
 
 
 const OWNER_EMAIL = "kaammilaga.official@gmail.com";
-let ownerUser = null;
+var ownerUser = null;
 
 function isOwnerUser(user){
   return !!(user && String(user.email||"").toLowerCase()===OWNER_EMAIL.toLowerCase());
@@ -2322,6 +2322,81 @@ if(document.getElementById("ownerReqSaveEdit")){
 
   // Refresh the owner-only post control after auth changes.
   setInterval(()=>{if(window.__kmUpdateRequirementPostButton)window.__kmUpdateRequirementPostButton();},1200);
+})();
+</script>
+
+<script id="kaammilega-v12-final-fix">
+(function(){
+  // Use a var-backed global for compatibility with older script blocks.
+  // This prevents "Cannot access 'ownerUser' before initialization" when a prior script aborts.
+  try { if (typeof window.ownerUser === 'undefined') window.ownerUser = null; } catch(_) {}
+
+  const $=id=>document.getElementById(id);
+  const ownerEmail='kaammilaga.official@gmail.com';
+  const clean=v=>String(v||'').trim().toLowerCase();
+  const show=(id,t,type)=>{ if(typeof window.msg==='function') window.msg(id,t,type); else { const e=$(id); if(e)e.innerHTML='<div class="notice '+(type||'')+'">'+t+'</div>'; } };
+
+  // Owner login: exact owner email only.
+  const ownerBtn=$('ownerLoginSubmit');
+  if(ownerBtn){
+    ownerBtn.onclick=null;
+    ownerBtn.addEventListener('click',async function(e){
+      e.preventDefault(); e.stopPropagation(); e.stopImmediatePropagation();
+      const password=$('ownerPassword')?.value||'';
+      if(!password){show('ownerLoginMsg','Enter the owner password.','error');return;}
+      ownerBtn.disabled=true; ownerBtn.textContent='Logging in...';
+      try{
+        const r=await fetch(SUPABASE_URL+'/auth/v1/token?grant_type=password',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json'},body:JSON.stringify({email:ownerEmail,password})});
+        const raw=await r.text(); let d={}; try{d=JSON.parse(raw)}catch(_){}
+        if(!r.ok||!d.access_token) throw new Error(d.error_description||d.msg||d.message||d.error||'Owner email/password is incorrect.');
+        if(clean(d.user?.email||ownerEmail)!==ownerEmail) throw new Error('This account is not authorized for Owner access.');
+        localStorage.setItem('km_access_token',d.access_token);
+        if(d.refresh_token)localStorage.setItem('km_refresh_token',d.refresh_token);
+        window.ownerUser=d.user;
+        if(typeof updateOwnerUI==='function') await updateOwnerUI();
+        $('ownerLoginModal')?.classList.add('hidden');
+        if($('ownerPassword'))$('ownerPassword').value='';
+        if(typeof openModal==='function')openModal('ownerPanelModal');
+        if(typeof loadOwnerJobs==='function')await loadOwnerJobs();
+        if(typeof loadOwnerCompanyRequirements==='function')await loadOwnerCompanyRequirements();
+        if(typeof loadPublicOwnerReviews==='function')await loadPublicOwnerReviews();
+        if(typeof loadOwnerVideos==='function')await loadOwnerVideos();
+        if(window.__kmUpdateRequirementPostButton)await window.__kmUpdateRequirementPostButton();
+        if(typeof showToast==='function')showToast('Owner login successful.');
+      }catch(err){show('ownerLoginMsg',err.message||'Owner login failed.','error');}
+      finally{ownerBtn.disabled=false;ownerBtn.textContent='Login as Owner';}
+    },true);
+  }
+
+  // Prevent repeated signup clicks while Supabase is sending the confirmation email.
+  const signup=$('signupSubmit');
+  if(signup){
+    signup.addEventListener('click',function(e){
+      const email=clean($('signupEmail')?.value);
+      if(email===ownerEmail){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();show('loginMsg','The owner account can only be used through Owner Login.','error');return;}
+      if(signup.dataset.kmBusy==='1'){e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();return;}
+      signup.dataset.kmBusy='1';
+      setTimeout(()=>{signup.dataset.kmBusy='0';},8000);
+    },true);
+  }
+
+  // Owner logout always clears the local session.
+  const logout=$('ownerLogout');
+  if(logout){
+    logout.onclick=null;
+    logout.addEventListener('click',async function(e){
+      e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+      const token=typeof getSession==='function'?await getSession():localStorage.getItem('km_access_token');
+      try{if(token)await fetch(SUPABASE_URL+'/auth/v1/logout',{method:'POST',headers:{'apikey':SUPABASE_ANON_KEY,'Authorization':'Bearer '+token}});}catch(_){}
+      if(typeof clearLocalAuth==='function')clearLocalAuth();
+      window.ownerUser=null;
+      $('ownerPanelModal')?.classList.add('hidden');
+      if(typeof updateOwnerUI==='function')await updateOwnerUI();
+      if(typeof updateAuthUI==='function')await updateAuthUI();
+      if(window.__kmUpdateRequirementPostButton)await window.__kmUpdateRequirementPostButton();
+      if(typeof showToast==='function')showToast('Owner logged out successfully.');
+    },true);
+  }
 })();
 </script>
 </body>

@@ -2870,34 +2870,7 @@ if(document.getElementById("ownerReqSaveEdit")){
 </script>
 
 <!-- KaamMilega AI Assistant + Black Background (add-on only) -->
-<style id="kaammilega-ai-black-addon">
-  /* Only requested visual change: black site background. Existing cards/components stay unchanged. */
-  body{background:#000 !important;color:#fff !important}
-  header{background:#000 !important;border-bottom-color:#222 !important}
-  header .brand-sub,.muted{color:#b8c0cc !important}
-  header .brand{color:#4da3ff !important}
-  header .brand span{color:#f97316 !important}
-  .section>h2,.section h2,.section h3,.info-section h2,.info-section h3{color:#fff}
 
-  #kmAiFab{position:fixed;right:20px;bottom:20px;z-index:10001;border:0;border-radius:999px;background:linear-gradient(135deg,#0b63ce,#174ea6);color:#fff;padding:14px 18px;font:800 14px Inter,Arial,sans-serif;box-shadow:0 12px 35px #0008;cursor:pointer;display:flex;align-items:center;gap:8px}
-  #kmAiFab:hover{transform:translateY(-1px)}
-  #kmAiPanel{position:fixed;right:20px;bottom:78px;width:min(390px,calc(100vw - 28px));height:min(600px,calc(100vh - 110px));z-index:10000;background:#fff;color:#172033;border-radius:18px;box-shadow:0 20px 60px #000b;display:none;overflow:hidden;border:1px solid #dbe5f0}
-  #kmAiPanel.open{display:flex;flex-direction:column}
-  .km-ai-head{background:linear-gradient(135deg,#0b63ce,#174ea6);color:#fff;padding:15px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .km-ai-title{font-weight:900;font-size:16px}.km-ai-sub{font-size:11px;opacity:.9;margin-top:2px}
-  .km-ai-close{border:0;background:#ffffff20;color:#fff;border-radius:9px;width:34px;height:34px;font-size:20px;cursor:pointer}
-  #kmAiMessages{flex:1;overflow:auto;padding:14px;background:#f6f8fb}
-  .km-ai-msg{max-width:88%;padding:10px 12px;border-radius:13px;margin:8px 0;line-height:1.45;font-size:13px;white-space:pre-wrap;word-break:break-word}
-  .km-ai-msg.bot{background:#fff;border:1px solid #e2e8f0;margin-right:auto}.km-ai-msg.user{background:#0b63ce;color:#fff;margin-left:auto}
-  .km-ai-typing{opacity:.7;font-style:italic}
-  .km-ai-quick{display:flex;gap:7px;overflow:auto;padding:8px 10px;border-top:1px solid #e5e7eb;background:#fff}
-  .km-ai-quick button{white-space:nowrap;border:1px solid #d7e1ef;background:#fff;color:#0b63ce;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800;cursor:pointer}
-  .km-ai-form{display:flex;gap:8px;padding:10px;border-top:1px solid #e5e7eb;background:#fff}
-  #kmAiInput{flex:1;min-width:0;border:1px solid #d7dde8;border-radius:10px;padding:10px 11px;font:inherit;outline:none}
-  #kmAiSend{border:0;border-radius:10px;background:#0b63ce;color:#fff;font-weight:800;padding:0 14px;cursor:pointer}
-  #kmAiSend:disabled{opacity:.55;cursor:not-allowed}
-  @media(max-width:600px){#kmAiFab{right:12px;bottom:12px;padding:12px 15px}#kmAiPanel{right:10px;bottom:64px;width:calc(100vw - 20px);height:min(650px,calc(100vh - 84px))}}
-</style>
 
 <div id="kmAiPanel" aria-label="KaamMilega AI Assistant">
   <div class="km-ai-head">

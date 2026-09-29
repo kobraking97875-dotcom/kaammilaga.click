@@ -2868,5 +2868,96 @@ if(document.getElementById("ownerReqSaveEdit")){
   setTimeout(()=>window.loadCompanyRequirementsFinal(),0);
 })();
 </script>
+
+<!-- KaamMilega AI Assistant + Black Background (add-on only) -->
+<style id="kaammilega-ai-black-addon">
+  /* Only requested visual change: black site background. Existing cards/components stay unchanged. */
+  body{background:#000 !important;color:#fff !important}
+  header{background:#000 !important;border-bottom-color:#222 !important}
+  header .brand-sub,.muted{color:#b8c0cc !important}
+  header .brand{color:#4da3ff !important}
+  header .brand span{color:#f97316 !important}
+  .section>h2,.section h2,.section h3,.info-section h2,.info-section h3{color:#fff}
+
+  #kmAiFab{position:fixed;right:20px;bottom:20px;z-index:10001;border:0;border-radius:999px;background:linear-gradient(135deg,#0b63ce,#174ea6);color:#fff;padding:14px 18px;font:800 14px Inter,Arial,sans-serif;box-shadow:0 12px 35px #0008;cursor:pointer;display:flex;align-items:center;gap:8px}
+  #kmAiFab:hover{transform:translateY(-1px)}
+  #kmAiPanel{position:fixed;right:20px;bottom:78px;width:min(390px,calc(100vw - 28px));height:min(600px,calc(100vh - 110px));z-index:10000;background:#fff;color:#172033;border-radius:18px;box-shadow:0 20px 60px #000b;display:none;overflow:hidden;border:1px solid #dbe5f0}
+  #kmAiPanel.open{display:flex;flex-direction:column}
+  .km-ai-head{background:linear-gradient(135deg,#0b63ce,#174ea6);color:#fff;padding:15px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .km-ai-title{font-weight:900;font-size:16px}.km-ai-sub{font-size:11px;opacity:.9;margin-top:2px}
+  .km-ai-close{border:0;background:#ffffff20;color:#fff;border-radius:9px;width:34px;height:34px;font-size:20px;cursor:pointer}
+  #kmAiMessages{flex:1;overflow:auto;padding:14px;background:#f6f8fb}
+  .km-ai-msg{max-width:88%;padding:10px 12px;border-radius:13px;margin:8px 0;line-height:1.45;font-size:13px;white-space:pre-wrap;word-break:break-word}
+  .km-ai-msg.bot{background:#fff;border:1px solid #e2e8f0;margin-right:auto}.km-ai-msg.user{background:#0b63ce;color:#fff;margin-left:auto}
+  .km-ai-typing{opacity:.7;font-style:italic}
+  .km-ai-quick{display:flex;gap:7px;overflow:auto;padding:8px 10px;border-top:1px solid #e5e7eb;background:#fff}
+  .km-ai-quick button{white-space:nowrap;border:1px solid #d7e1ef;background:#fff;color:#0b63ce;border-radius:999px;padding:7px 10px;font-size:11px;font-weight:800;cursor:pointer}
+  .km-ai-form{display:flex;gap:8px;padding:10px;border-top:1px solid #e5e7eb;background:#fff}
+  #kmAiInput{flex:1;min-width:0;border:1px solid #d7dde8;border-radius:10px;padding:10px 11px;font:inherit;outline:none}
+  #kmAiSend{border:0;border-radius:10px;background:#0b63ce;color:#fff;font-weight:800;padding:0 14px;cursor:pointer}
+  #kmAiSend:disabled{opacity:.55;cursor:not-allowed}
+  @media(max-width:600px){#kmAiFab{right:12px;bottom:12px;padding:12px 15px}#kmAiPanel{right:10px;bottom:64px;width:calc(100vw - 20px);height:min(650px,calc(100vh - 84px))}}
+</style>
+
+<div id="kmAiPanel" aria-label="KaamMilega AI Assistant">
+  <div class="km-ai-head">
+    <div><div class="km-ai-title">🤖 KaamMilega AI Assistant</div><div class="km-ai-sub">Ask about jobs, hiring, profiles, payments or the website</div></div>
+    <button class="km-ai-close" id="kmAiClose" aria-label="Close">×</button>
+  </div>
+  <div id="kmAiMessages"></div>
+  <div class="km-ai-quick">
+    <button data-ai-q="How can I find a job?">Find a job</button>
+    <button data-ai-q="How can a company hire workers urgently?">Urgent hiring</button>
+    <button data-ai-q="How do I post a job?">Post a job</button>
+    <button data-ai-q="How can I contact support?">Support</button>
+  </div>
+  <form class="km-ai-form" id="kmAiForm">
+    <input id="kmAiInput" autocomplete="off" placeholder="Ask me anything about KaamMilega...">
+    <button id="kmAiSend" type="submit">Send</button>
+  </form>
+</div>
+<button id="kmAiFab" type="button" aria-label="Open AI Assistant">🤖 AI Assistant</button>
+
+<script id="kaammilega-ai-addon">
+(function(){
+  'use strict';
+  const fab=document.getElementById('kmAiFab'),panel=document.getElementById('kmAiPanel'),close=document.getElementById('kmAiClose'),msgs=document.getElementById('kmAiMessages'),form=document.getElementById('kmAiForm'),input=document.getElementById('kmAiInput'),send=document.getElementById('kmAiSend');
+  if(!fab||!panel||!msgs||!form)return;
+  const endpoint=(window.KM_AI_ENDPOINT||((typeof SUPABASE_URL!=='undefined')?SUPABASE_URL+'/functions/v1/ai-assistant':'/functions/v1/ai-assistant'));
+  const welcome='Namaste! 👋 Main KaamMilega AI Assistant hoon.\n\nAap job search, job posting, urgent hiring, Featured Jobs, profile/login, payments, safety ya website ke kisi bhi feature ke baare mein pooch sakte hain.';
+  const siteContext='KaamMilega is an independent employment marketplace in India. Workers can search jobs by skill and city. Employers can post jobs, use Featured Jobs, request workers urgently/company requirements, and contact support. Support email: kaammilaga.official@gmail.com. KaamMilega does not guarantee employment. Users should verify employer, vacancy, salary, location and joining details. Never share OTP, password or payment PIN. Standard job posting is available; Featured Job promotion may be paid. The website has login/signup, profiles, reviews, work-result videos, owner management, PayU checkout for featured promotion, and company hiring requirements.';
+  const history=[];
+  function add(text,who){const d=document.createElement('div');d.className='km-ai-msg '+who;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d}
+  function open(){panel.classList.add('open');if(!msgs.children.length)add(welcome,'bot');setTimeout(()=>input.focus(),80)}
+  function closePanel(){panel.classList.remove('open')}
+  fab.addEventListener('click',open);close.addEventListener('click',closePanel);
+  document.querySelectorAll('[data-ai-q]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.aiQ;form.requestSubmit()}));
+  function fallback(q){
+    const s=q.toLowerCase();
+    if(/find|search|job|काम|नौकरी/.test(s)) return 'Job find karne ke liye Search Jobs mein skill/job title aur City/Location enter karke Search Jobs dabaiye. Listing kholkar salary, location, employer aur vacancy details verify karein.';
+    if(/urgent|worker|workers|company requirement|staff|मजदूर/.test(s)) return 'Company ko workers urgently chahiye to Need Workers Urgently ya Company Hiring Requirements workflow use karein. Worker type, number of workers, location, salary/rate aur joining details dena useful hai.';
+    if(/post.*job|job.*post|vacancy|भर्ती/.test(s)) return 'Employer Post a Job se vacancy publish kar sakta hai. Job title, category, city, salary, job type, description aur contact details bharni hoti hain.';
+    if(/feature|featured|payu|payment|पैसा|भुगतान/.test(s)) return 'Featured Jobs paid promotion service hai. Payment screen par package/details check karein. Promotion employment ya hiring guarantee nahi karta.';
+    if(/support|contact|email|help|मदद/.test(s)) return 'KaamMilega support email: kaammilaga.official@gmail.com';
+    if(/login|signup|profile|account|password|otp/.test(s)) return 'Login / Sign Up se email aur password ke saath account access karein. OTP, password aur payment PIN kisi ke saath share na karein.';
+    if(/safe|fraud|scam|security|सुरक्षित/.test(s)) return 'Job accept karne se pehle employer, location, salary, joining details verify karein. Job ke badle advance money, OTP, password ya payment PIN maangne par savdhan rahein.';
+    return 'Main KaamMilega ke jobs, hiring, account, support, payments aur website features samjha sakta hoon. Aap apna sawal thoda detail mein pooch sakte hain.';
+  }
+  async function ask(q){
+    const clean=q.trim();if(!clean)return;add(clean,'user');history.push({role:'user',content:clean});input.value='';send.disabled=true;
+    const typing=add('Thinking...','bot');typing.classList.add('km-ai-typing');
+    try{
+      const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':(typeof SUPABASE_ANON_KEY!=='undefined'?SUPABASE_ANON_KEY:''),'Authorization':(typeof SUPABASE_ANON_KEY!=='undefined'?'Bearer '+SUPABASE_ANON_KEY:'')},body:JSON.stringify({message:clean,history:history.slice(-10),context:siteContext})});
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok)throw new Error(d.error||'AI endpoint unavailable');
+      const answer=d.answer||d.output||d.message;if(!answer)throw new Error('Empty AI response');
+      typing.remove();add(String(answer),'bot');history.push({role:'assistant',content:String(answer)});
+    }catch(e){typing.remove();const answer=fallback(clean);add(answer,'bot');history.push({role:'assistant',content:answer});}
+    finally{send.disabled=false;input.focus()}
+  }
+  form.addEventListener('submit',e=>{e.preventDefault();ask(input.value)});
+})();
+</script>
+
 </body>
 </html>

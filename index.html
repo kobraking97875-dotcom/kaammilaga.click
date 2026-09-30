@@ -4640,3 +4640,81 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
   });
 })();
 </script>
+
+
+<script id="km-public-requirement-only-fix-v8">
+(function(){
+  'use strict';
+  function ready(fn){
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn,{once:true});
+    else fn();
+  }
+  ready(function(){
+    const old=document.getElementById('saveRequirement');
+    if(!old) return;
+    // Replace only this one button so older conflicting click handlers cannot run.
+    const btn=old.cloneNode(true);
+    old.replaceWith(btn);
+    btn.type='button';
+    btn.onclick=async function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      if(btn.disabled) return;
+      const $=id=>document.getElementById(id);
+      const msgBox=$('reqMsg');
+      const show=(text,type)=>{if(msgBox){msgBox.className=type==='error'?'notice error':'notice';msgBox.textContent=text;}};
+      const required=['reqCompany','reqMembers','reqCallerName','reqWorker','reqSalary','reqLocation'];
+      const body={
+        company_name:($('reqCompany')?.value||'').trim(),
+        members_needed:Number($('reqMembers')?.value||0),
+        caller_role:$('reqCallerRole')?.value||'HR',
+        caller_name:($('reqCallerName')?.value||'').trim(),
+        worker_requirement:($('reqWorker')?.value||'').trim(),
+        salary:($('reqSalary')?.value||'').trim(),
+        location:($('reqLocation')?.value||'').trim(),
+        joining_date:$('reqJoining')?.value||null,
+        details:($('reqDetails')?.value||'').trim(),
+        status:'active'
+      };
+      if(!body.company_name || !body.members_needed || !body.caller_name || !body.worker_requirement || !body.salary || !body.location){
+        show('Please fill all fields marked *.','error'); return;
+      }
+      btn.disabled=true; btn.textContent='Publishing...';
+      try{
+        // Use the same live session used by Owner Panel, with one refresh retry.
+        let token=typeof window.getSession==='function' ? await window.getSession() : localStorage.getItem('km_access_token');
+        if(!token) throw new Error('Owner login is required. Please open Owner Panel and login first.');
+        let user=null;
+        try{
+          const ur=await fetch((window.SUPABASE_URL||SUPABASE_URL)+'/auth/v1/user',{headers:{'apikey':(window.SUPABASE_ANON_KEY||SUPABASE_ANON_KEY),'Authorization':'Bearer '+token}});
+          if(ur.ok) user=await ur.json();
+        }catch(_){ }
+        const email=String(user?.email||'').toLowerCase();
+        if(email && email!=='kaammilaga.official@gmail.com') throw new Error('This account is not authorized for Owner publishing.');
+        const base=(window.SUPABASE_URL||SUPABASE_URL)+'/rest/v1/company_requirements';
+        const api=(window.SUPABASE_ANON_KEY||SUPABASE_ANON_KEY);
+        const send=async t=>fetch(base,{method:'POST',headers:{'apikey':api,'Authorization':'Bearer '+t,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(body)});
+        let r=await send(token);
+        if(r.status===401 && typeof window.getSession==='function'){
+          token=await window.getSession();
+          if(token) r=await send(token);
+        }
+        const raw=await r.text();
+        if(!r.ok){
+          let d={}; try{d=raw?JSON.parse(raw):{}}catch(_){ }
+          throw new Error(d.message||d.error_description||d.hint||d.details||raw||'Could not publish company requirement.');
+        }
+        ['reqCompany','reqMembers','reqCallerName','reqWorker','reqSalary','reqLocation','reqJoining','reqDetails'].forEach(id=>{const x=$(id);if(x)x.value='';});
+        $('ownerRequirementModal')?.classList.add('hidden');
+        if(typeof window.loadCompanyRequirements==='function') await window.loadCompanyRequirements();
+        if(typeof window.loadOwnerCompanyRequirements==='function') await window.loadOwnerCompanyRequirements();
+        if(typeof window.showToast==='function') window.showToast('✓ Company requirement published successfully.');
+      }catch(err){
+        show(err?.message||'Could not publish company requirement.','error');
+      }finally{
+        btn.disabled=false; btn.textContent='Publish Requirement';
+      }
+    };
+  });
+})();
+</script>

@@ -211,6 +211,16 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 @media(max-width:650px){.km-callback-grid{grid-template-columns:1fr}}
 </style>
 
+
+<style id="km-company-directory-css">
+.km-company-directory{margin-top:24px}
+.km-company-directory-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.km-company-directory-card{display:flex;align-items:center;gap:12px;border:1px solid rgba(127,127,127,.22);border-radius:14px;padding:14px;background:rgba(127,127,127,.045)}
+.km-company-directory-logo{width:42px;height:42px;border-radius:11px;display:grid;place-items:center;background:rgba(127,127,127,.12);font-weight:800;flex:none}
+.km-company-directory-card h3{margin:0;font-size:16px}
+.km-company-directory-card p{margin:3px 0 0;font-size:12px}
+</style>
+
 </head>
 <body><div id="toast" class="toast"></div>
 <header><div class="nav">
@@ -310,58 +320,6 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
       <button class="btn" type="button">View My Team Member</button>
     </div>
   </div>
-</section>
-
-<section class="section" id="companyHiring">
-  <div class="trust-head">
-    <div>
-      <span class="eyebrow">HIRING OPPORTUNITIES</span>
-      <h2>Companies & Hiring Leads</h2>
-      <p class="muted">Company names are shown for job-search assistance. Vacancy status is based on the source noted on each card.</p>
-    </div>
-  </div>
-  <div class="cards">
-    <div class="card company-card">
-      <div class="company-logo" aria-label="NR Company logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#0f172a"/><text x="40" y="50" text-anchor="middle" fill="white" font-size="25" font-weight="800">NR</text></svg></div>
-      <div class="company-info"><span class="eyebrow">COMPANY LEAD</span><h3>NR Company</h3><p class="muted">Hyderabad, Telangana</p><span class="notice">Vacancy status: confirm before applying</span><p>Listed as a company lead for Hyderabad job requirements. Contact KaamMilega support for current requirement verification.</p><a class="btn secondary" href="mailto:kaammilaga.official@gmail.com?subject=NR%20Company%20Hyderabad%20Job%20Requirement">Email Support</a></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Vee Gee Auto Components logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#123b5d"/><path d="M17 23h9l7 26 7-26h9l-11 34h-10z" fill="white"/><text x="58" y="55" text-anchor="middle" fill="#8fd3ff" font-size="11" font-weight="800">VG</text></svg></div>
-      <div class="company-info"><span class="eyebrow">HIRING LEAD</span><h3>Vee Gee Auto Components Pvt Ltd</h3><p class="muted">Ahmedabad, Gujarat</p><span class="notice success">Vacancy confirmed by HR</span><p>Hiring information confirmed through HR communication as provided to KaamMilega. Public listings also show Vee Gee roles in Ahmedabad.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn secondary" href="mailto:kaammilaga.official@gmail.com?subject=Vee%20Gee%20Auto%20Components%20Job%20Requirement">Email Support</a><a class="btn ghost" href="https://www.veegeeindustries.com/" target="_blank" rel="noopener">Company Website</a></div></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Hariyana Industries logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#17603b"/><text x="40" y="51" text-anchor="middle" fill="white" font-size="24" font-weight="800">HI</text><path d="M18 59h44" stroke="#8ee0b0" stroke-width="4"/></svg></div>
-      <div class="company-info"><span class="eyebrow">HIRING LEAD</span><h3>Hariyana Industries</h3><p class="muted">Gujarat</p><span class="notice success">Vacancy confirmed by HR</span><p>Hiring information confirmed through HR communication as provided to KaamMilega. Candidates can email their job requirement for assistance.</p><a class="btn secondary" href="mailto:kaammilaga.official@gmail.com?subject=Hariyana%20Industries%20Job%20Requirement">Email Support</a></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Maruti Suzuki logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#e8eef7"/><ellipse cx="40" cy="40" rx="27" ry="18" fill="none" stroke="#1671c9" stroke-width="6"/><text x="40" y="47" text-anchor="middle" fill="#1671c9" font-size="14" font-weight="900">MARUTI</text></svg></div>
-      <div class="company-info"><span class="eyebrow">CAREERS</span><h3>Maruti Suzuki India Limited</h3><p class="muted">Ahmedabad / Hansalpur, Gujarat</p><span class="notice">Official careers available</span><p>Maruti Suzuki's official careers page currently lists opportunities including Freshers, Engineering, Experienced Professionals and Workmen Hiring.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn secondary" href="https://www.marutisuzuki.com/corporate/careers" target="_blank" rel="noopener">Official Careers</a><a class="btn ghost" href="mailto:kaammilaga.official@gmail.com?subject=Maruti%20Suzuki%20Job%20Requirement">Email Support</a></div></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Honda logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#b40000"/><text x="40" y="51" text-anchor="middle" fill="white" font-size="29" font-family="Arial" font-weight="900">H</text></svg></div>
-      <div class="company-info"><span class="eyebrow">CAREERS</span><h3>Honda</h3><p class="muted">Gujarat / India</p><span class="notice">Official careers available</span><p>Honda's official careers site provides searchable opportunities across engineering, manufacturing, supply chain, sales and other functions.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn secondary" href="https://www.honda.com/careers" target="_blank" rel="noopener">Official Careers</a><a class="btn ghost" href="mailto:kaammilaga.official@gmail.com?subject=Honda%20Job%20Requirement">Email Support</a></div></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Swiggy Instamart logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#ff7a00"/><path d="M25 25c18-8 31 3 27 14-3 9-15 9-20 16" fill="none" stroke="white" stroke-width="7" stroke-linecap="round"/><text x="40" y="65" text-anchor="middle" fill="white" font-size="8" font-weight="800">INSTAMART</text></svg></div>
-      <div class="company-info"><span class="eyebrow">PUBLIC LISTING</span><h3>Swiggy Instamart</h3><p class="muted">Delivery — Sarkhej, Ahmedabad</p><span class="notice success">Public vacancy listing found</span><p>Public listings currently show Food/Grocery Delivery roles in Sarkhej, Ahmedabad. Check the listing before applying.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn secondary" href="https://www.jobhai.com/delivery-jobs-in-sarkhej-ahmedabad-lccty" target="_blank" rel="noopener">View Listing</a><a class="btn ghost" href="mailto:kaammilaga.official@gmail.com?subject=Swiggy%20Instamart%20Job%20Requirement">Email Support</a></div></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="Assistant Administration jobs logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#4f46e5"/><path d="M22 29h36v27H22z" fill="none" stroke="white" stroke-width="4"/><path d="M30 29v-6h20v6M30 42h20" fill="none" stroke="white" stroke-width="4"/></svg></div>
-      <div class="company-info"><span class="eyebrow">JOB CATEGORY</span><h3>Assistant / Administration</h3><p class="muted">Ahmedabad, Gujarat</p><span class="notice">Current listings available</span><p>Administrative and assistant roles are listed across Ahmedabad. Employer and role should be verified before applying.</p><div style="display:flex;gap:10px;flex-wrap:wrap"><a class="btn secondary" href="https://in.linkedin.com/jobs/assistant-administrator-jobs-ahmedabad" target="_blank" rel="noopener">View Jobs</a><a class="btn ghost" href="mailto:kaammilaga.official@gmail.com?subject=Assistant%20Administration%20Job%20Requirement">Email Support</a></div></div>
-    </div>
-
-    <div class="card company-card">
-      <div class="company-logo" aria-label="E-Commerce and Tech logo"><svg viewBox="0 0 80 80" role="img"><rect x="4" y="4" width="72" height="72" rx="18" fill="#0b63ce"/><path d="M21 25h38l-4 21H27z" fill="none" stroke="white" stroke-width="4"/><circle cx="31" cy="57" r="3" fill="white"/><circle cx="51" cy="57" r="3" fill="white"/><text x="40" y="39" text-anchor="middle" fill="white" font-size="9" font-weight="800">E-COM</text></svg></div>
-      <div class="company-info"><span class="eyebrow">HIRING CATEGORY</span><h3>E-Commerce & Tech</h3><p class="muted">Delhi / NCR</p><span class="notice">Multiple employer opportunities</span><p>Technology and e-commerce hiring is represented as a job category. Specific employer and vacancy should be checked before applying.</p><a class="btn secondary" href="mailto:kaammilaga.official@gmail.com?subject=E-Commerce%20Tech%20Job%20Requirement">Email Support</a></div>
-    </div>
-  </div>
-  <p class="muted" style="margin-top:14px;font-size:12px">Brand marks are provided for identification and presentation. KaamMilega is an independent employment marketplace and is not the employer of these vacancies. Vacancy status can change; verify the employer and role before applying.</p>
 </section>
 
 <section class="section" id="latestUpdates">
@@ -585,13 +543,6 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div><span class="eyebrow">CUSTOMER SUPPORT</span><h2>Need help with hiring?</h2><p class="muted">Contact KaamMilega support by email for job posting, urgent worker requirements and general assistance.</p></div>
 <a class="btn orange" href="mailto:kaammilaga.official@gmail.com?subject=KaamMilega%20Support">Email Support</a>
 </section>
-
-<footer><div style="max-width:1150px;margin:0 auto 18px;padding:12px 14px;border:1px solid #334155;border-radius:10px;color:#cbd5e1"><b>KaamMilega</b> is an independent employment marketplace connecting workers and employers. It is not a government department or government agency.</div><div class="section footer-grid" style="padding:0">
-<div><div class="footer-brand">Kaam<span>Milega</span></div><p>Jobs, skills and employment opportunities in one place.</p></div>
-<div><b>Customer Support</b><p>Email: <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a></p><p>Support for employers and workers.</p></div>
-<div><b>Trust & Safety</b><p>Keep payments and account credentials secure. Never share OTPs or passwords with anyone.</p></div>
-</div>
-<div class="footer-bottom">© 2026 KaamMilega. All rights reserved. · <a href="#aboutKaamMilega">About</a> · <a href="#searchAiGuidance">Search &amp; AI</a> · <a href="#howItWorks">How It Works</a> · <a href="#officialIdentity">Official Website</a><a href="#privacyPolicy">Privacy Policy</a> · <a href="#terms">Terms</a> · <a href="#faq">FAQ</a> · <a href="#contactInfo">Contact</a> · Hiring decisions are made by employers.</div></footer>
 
 
 <!-- SUPPORT -->
@@ -1322,8 +1273,6 @@ $("ownerLogout").onclick=async()=>{
   try{if(token)await fetch(SUPABASE_URL+"/auth/v1/logout",{method:"POST",headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token}})}catch(e){}
   clearLocalAuth(); ownerUser=null; $("ownerPanelModal").classList.add("hidden"); await updateOwnerUI(); showToast("Owner logged out.");
 };
-
-
 
 async function loadCompanyRequirements(){
   const box=$("companyRequirements");
@@ -3954,5 +3903,26 @@ if(document.getElementById("ownerReqSaveEdit")){
 })();
 </script>
 
+
+<section class="section km-company-directory" id="companyDirectory">
+  <div class="trust-head">
+    <div>
+      <span class="eyebrow">COMPANY DIRECTORY</span>
+      <h2>Companies & Hiring Leads on KaamMilega</h2>
+      <p class="muted">A quick directory of company names shown in the hiring section. Vacancy status can change; verify the current listing before applying.</p>
+    </div>
+  </div>
+  <div class="km-company-directory-grid">
+    <article class="km-company-directory-card"><div class="km-company-directory-logo">NC</div><div><h3>NR Company</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">HI</div><div><h3>Hariyana Industries</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">MS</div><div><h3>Maruti Suzuki India Limited</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">H</div><div><h3>Honda</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">SI</div><div><h3>Swiggy Instamart</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">VG</div><div><h3>Ve Gee Auto Components Pvt Ltd</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article>
+  </div>
+</section>
+
+
+<footer><div style="max-width:1150px;margin:0 auto 18px;padding:12px 14px;border:1px solid #334155;border-radius:10px;color:#cbd5e1"><b>KaamMilega</b> is an independent employment marketplace connecting workers and employers. It is not a government department or government agency.</div><div class="section footer-grid" style="padding:0">
+<div><div class="footer-brand">Kaam<span>Milega</span></div><p>Jobs, skills and employment opportunities in one place.</p></div>
+<div><b>Customer Support</b><p>Email: <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a></p><p>Support for employers and workers.</p></div>
+<div><b>Trust & Safety</b><p>Keep payments and account credentials secure. Never share OTPs or passwords with anyone.</p></div>
+</div>
+<div class="footer-bottom">© 2026 KaamMilega. All rights reserved. · <a href="#aboutKaamMilega">About</a> · <a href="#searchAiGuidance">Search &amp; AI</a> · <a href="#howItWorks">How It Works</a> · <a href="#officialIdentity">Official Website</a><a href="#privacyPolicy">Privacy Policy</a> · <a href="#terms">Terms</a> · <a href="#faq">FAQ</a> · <a href="#contactInfo">Contact</a> · Hiring decisions are made by employers.</div></footer>
 </body>
 </html>

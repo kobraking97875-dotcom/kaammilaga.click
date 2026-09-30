@@ -725,6 +725,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
   <div class="owner-control-card"><span class="owner-badge">RATINGS & COMMENTS</span><h3>Job Reviews</h3><p class="muted">View ratings and comments submitted for jobs.</p><button class="btn secondary" id="ownerReviewsManageBtn" type="button">Manage Ratings</button></div>
   <div class="owner-control-card"><span class="owner-badge">EXCLUSIVE TOOLS</span><h3>Manage KaamMilega Tools</h3><p class="muted">View and delete saved tool records. Expired records can be cleared.</p><button class="btn orange" id="ownerMegaManageBtn" type="button">Manage Tool Records</button></div>
   <div class="owner-control-card"><span class="owner-badge">WORK RESULT VIDEOS</span><h3>User Video Submissions</h3><p class="muted">Activate or delete videos uploaded by users.</p><button class="btn orange" id="ownerVideosManageBtn" type="button">Manage Videos</button></div>
+  <div class="owner-control-card"><span class="owner-badge">WORKER ID CARDS</span><h3>Manage Worker ID Cards</h3><p class="muted">Review cards, make them Live/Hidden, or delete them.</p><button class="btn orange" id="ownerWorkerCardsManageBtn" type="button">Manage ID Cards</button></div>
 </div>
 <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0">
   <h3 style="margin:0">Posted Jobs</h3>
@@ -739,6 +740,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </div></div>
 
 <div id="ownerMegaModal" class="modal hidden"><div class="modalbox" style="max-width:850px"><button class="close" data-close>×</button><span class="eyebrow">OWNER CONTROL</span><h2>Exclusive Tool Records</h2><p class="muted">Records created by the new tools are listed here. You can delete individual records or clear expired records.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn danger" id="ownerMegaClearExpired" type="button">Delete Expired</button><button class="btn ghost" id="ownerMegaRefresh" type="button">Refresh</button></div><div id="ownerMegaList" class="km-owner-feature-list" style="margin-top:14px"></div></div></div>
+<div id="ownerWorkerCardsModal" class="modal hidden"><div class="modalbox" style="max-width:980px"><button class="close" data-close>×</button><span class="eyebrow">OWNER CONTROL</span><h2>KaamMilega Worker ID Cards</h2><p class="muted">Review submitted cards. <b>Live</b> makes the card visible in the public KaamMilega ID Card area. <b>Hide</b> removes it from the public area without deleting it.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn ghost" id="ownerWorkerCardsRefresh" type="button">Refresh</button></div><div id="ownerWorkerCardsList" class="km-owner-feature-list" style="margin-top:14px"></div></div></div>
 <!-- OWNER EDIT -->
 <div id="ownerEditModal" class="modal hidden"><div class="modalbox">
 <button class="close" data-close>×</button><span class="eyebrow">OWNER EDIT</span><h2>Update Job</h2>
@@ -4283,6 +4285,16 @@ if(document.getElementById("ownerReqSaveEdit")){
 </section>
 
 
+<!-- KAAMMILEGA LIVE WORKER ID CARDS -->
+<section class="section" id="kmLiveWorkerCards">
+  <div class="trust-head"><div><span class="eyebrow">KAAMMILEGA VERIFIED PROFILE CARDS</span><h2>Live Worker ID Cards</h2><p class="muted">Worker profile cards published by the KaamMilega owner. Only cards marked Live are shown here.</p></div></div>
+  <div id="kmLiveWorkerCardsGrid" class="km-live-id-grid"><div class="card">No live worker ID cards yet.</div></div>
+</section>
+
+<style id="km-live-worker-id-style">
+.km-live-id-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.km-live-id-card{background:#0b1728;border:1px solid #334155;border-radius:18px;overflow:hidden;color:#fff}.km-live-id-head{background:#f59e0b;color:#0b1220;padding:12px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center}.km-live-id-body{display:grid;grid-template-columns:130px 1fr;gap:16px;padding:18px}.km-live-id-photo{width:130px;height:165px;border-radius:12px;object-fit:cover;background:#e2e8f0}.km-live-id-row{margin-bottom:9px}.km-live-id-label{font-size:11px;color:#94a3b8;font-weight:700}.km-live-id-value{font-size:15px;font-weight:700;overflow-wrap:anywhere}.km-live-id-foot{padding:10px 16px;background:rgba(0,0,0,.28);font-size:12px;color:#cbd5e1}.km-owner-id-row{border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:10px;background:#0b1728;color:#fff}.km-owner-id-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}@media(max-width:800px){.km-live-id-grid{grid-template-columns:1fr}.km-live-id-body{grid-template-columns:100px 1fr}.km-live-id-photo{width:100px;height:130px}}
+</style>
+
 <footer><div style="max-width:1150px;margin:0 auto 18px;padding:12px 14px;border:1px solid #334155;border-radius:10px;color:#cbd5e1"><b>KaamMilega</b> is an independent employment marketplace connecting workers and employers. It is not a government department or government agency.</div><div class="section footer-grid" style="padding:0">
 <div><div class="footer-brand">Kaam<span>Milega</span></div><p>Jobs, skills and employment opportunities in one place.</p></div>
 <div><b>Customer Support</b><p>Email: <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a></p><p>Support for employers and workers.</p></div>
@@ -4487,6 +4499,232 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
     }, true);
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true}); else bind();
+})();
+</script>
+
+
+<!-- KaamMilega Brand Worker ID Card: isolated add-on; existing features untouched -->
+<section class="section" id="kmBrandWorkerCard">
+  <div class="trust-head">
+    <div>
+      <span class="eyebrow">KAAMMILEGA IDENTITY</span>
+      <h2>🪪 KaamMilega Worker ID Card</h2>
+      <p class="muted">Create your KaamMilega website profile card with your photo, ID, name, date of birth and experience. Download it as an image and share it with employers.</p>
+    </div>
+  </div>
+  <div class="km-brand-id-grid">
+    <article class="km-brand-id-form card">
+      <div class="km-brand-id-form-grid">
+        <label>First Name<input class="input" id="kmBrandIdFirstName" type="text" placeholder="First name" autocomplete="given-name"></label>
+        <label>Last Name<input class="input" id="kmBrandIdLastName" type="text" placeholder="Last name" autocomplete="family-name"></label>
+        <label>Date of Birth<input class="input" id="kmBrandIdDob" type="date"></label>
+        <label>Experience<input class="input" id="kmBrandIdExperience" type="text" placeholder="e.g. 3 Years"></label>
+        <label>Main Skill<input class="input" id="kmBrandIdSkill" type="text" placeholder="e.g. MIG Welder"></label>
+        <label>City<input class="input" id="kmBrandIdCity" type="text" placeholder="City"></label>
+        <label style="grid-column:1/-1">Address<input class="input" id="kmBrandIdAddress" type="text" placeholder="Full address" autocomplete="street-address"></label>
+        <label>Profile Photo<input class="input" id="kmBrandIdPhoto" type="file" accept="image/*"></label>
+      </div>
+      <div class="km-brand-id-actions">
+        <button class="btn orange" type="button" id="kmBrandIdCreate">Create KaamMilega ID Card</button>
+        <button class="btn secondary" type="button" id="kmBrandIdDownload" disabled>Download Card</button>
+      </div>
+      <div id="kmBrandIdMsg" class="muted" style="margin-top:10px"></div>
+      <p class="muted" style="font-size:12px;margin-top:12px">KaamMilega website profile card • Use the card only for your KaamMilega profile and employment profile sharing.</p>
+    </article>
+    <article class="card km-brand-id-preview-wrap">
+      <div class="eyebrow">LIVE CARD PREVIEW</div>
+      <div id="kmBrandIdPreview" class="km-brand-id-preview" aria-live="polite">
+        <div class="km-brand-id-placeholder">Fill the details and click <b>Create KaamMilega ID Card</b>.</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<style id="km-brand-id-card-style">
+#kmBrandWorkerCard{scroll-margin-top:78px}
+.km-brand-id-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,520px);gap:20px;align-items:start}
+.km-brand-id-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.km-brand-id-form-grid label{font-size:13px;font-weight:700;display:grid;gap:6px}
+.km-brand-id-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.km-brand-id-preview-wrap{overflow:hidden}
+.km-brand-id-placeholder{padding:55px 20px;text-align:center;border:1px dashed #64748b;border-radius:14px;color:#94a3b8}
+.km-id-card-canvas{width:100%;max-width:480px;aspect-ratio:1.586/1;margin:12px auto 0;border-radius:18px;display:block;box-shadow:0 16px 45px rgba(0,0,0,.25);background:#fff}
+@media(max-width:900px){.km-brand-id-grid{grid-template-columns:1fr}}
+@media(max-width:620px){.km-brand-id-form-grid{grid-template-columns:1fr}.km-brand-id-actions .btn{width:100%}}
+</style>
+
+<script id="km-brand-id-card-script">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const STORAGE='km_brand_worker_id_card_v1';
+  let photoData='';
+  let lastCardData=null;
+  let photoImage=null;
+
+  function safe(v){return String(v||'').trim()}
+  function makeId(){
+    try{
+      const old=JSON.parse(localStorage.getItem(STORAGE)||'null');
+      if(old&&old.id)return old.id;
+    }catch(e){}
+    const id='KM-W-'+String(Math.floor(100000+Math.random()*900000));
+    return id;
+  }
+  function fmtDob(v){
+    if(!v)return 'Not provided';
+    const d=new Date(v+'T00:00:00');
+    if(Number.isNaN(d.getTime()))return v;
+    return d.toLocaleDateString('en-IN',{day:'2-digit',month:'2-digit',year:'numeric'});
+  }
+  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+
+  function drawCard(data){
+    const canvas=document.createElement('canvas');
+    canvas.width=1200; canvas.height=756;
+    canvas.className='km-id-card-canvas';
+    canvas.setAttribute('aria-label','KaamMilega Worker ID Card');
+    const ctx=canvas.getContext('2d');
+    ctx.imageSmoothingEnabled=true;
+    // Card background
+    const bg=ctx.createLinearGradient(0,0,1200,756); bg.addColorStop(0,'#07111f'); bg.addColorStop(1,'#162b46');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,1200,756);
+    // Brand header
+    ctx.fillStyle='#f59e0b'; ctx.fillRect(0,0,1200,118);
+    ctx.fillStyle='#0b1220'; ctx.font='700 52px Arial'; ctx.fillText('KaamMilega',54,76);
+    ctx.font='700 25px Arial'; ctx.fillText('WORKER ID CARD',860,70);
+    // Photo frame
+    const px=58,py=166,pw=260,ph=330;
+    ctx.fillStyle='#e2e8f0'; roundRect(ctx,px,py,pw,ph,22); ctx.fill();
+    if(photoImage){
+      const iw=photoImage.naturalWidth||photoImage.width, ih=photoImage.naturalHeight||photoImage.height;
+      const scale=Math.max(pw/iw,ph/ih); const dw=iw*scale,dh=ih*scale;
+      ctx.save(); roundRect(ctx,px,py,pw,ph,22); ctx.clip();
+      ctx.drawImage(photoImage,px+(pw-dw)/2,py+(ph-dh)/2,dw,dh); ctx.restore();
+    }else{
+      ctx.fillStyle='#64748b'; ctx.font='700 28px Arial'; ctx.textAlign='center'; ctx.fillText('PHOTO',px+pw/2,py+ph/2+10); ctx.textAlign='left';
+    }
+    // Details
+    const x=370; let y=192;
+    ctx.fillStyle='#94a3b8'; ctx.font='700 20px Arial'; ctx.fillText('ID',x,y);
+    ctx.fillStyle='#fff'; ctx.font='700 34px Arial'; ctx.fillText(data.id,x+95,y);
+    y+=68; detail('NAME',data.name); y+=64; detail('DATE OF BIRTH',fmtDob(data.dob)); y+=64; detail('EXPERIENCE',data.experience||'Not provided'); y+=64; detail('SKILL',data.skill||'Not provided'); y+=64; detail('CITY',data.city||'Not provided'); y+=64; detail('ADDRESS',data.address||'Not provided');
+    function detail(label,value){ctx.fillStyle='#94a3b8';ctx.font='700 18px Arial';ctx.fillText(label,x,y);ctx.fillStyle='#fff';ctx.font='600 25px Arial';let val=String(value||'—');if(val.length>38)val=val.slice(0,35)+'…';ctx.fillText(val,x,y+31)}
+    // Logo watermark
+    ctx.save();ctx.globalAlpha=.08;ctx.translate(1030,610);ctx.rotate(-.22);ctx.fillStyle='#fff';ctx.font='700 86px Arial';ctx.fillText('KaamMilega',0,0);ctx.restore();
+    // Footer
+    ctx.fillStyle='rgba(0,0,0,.28)';ctx.fillRect(0,650,1200,106);
+    ctx.fillStyle='#fff';ctx.font='600 19px Arial';ctx.fillText('KaamMilega website profile card • Verify profile details before relying on them.',54,690);
+    ctx.fillStyle='#cbd5e1';ctx.font='500 17px Arial';ctx.fillText('KaamMilega website profile card',54,723);
+    return canvas;
+  }
+  function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
+
+  function currentData(){
+    const first=safe($('kmBrandIdFirstName')?.value);
+    const last=safe($('kmBrandIdLastName')?.value);
+    return {id:makeId(),firstName:first,lastName:last,name:[first,last].filter(Boolean).join(' '),dob:$('kmBrandIdDob')?.value||'',experience:safe($('kmBrandIdExperience')?.value),skill:safe($('kmBrandIdSkill')?.value),city:safe($('kmBrandIdCity')?.value),address:safe($('kmBrandIdAddress')?.value)};
+  }
+  function render(data){
+    const box=$('kmBrandIdPreview'); if(!box)return;
+    box.innerHTML='';
+    const canvas=drawCard(data); box.appendChild(canvas); lastCardData=data;
+    const dl=$('kmBrandIdDownload'); if(dl)dl.disabled=false;
+  }
+  function message(t,good){const e=$('kmBrandIdMsg');if(e){e.textContent=t;e.style.color=good?'#16a34a':''}}
+
+  $('kmBrandIdPhoto')?.addEventListener('change',function(){
+    const file=this.files&&this.files[0]; if(!file)return;
+    if(!file.type.startsWith('image/')){message('Please select an image file.',false);return}
+    if(file.size>5*1024*1024){message('Photo must be 5 MB or smaller.',false);this.value='';return}
+    const reader=new FileReader(); reader.onload=function(e){
+      photoData=e.target.result; photoImage=new Image(); photoImage.onload=function(){ if(lastCardData)render(lastCardData); }; photoImage.src=photoData;
+    }; reader.readAsDataURL(file);
+  });
+
+  $('kmBrandIdCreate')?.addEventListener('click',function(){
+    const data=currentData();
+    if(!data.firstName || !data.lastName){message('Please enter both first name and last name.',false);(!data.firstName?$('kmBrandIdFirstName'):$('kmBrandIdLastName'))?.focus();return}
+    try{localStorage.setItem(STORAGE,JSON.stringify({...data,photo:photoData||''}));}catch(e){}
+    render(data);
+    message('✓ Your KaamMilega ID Card is ready. You can download it below.',true);
+  });
+
+  $('kmBrandIdDownload')?.addEventListener('click',function(){
+    if(!lastCardData)return;
+    const canvas=drawCard(lastCardData);
+    const a=document.createElement('a');
+    a.download=(lastCardData.id||'KaamMilega-Worker-ID')+'.png';
+    a.href=canvas.toDataURL('image/png'); a.click();
+  });
+
+  // Restore the user's own card on the same browser.
+  try{
+    const saved=JSON.parse(localStorage.getItem(STORAGE)||'null');
+    if(saved){
+      if($('kmBrandIdFirstName'))$('kmBrandIdFirstName').value=saved.firstName||((saved.name||'').trim().split(/\s+/)[0]||'');
+      if($('kmBrandIdLastName'))$('kmBrandIdLastName').value=saved.lastName||((saved.name||'').trim().split(/\s+/).slice(1).join(' ')||'');
+      if($('kmBrandIdDob'))$('kmBrandIdDob').value=saved.dob||'';
+      if($('kmBrandIdExperience'))$('kmBrandIdExperience').value=saved.experience||'';
+      if($('kmBrandIdSkill'))$('kmBrandIdSkill').value=saved.skill||'';
+      if($('kmBrandIdCity'))$('kmBrandIdCity').value=saved.city||'';
+      if($('kmBrandIdAddress'))$('kmBrandIdAddress').value=saved.address||'';
+      if(saved.photo){photoData=saved.photo;photoImage=new Image();photoImage.onload=function(){render(saved)};photoImage.src=saved.photo}else render(saved);
+    }
+  }catch(e){}
+})();
+</script>
+
+<script id="km-worker-id-owner-live-manager">
+(function(){
+  'use strict';
+  const KEY='km_brand_worker_id_cards_public_v1';
+  const $=id=>document.getElementById(id);
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function read(){try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
+  function write(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
+  function getCurrentCard(){try{return JSON.parse(localStorage.getItem('km_brand_worker_id_card_v1')||'null')}catch(e){return null}}
+  function upsertCurrent(){
+    const d=getCurrentCard(); if(!d||!d.id)return;
+    const a=read(); const i=a.findIndex(x=>x.id===d.id);
+    const row={...d,status:(i>=0?a[i].status:'pending'),submittedAt:(i>=0?a[i].submittedAt:new Date().toISOString())};
+    if(i>=0)a[i]=row; else a.unshift(row); write(a); renderPublic(); renderOwner();
+  }
+  function renderPublic(){
+    const box=$('kmLiveWorkerCardsGrid'); if(!box)return;
+    const a=read().filter(x=>x.status==='live');
+    if(!a.length){box.innerHTML='<div class="card">No live worker ID cards yet.</div>';return}
+    box.innerHTML=a.map(x=>{
+      const photo=x.photo?'<img class="km-live-id-photo" src="'+esc(x.photo)+'" alt="Worker profile photo">':'<div class="km-live-id-photo" style="display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:700">PHOTO</div>';
+      return '<article class="km-live-id-card"><div class="km-live-id-head"><b>KaamMilega</b><b>WORKER ID CARD</b></div><div class="km-live-id-body">'+photo+'<div><div class="km-live-id-row"><div class="km-live-id-label">ID</div><div class="km-live-id-value">'+esc(x.id)+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">NAME</div><div class="km-live-id-value">'+esc(x.name)+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">DATE OF BIRTH</div><div class="km-live-id-value">'+esc(x.dob||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">EXPERIENCE</div><div class="km-live-id-value">'+esc(x.experience||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">SKILL</div><div class="km-live-id-value">'+esc(x.skill||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">CITY</div><div class="km-live-id-value">'+esc(x.city||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">ADDRESS</div><div class="km-live-id-value">'+esc(x.address||'Not provided')+'</div></div></div></div><div class="km-live-id-foot">KaamMilega website profile card • Verify profile details before relying on them.</div></article>';
+    }).join('');
+  }
+  function renderOwner(){
+    const box=$('ownerWorkerCardsList'); if(!box)return;
+    const a=read();
+    if(!a.length){box.innerHTML='<div class="card">No Worker ID Cards submitted yet.</div>';return}
+    box.innerHTML=a.map(x=>'<div class="km-owner-id-row"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><b>'+esc(x.name||'Worker')+'</b><div class="muted">'+esc(x.id)+' · '+esc(x.skill||'')+' · '+esc(x.city||'')+'</div></div><span class="owner-badge">'+esc((x.status||'pending').toUpperCase())+'</span></div><div class="muted" style="margin-top:7px">DOB: '+esc(x.dob||'—')+' · Experience: '+esc(x.experience||'—')+'</div><div class="km-owner-id-actions"><button class="btn" type="button" data-km-id-live="'+esc(x.id)+'">Live</button><button class="btn secondary" type="button" data-km-id-hide="'+esc(x.id)+'">Hide</button><button class="btn danger" type="button" data-km-id-delete="'+esc(x.id)+'">Delete</button></div></div>').join('');
+    box.querySelectorAll('[data-km-id-live]').forEach(b=>b.onclick=()=>setStatus(b.dataset.kmIdLive,'live'));
+    box.querySelectorAll('[data-km-id-hide]').forEach(b=>b.onclick=()=>setStatus(b.dataset.kmIdHide,'hidden'));
+    box.querySelectorAll('[data-km-id-delete]').forEach(b=>b.onclick=()=>{if(!confirm('Delete this Worker ID Card?'))return;write(read().filter(x=>x.id!==b.dataset.kmIdDelete));renderOwner();renderPublic();});
+  }
+  function setStatus(id,status){const a=read();const x=a.find(v=>v.id===id);if(!x)return;x.status=status;x.updatedAt=new Date().toISOString();write(a);renderOwner();renderPublic()}
+  // User creates a card: put it into the owner review queue as Pending.
+  const create=$('kmBrandIdCreate');
+  if(create){
+    // The card creator uses addEventListener, so wrapping onclick did not fire.
+    // Listen independently and send the newly created card to the Owner review queue.
+    create.addEventListener('click',function(){setTimeout(function(){
+      upsertCurrent();
+      const refresh=$('ownerWorkerCardsRefresh');
+      if(refresh && !$('ownerWorkerCardsModal')?.classList.contains('hidden')) refresh.click();
+    },120)});
+  }
+  const manage=$('ownerWorkerCardsManageBtn');
+  if(manage)manage.addEventListener('click',async function(){try{const u=await (window.getOwnerUser?window.getOwnerUser():null);if(!u){if(window.openModal)window.openModal('ownerLoginModal');else $('ownerLoginModal')?.classList.remove('hidden');return}}catch(e){return}renderOwner();if(window.openModal)window.openModal('ownerWorkerCardsModal');else $('ownerWorkerCardsModal')?.classList.remove('hidden')});
+  $('ownerWorkerCardsRefresh')?.addEventListener('click',renderOwner);
+  renderPublic();
+  window.addEventListener('storage',function(e){if(e.key===KEY){renderPublic();renderOwner()}});
 })();
 </script>
 </body>

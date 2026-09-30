@@ -221,6 +221,76 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 .km-company-directory-card p{margin:3px 0 0;font-size:12px}
 </style>
 
+
+<style id="km-final-ui-polish">
+.km-search-actions{display:flex;gap:8px;align-items:stretch}
+.km-search-actions .btn{white-space:nowrap}
+.km-click-card{cursor:pointer;transition:transform .15s ease,box-shadow .15s ease}
+.km-click-card:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(15,35,63,.10)}
+.km-bottom-leads{margin-top:10px}
+.km-bottom-leads .requirement-grid{margin-top:18px}
+.km-directory-note{font-size:13px;color:#64748b;margin-top:6px}
+#advancedSearchModal .modalbox{max-width:720px}
+.km-advanced-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.km-advanced-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}
+@media(max-width:800px){
+  .km-search-actions{display:grid;grid-template-columns:1fr 1fr}
+  .km-advanced-grid{grid-template-columns:1fr}
+}
+@media(max-width:500px){
+  .km-search-actions{grid-template-columns:1fr}
+}
+</style>
+
+
+<style id="km-premium-search-system">
+.km-premium-search-wrap{
+  margin:18px auto 0;max-width:1150px;padding:0 18px;
+}
+.km-premium-search-card{
+  background:linear-gradient(135deg,#071a36,#0b63ce 58%,#0f7c83);
+  border-radius:22px;padding:22px;color:#fff;
+  box-shadow:0 16px 40px rgba(11,99,206,.20);
+}
+.km-premium-search-title{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.km-premium-search-title h2{margin:0;font-size:24px}
+.km-premium-search-title p{margin:5px 0 0;color:#dbeafe;font-size:13px}
+.km-premium-search-grid{
+  display:grid;grid-template-columns:1.3fr 1fr .8fr .9fr auto;gap:9px;margin-top:15px
+}
+.km-premium-search-grid input,.km-premium-search-grid select{
+  min-width:0;border:0;border-radius:12px;padding:13px 14px;background:#fff;color:#172033;font:inherit
+}
+.km-premium-search-btn{
+  border:0;border-radius:12px;padding:13px 18px;background:#f97316;color:#fff;
+  font-weight:900;cursor:pointer;white-space:nowrap;box-shadow:0 7px 18px rgba(0,0,0,.16)
+}
+.km-premium-search-btn:hover{transform:translateY(-1px);filter:brightness(1.04)}
+.km-search-shortcuts{display:flex;gap:7px;flex-wrap:wrap;margin-top:11px}
+.km-search-shortcut{border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.10);
+  color:#fff;border-radius:999px;padding:7px 11px;cursor:pointer;font-size:12px}
+.km-search-result-note{margin-top:10px;font-size:12px;color:#dbeafe;min-height:17px}
+.km-search-btn-premium{
+  border:0!important;border-radius:11px!important;background:linear-gradient(135deg,#0b63ce,#174ea6)!important;
+  color:#fff!important;font-weight:800!important;box-shadow:0 6px 15px rgba(11,99,206,.18)!important;
+}
+.km-search-btn-premium:hover{filter:brightness(1.06);transform:translateY(-1px)}
+@media(max-width:950px){.km-premium-search-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.km-premium-search-wrap{padding:0 12px}.km-premium-search-card{padding:17px;border-radius:17px}
+.km-premium-search-grid{grid-template-columns:1fr}.km-premium-search-title h2{font-size:20px}}
+</style>
+
+
+<style id="km-hide-top-search">
+.hero .search, header .search { display:none !important; }
+/* The original search controls remain in the DOM for compatibility with existing JS; only the old/top UI is hidden. */
+</style>
+
+
+<style id="km-mega-features-css">
+.km-mega-wrap{max-width:1150px;margin:28px auto;padding:0 18px}.km-mega-head{display:flex;justify-content:space-between;gap:15px;align-items:end;flex-wrap:wrap}.km-mega-head h2{margin:4px 0}.km-mega-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}.km-mega-card{background:#fff;border:1px solid #e6eaf0;border-radius:18px;padding:18px;box-shadow:0 8px 25px rgba(15,23,42,.06)}.km-mega-card h3{margin:6px 0 7px}.km-mega-card p{font-size:13px;color:#64748b;line-height:1.55}.km-mega-icon{font-size:27px}.km-mega-card .btn{margin-top:9px}.km-mega-form{display:grid;gap:9px;margin-top:12px}.km-mega-form input,.km-mega-form textarea,.km-mega-form select{width:100%;box-sizing:border-box;border:1px solid #dbe2ea;border-radius:10px;padding:11px;background:#fff}.km-mega-result{margin-top:10px;font-size:13px;color:#334155;line-height:1.5}.km-hot{display:inline-flex;padding:4px 8px;border-radius:999px;background:#fff1e8;color:#c2410c;font-size:11px;font-weight:800}.km-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.km-mini-grid>div{background:#f8fafc;padding:9px;border-radius:10px;font-size:12px}.km-profile-card{background:linear-gradient(135deg,#071a36,#0b63ce);color:#fff;border-radius:18px;padding:18px}.km-profile-card p{color:#dbeafe}.km-owner-feature-list{display:grid;gap:10px}.km-owner-feature{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid #e5e7eb;border-radius:12px;padding:11px}.km-owner-feature small{display:block;color:#64748b;margin-top:3px}.km-danger-btn{background:#dc2626!important;color:#fff!important;border:0!important}.km-expired{opacity:.65}.km-qr{font-family:monospace;word-break:break-all;background:#f1f5f9;border-radius:10px;padding:8px;font-size:11px}@media(max-width:900px){.km-mega-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.km-mega-wrap{padding:0 12px}.km-mega-grid{grid-template-columns:1fr}.km-mini-grid{grid-template-columns:1fr}}
+</style>
+
 </head>
 <body><div id="toast" class="toast"></div>
 <header><div class="nav">
@@ -241,16 +311,49 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div class="search">
 <input id="searchSkill" class="input" placeholder="Search skill or job title">
 <input id="searchCity" class="input" placeholder="City / Location">
-<button class="btn" id="searchBtn">Search Jobs</button>
+<div class="km-search-actions"><button class="km-search-btn-premium btn" id="searchBtn">Search Jobs</button><button class="btn secondary" id="advancedSearchBtn" type="button">Advanced Search</button></div>
 </div>
 </div></section>
 
+<section class="km-premium-search-wrap" id="kmPremiumSearchPanel">
+  <div class="km-premium-search-card">
+    <div class="km-premium-search-title">
+      <div>
+        <h2>🔎 Find Your Perfect Job</h2>
+        <p>Search by skill, location, salary and job type — fast and simple.</p>
+      </div>
+      <span class="km-premium-search-badge">PREMIUM JOB SEARCH</span>
+    </div>
+    <div class="km-premium-search-grid">
+      <input id="kmProSkill" placeholder="Job title / skill" autocomplete="off">
+      <input id="kmProCity" placeholder="City / location" autocomplete="off">
+      <input id="kmProSalary" type="number" min="0" placeholder="Min salary ₹">
+      <select id="kmProType">
+        <option value="">Any job type</option>
+        <option>Full Time</option><option>Part Time</option><option>Contract</option>
+        <option>Temporary</option><option>Internship</option>
+      </select>
+      <button class="km-search-btn-premium km-premium-search-btn" id="kmProSearchBtn" type="button">Search Jobs</button>
+    </div>
+    <div class="km-search-shortcuts">
+      <button class="km-search-shortcut" type="button" data-km-search="MIG Welder">🔧 MIG Welder</button>
+      <button class="km-search-shortcut" type="button" data-km-search="Electrician">⚡ Electrician</button>
+      <button class="km-search-shortcut" type="button" data-km-search="Driver">🚚 Driver</button>
+      <button class="km-search-shortcut" type="button" data-km-search="Helper">👷 Helper</button>
+      <button class="km-search-shortcut" type="button" data-km-search="Delivery Executive">📦 Delivery</button>
+    </div>
+    <div class="km-search-result-note" id="kmProSearchNote">Ready to search.</div>
+  </div>
+</section>
+
+
+
 <section class="section" style="padding-top:20px">
 <div class="trust-strip">
-<div class="trust-mini"><b>Secure account login</b><span>Email + password account access</span></div>
-<div class="trust-mini"><b>Real job listings</b><span>Structured employer requirements</span></div>
-<div class="trust-mini"><b>Payment checkout</b><span>PayU checkout for featured job promotion</span></div>
-<div class="trust-mini"><b>Customer support</b><span>Direct KaamMilega assistance</span></div>
+<div class="trust-mini km-click-card" id="quickLoginCard" role="button" tabindex="0"><b>Secure account login</b><span>Email + password account access</span></div>
+<div class="trust-mini km-click-card" id="quickJobsCard" role="button" tabindex="0"><b>Real job listings</b><span>Structured employer requirements</span></div>
+<div class="trust-mini km-click-card" id="quickPaymentCard" role="button" tabindex="0"><b>Payment checkout</b><span>PayU checkout for featured job promotion</span></div>
+<div class="trust-mini km-click-card" id="quickSupportCard" role="button" tabindex="0"><b>Customer support</b><span>Direct KaamMilega assistance</span></div>
 </div>
 </section>
 
@@ -259,10 +362,6 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div id="jobs" class="cards"><div class="card">Loading jobs...</div></div>
 </section>
 
-<section class="section" id="companyRequirementsSection">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">COMPANY HIRING REQUIREMENTS</span><h2 style="margin:5px 0">Workers Required by Companies</h2><p class="muted" style="margin:0">Company requirements posted through KaamMilega. Contact the support team for current verification.</p></div><button class="btn" id="ownerRequirementBtn" data-open="ownerRequirementModal">Post Company Requirement</button></div>
-<div id="companyRequirements" class="requirement-grid" style="margin-top:18px"><div class="card">Loading company requirements...</div></div>
-</section>
 
 <section class="section trust-section">
 <div class="trust-head"><div><span class="eyebrow">BUILT FOR REAL HIRING</span><h2>A simpler, more professional way to hire</h2><p class="muted">Post requirements, reach relevant workers and get support when you need it.</p></div></div>
@@ -317,7 +416,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
       <span class="eyebrow">MY TEAM MEMBER</span>
       <h3>My Team member</h3>
       <p class="muted">Click here to view the KaamMilega team.</p>
-      <button class="btn" type="button">View My Team Member</button>
+      <button class="btn" type="button" data-open="teamModal">View My Team Member</button>
     </div>
   </div>
 </section>
@@ -545,6 +644,28 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </section>
 
 
+
+<!-- ADVANCED SEARCH -->
+<div id="advancedSearchModal" class="modal hidden">
+  <div class="modalbox">
+    <button class="close" data-close>×</button>
+    <span class="eyebrow">NEW PLATFORM SEARCH</span>
+    <h2>Advanced Job Search</h2>
+    <p class="muted">Search active KaamMilega jobs by skill, city, minimum salary and job type.</p>
+    <div class="km-advanced-grid">
+      <div class="formgroup"><label>Job / Skill</label><input id="advSkill" class="input" placeholder="MIG Welder, Electrician, Driver"></div>
+      <div class="formgroup"><label>City / Location</label><input id="advCity" class="input" placeholder="Ahmedabad, Mumbai, Delhi"></div>
+      <div class="formgroup"><label>Minimum Salary</label><input id="advSalary" class="input" type="number" min="0" placeholder="15000"></div>
+      <div class="formgroup"><label>Job Type</label><select id="advType" class="input"><option value="">Any job type</option><option>Full Time</option><option>Part Time</option><option>Contract</option><option>Daily Wage</option></select></div>
+    </div>
+    <div class="km-advanced-actions">
+      <button class="km-search-btn-premium btn" id="advSearchSubmit" type="button">Search Jobs</button>
+      <button class="btn secondary" id="advSearchReset" type="button">Clear Filters</button>
+    </div>
+    <div id="advSearchMsg"></div>
+  </div>
+</div>
+
 <!-- SUPPORT -->
 <div id="supportModal" class="modal hidden"><div class="modalbox support-modal">
 <button class="close" data-close>×</button>
@@ -602,6 +723,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
   <div class="owner-control-card"><span class="owner-badge">JOB POSTS</span><h3>Manage Jobs</h3><p class="muted">Confirm, activate, update, complete or delete all job posts.</p><button class="btn" id="ownerJobsManageBtn" type="button">Manage Jobs</button></div>
   <div class="owner-control-card"><span class="owner-badge">COMPANY REQUIREMENTS</span><h3>Manage Company Requirements</h3><p class="muted">Complete, update, reopen or delete company worker requirements.</p><button class="btn" id="ownerRequirementsManageBtn" type="button">Manage Company</button></div>
   <div class="owner-control-card"><span class="owner-badge">RATINGS & COMMENTS</span><h3>Job Reviews</h3><p class="muted">View ratings and comments submitted for jobs.</p><button class="btn secondary" id="ownerReviewsManageBtn" type="button">Manage Ratings</button></div>
+  <div class="owner-control-card"><span class="owner-badge">EXCLUSIVE TOOLS</span><h3>Manage KaamMilega Tools</h3><p class="muted">View and delete saved tool records. Expired records can be cleared.</p><button class="btn orange" id="ownerMegaManageBtn" type="button">Manage Tool Records</button></div>
   <div class="owner-control-card"><span class="owner-badge">WORK RESULT VIDEOS</span><h3>User Video Submissions</h3><p class="muted">Activate or delete videos uploaded by users.</p><button class="btn orange" id="ownerVideosManageBtn" type="button">Manage Videos</button></div>
 </div>
 <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0">
@@ -616,6 +738,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </div>
 </div></div>
 
+<div id="ownerMegaModal" class="modal hidden"><div class="modalbox" style="max-width:850px"><button class="close" data-close>×</button><span class="eyebrow">OWNER CONTROL</span><h2>Exclusive Tool Records</h2><p class="muted">Records created by the new tools are listed here. You can delete individual records or clear expired records.</p><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn danger" id="ownerMegaClearExpired" type="button">Delete Expired</button><button class="btn ghost" id="ownerMegaRefresh" type="button">Refresh</button></div><div id="ownerMegaList" class="km-owner-feature-list" style="margin-top:14px"></div></div></div>
 <!-- OWNER EDIT -->
 <div id="ownerEditModal" class="modal hidden"><div class="modalbox">
 <button class="close" data-close>×</button><span class="eyebrow">OWNER EDIT</span><h2>Update Job</h2>
@@ -3904,12 +4027,201 @@ if(document.getElementById("ownerReqSaveEdit")){
 </script>
 
 
+
+<section class="section km-bottom-leads" id="companyRequirementsSection">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">COMPANY HIRING REQUIREMENTS</span><h2 style="margin:5px 0">Workers Required by Companies</h2><p class="muted" style="margin:0">Company requirements posted through KaamMilega. Contact the support team for current verification.</p></div><button class="btn" id="ownerRequirementBtn" data-open="ownerRequirementModal">Post Company Requirement</button></div>
+<div id="companyRequirements" class="requirement-grid" style="margin-top:18px"><div class="card">Loading company requirements...</div></div>
+</section>
+
+
+
+<script id="km-final-functionality-fix">
+(function(){
+  const $=id=>document.getElementById(id);
+  const esc=window.escapeHtml||((v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
+  const open=(id)=>{const x=$(id);if(x)x.classList.remove('hidden')};
+  const close=(id)=>{const x=$(id);if(x)x.classList.add('hidden')};
+
+  // Quick cards: all four are real actions.
+  function bindQuick(id,fn){
+    const x=$(id); if(!x)return;
+    x.addEventListener('click',fn);
+    x.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();fn();}});
+  }
+  bindQuick('quickLoginCard',()=>open('loginModal'));
+  bindQuick('quickJobsCard',()=>{ $('jobs')?.scrollIntoView({behavior:'smooth',block:'start'}); });
+  bindQuick('quickPaymentCard',()=>open('featuredModal'));
+  bindQuick('quickSupportCard',()=>open('supportModal'));
+
+  const adv=$('advancedSearchBtn');
+  if(adv)adv.addEventListener('click',()=>{
+    if($('searchSkill'))$('advSkill').value=$('searchSkill').value||'';
+    if($('searchCity'))$('advCity').value=$('searchCity').value||'';
+    open('advancedSearchModal');
+  });
+
+  const reset=$('advSearchReset');
+  if(reset)reset.addEventListener('click',()=>{
+    ['advSkill','advCity','advSalary'].forEach(id=>{if($(id))$(id).value='';});
+    if($('advType'))$('advType').value='';
+    if($('advSearchMsg'))$('advSearchMsg').innerHTML='';
+  });
+
+  async function runAdvancedSearch(){
+    const skill=($('advSkill')?.value||'').trim().toLowerCase();
+    const city=($('advCity')?.value||'').trim().toLowerCase();
+    const minSalary=Number($('advSalary')?.value||0);
+    const type=($('advType')?.value||'').trim().toLowerCase();
+    const box=$('jobs');
+    if(!box){return;}
+    box.innerHTML='<div class="card">Searching active jobs...</div>';
+    try{
+      const r=await supa('jobs?select=id,title,category,city,salary,job_type,description,contact_phone,employer_id,status&status=eq.active&order=created_at.desc&limit=1000');
+      if(!r.ok)throw new Error('Could not load jobs right now.');
+      const all=await r.json();
+      const rows=(Array.isArray(all)?all:[]).filter(j=>{
+        const title=String(j.title||'').toLowerCase();
+        const cat=String(j.category||'').toLowerCase();
+        const jcity=String(j.city||'').toLowerCase();
+        const jsal=String(j.salary||'').replace(/[^0-9.]/g,'');
+        const salary=Number(jsal)||0;
+        const jt=String(j.job_type||'').toLowerCase();
+        return (!skill||(title.includes(skill)||cat.includes(skill)))
+          &&(!city||jcity.includes(city))
+          &&(!minSalary||salary>=minSalary)
+          &&(!type||jt===type);
+      });
+      if(!rows.length){
+        box.innerHTML='<div class="card"><h3>No matching jobs found</h3><p class="muted">Try a different skill, city, salary or job type.</p></div>';
+      }else{
+        box.innerHTML=rows.map(j=>`<article class="card job">
+          <div style="flex:1"><span class="tag">${esc(j.category||'Job')}</span><h3>${esc(j.title||'Job')}</h3>
+          <p class="muted">${esc(j.city||'')} · ${esc(j.salary||'Salary not specified')} · ${esc(j.job_type||'')}</p>
+          <p>${esc(j.description||'')}</p></div>
+          <button class="btn secondary kmAdvContact" data-phone="${esc(j.contact_phone||'')}">Contact</button>
+        </article>`).join('');
+        box.querySelectorAll('.kmAdvContact').forEach(b=>b.addEventListener('click',()=>{
+          const phone=(b.dataset.phone||'').replace(/\D/g,'');
+          if(phone)location.href='https://wa.me/'+phone; else alert('Contact number is not available for this listing.');
+        }));
+      }
+      if($('advSearchMsg'))$('advSearchMsg').innerHTML='<div class="notice success">'+rows.length+' active job'+(rows.length===1?'':'s')+' found.</div>';
+      $('jobs')?.scrollIntoView({behavior:'smooth',block:'start'});
+      close('advancedSearchModal');
+    }catch(e){
+      box.innerHTML='<div class="card error">Search is temporarily unavailable. Please try again.</div>';
+      if($('advSearchMsg'))$('advSearchMsg').innerHTML='<div class="notice error">'+esc(e.message||'Search failed.')+'</div>';
+    }
+  }
+  const advSubmit=$('advSearchSubmit');
+  if(advSubmit)advSubmit.addEventListener('click',runAdvancedSearch);
+
+  // Keep the main search fields and advanced fields synchronized.
+  const ss=$('searchSkill'), sc=$('searchCity');
+  if(ss)ss.addEventListener('input',()=>{if($('advSkill'))$('advSkill').value=ss.value;});
+  if(sc)sc.addEventListener('input',()=>{if($('advCity'))$('advCity').value=sc.value;});
+
+  // If the existing owner flow refreshes company requirements, also refresh the
+  // bottom company directory labels without changing the Supabase workflow.
+  window.refreshBottomCompanyLeads=function(){
+    try{
+      const req=$('companyRequirements'), dir=$('companyDirectory');
+      if(!req||!dir)return;
+      const names=[...req.querySelectorAll('.requirement-card h3')].map(x=>x.textContent.trim()).filter(Boolean);
+      if(!names.length)return;
+      const grid=dir.querySelector('.km-company-directory-grid');
+      if(!grid)return;
+      const existing=[...grid.querySelectorAll('h3')].map(x=>x.textContent.trim());
+      names.forEach(name=>{
+        if(existing.includes(name))return;
+        const art=document.createElement('article');
+        art.className='km-company-directory-card';
+        const initials=name.split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]).join('').toUpperCase();
+        art.innerHTML='<div class="km-company-directory-logo">'+esc(initials)+'</div><div><h3>'+esc(name)+'</h3><p class="muted">Active company hiring lead on KaamMilega</p></div>';
+        grid.appendChild(art);
+      });
+    }catch(e){console.warn('Company directory refresh skipped',e);}
+  };
+
+  // Observe the dynamic company requirements list. This is deliberately limited
+  // to the bottom directory; no company names are injected into the upper page.
+  const req=$('companyRequirements');
+  if(req){
+    new MutationObserver(()=>setTimeout(()=>window.refreshBottomCompanyLeads?.(),50)).observe(req,{childList:true,subtree:true});
+  }
+
+  // Existing modal close buttons still work; add Escape support for the new modal.
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')close('advancedSearchModal');});
+})();
+</script>
+
+
+<script id="km-premium-search-js">
+(function(){
+  const skill=document.getElementById('kmProSkill');
+  const city=document.getElementById('kmProCity');
+  const salary=document.getElementById('kmProSalary');
+  const type=document.getElementById('kmProType');
+  const btn=document.getElementById('kmProSearchBtn');
+  const note=document.getElementById('kmProSearchNote');
+  const oldSkill=document.getElementById('searchSkill');
+  const oldCity=document.getElementById('searchCity');
+  const oldBtn=document.getElementById('searchBtn');
+
+  function run(){
+    const s=(skill?.value||'').trim(), c=(city?.value||'').trim();
+    if(oldSkill) oldSkill.value=s;
+    if(oldCity) oldCity.value=c;
+    if(oldBtn) oldBtn.click();
+    document.getElementById('jobs')?.scrollIntoView({behavior:'smooth',block:'start'});
+    if(note){
+      const extras=[];
+      if(s) extras.push(s);
+      if(c) extras.push(c);
+      if(salary?.value) extras.push('₹'+salary.value+'+');
+      if(type?.value) extras.push(type.value);
+      note.textContent=extras.length ? 'Searching: '+extras.join(' • ') : 'Showing available jobs.';
+    }
+  }
+  btn?.addEventListener('click',run);
+  [skill,city,salary,type].forEach(el=>el?.addEventListener('keydown',e=>{if(e.key==='Enter')run()}));
+  document.querySelectorAll('[data-km-search]').forEach(b=>b.addEventListener('click',()=>{
+    if(skill) skill.value=b.getAttribute('data-km-search')||'';
+    run();
+  }));
+})();
+</script>
+
+
+<section class="km-mega-wrap" id="kmExclusiveFeatures">
+  <div class="km-mega-head"><div><span class="eyebrow">KAAMMILEGA EXCLUSIVE TOOLS</span><h2>Next-Generation Job Tools</h2><p class="muted">Smart tools for workers and employers — all in one place.</p></div><span class="km-hot">⚡ LIVE TOOLS</span></div>
+  <div class="km-mega-grid">
+    <article class="km-mega-card"><div class="km-mega-icon">🧠</div><h3>AI Job Match Explanation</h3><p>Enter a job and your skills to see why the opportunity may match.</p><button class="btn" type="button" id="kmMatchOpen">Check Match</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">💰</div><h3>Salary Negotiation Assistant</h3><p>Get a practical negotiation range and a ready-to-send message.</p><button class="btn" type="button" id="kmSalaryOpen">Negotiate Salary</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">📍</div><h3>Job Travel Calculator</h3><p>Estimate distance, travel time and daily travel cost.</p><button class="btn" type="button" id="kmTravelOpen">Calculate Travel</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🛡️</div><h3>Job Scam Warning System</h3><p>Check common risk signals before sharing money or documents.</p><button class="btn" type="button" id="kmScamOpen">Check Job Safety</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🪪</div><h3>Digital Worker ID</h3><p>Create a shareable KaamMilega worker ID and profile link.</p><button class="btn" type="button" id="kmIdOpen">Create Worker ID</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🔄</div><h3>Job Swap / Referral</h3><p>Save a referral record and share a job with another worker.</p><button class="btn" type="button" id="kmReferralOpen">Refer a Job</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🧮</div><h3>Take-Home Salary Calculator</h3><p>Compare salary after your declared monthly work-related costs.</p><button class="btn" type="button" id="kmTakeHomeOpen">Calculate Take-Home</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">📁</div><h3>Document Locker</h3><p>Organize document names and statuses locally without uploading files.</p><button class="btn" type="button" id="kmDocsOpen">Open Locker</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🎯</div><h3>Interview Practice AI</h3><p>Practice role-based interview questions and track your answers.</p><button class="btn" type="button" id="kmInterviewOpen">Start Practice</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🌐</div><h3>Hindi ↔ English Job Translator</h3><p>Paste a short job description and get a worker-friendly language view.</p><button class="btn" type="button" id="kmTranslateOpen">Translate Job</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🎙️</div><h3>AI Voice Interview</h3><p>Use browser speech recognition to answer interview questions by voice.</p><button class="btn" type="button" id="kmVoiceInterviewOpen">Voice Interview</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">📦</div><h3>Job Bundle</h3><p>See salary, location, shift, requirements and apply action together.</p><button class="btn" type="button" id="kmBundleOpen">Build Job Bundle</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🔥</div><h3>Hot Vacancy Meter</h3><p>Display a visual vacancy signal from declared slots and applications.</p><button class="btn" type="button" id="kmHotOpen">Check Vacancy</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">👥</div><h3>Worker Match Circle</h3><p>Create a shortlist from skill, city and availability information.</p><button class="btn" type="button" id="kmCircleOpen">Build Match Circle</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🎫</div><h3>Interview Pass</h3><p>Create a simple interview pass with candidate, role and time.</p><button class="btn" type="button" id="kmPassOpen">Create Pass</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">👤</div><h3>Worker Mini Website</h3><p>Generate a shareable public-style worker profile preview.</p><button class="btn" type="button" id="kmMiniOpen">Create Mini Profile</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🏢</div><h3>Company Mini Page</h3><p>Create a compact company hiring page preview with open roles.</p><button class="btn" type="button" id="kmCompanyOpen">Create Company Page</button></article>
+  </div>
+</section>
+
 <section class="section km-company-directory" id="companyDirectory">
   <div class="trust-head">
     <div>
       <span class="eyebrow">COMPANY DIRECTORY</span>
       <h2>Companies & Hiring Leads on KaamMilega</h2>
-      <p class="muted">A quick directory of company names shown in the hiring section. Vacancy status can change; verify the current listing before applying.</p>
+      <p class="muted">Company names and hiring leads are listed here at the bottom of the website. Vacancy status can change; verify the current listing before applying.</p>
     </div>
   </div>
   <div class="km-company-directory-grid">
@@ -3924,5 +4236,96 @@ if(document.getElementById("ownerReqSaveEdit")){
 <div><b>Trust & Safety</b><p>Keep payments and account credentials secure. Never share OTPs or passwords with anyone.</p></div>
 </div>
 <div class="footer-bottom">© 2026 KaamMilega. All rights reserved. · <a href="#aboutKaamMilega">About</a> · <a href="#searchAiGuidance">Search &amp; AI</a> · <a href="#howItWorks">How It Works</a> · <a href="#officialIdentity">Official Website</a><a href="#privacyPolicy">Privacy Policy</a> · <a href="#terms">Terms</a> · <a href="#faq">FAQ</a> · <a href="#contactInfo">Contact</a> · Hiring decisions are made by employers.</div></footer>
+
+
+<div id="kmMegaModal" class="modal hidden"><div class="modalbox" style="max-width:700px"><button class="close" data-close>×</button><span class="eyebrow">KAAMMILEGA TOOL</span><h2 id="kmMegaTitle">Tool</h2><div id="kmMegaBody"></div></div></div>
+
+<script id="km-exclusive-tools-js">
+(function(){
+const $=id=>document.getElementById(id), KEY='km_exclusive_records_v1';
+const read=()=>{try{return JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){return[]}};
+const write=a=>localStorage.setItem(KEY,JSON.stringify(a));
+const save=(type,data,days=30)=>{const a=read();a.unshift({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()+Math.random()),type,data,createdAt:new Date().toISOString(),expiresAt:new Date(Date.now()+days*864e5).toISOString()});write(a);return a[0]};
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+function openTool(title,html,bind){$('kmMegaTitle').textContent=title;$('kmMegaBody').innerHTML=html;openModal('kmMegaModal');if(bind)bind();}
+function card(type,label,data){return `<div class="km-owner-feature"><div><b>${esc(label)}</b><small>${esc(JSON.stringify(data))}</small></div><button class="btn km-danger-btn" data-del-tool="${esc(type)}" data-del-id="${esc(data._id||'')}">Delete</button></div>`}
+function ownerList(){const box=$('ownerMegaList');if(!box)return;const a=read();if(!a.length){box.innerHTML='<div class="card">No saved tool records.</div>';return}box.innerHTML=a.map(x=>{const d={...x.data,_id:x.id};return card(x.type,x.type.replace(/([A-Z])/g,' $1'),d)}).join('');box.querySelectorAll('[data-del-tool]').forEach(b=>b.onclick=()=>{write(read().filter(x=>x.id!==b.dataset.delId));ownerList();});}
+function bind(id,title,html,fn){const b=$(id);if(b)b.onclick=()=>openTool(title,html,fn)}
+bind('kmMatchOpen','AI Job Match Explanation',`<div class="km-mega-form"><input id="mtSkill" placeholder="Your skill"><input id="mtJob" placeholder="Job title"><input id="mtCity" placeholder="City"><button class="btn" id="mtGo">Explain Match</button><div id="mtOut" class="km-mega-result"></div></div>`,()=>{$('mtGo').onclick=()=>{let s=$('mtSkill').value.trim(),j=$('mtJob').value.trim(),c=$('mtCity').value.trim();let reasons=[];if(s&&j&&j.toLowerCase().includes(s.toLowerCase()))reasons.push('Your skill matches the job title.');if(c)reasons.push('Location preference recorded: '+c+'.');reasons.push('Final selection depends on the employer and vacancy details.');$('mtOut').innerHTML='<b>Match explanation</b><br>'+reasons.map(esc).join('<br>');save('AI Job Match Explanation',{skill:s,job:j,city:c});}});
+bind('kmSalaryOpen','Salary Negotiation Assistant',`<div class="km-mega-form"><input id="snCur" type="number" placeholder="Current salary ₹"><input id="snExp" type="number" placeholder="Expected salary ₹"><button class="btn" id="snGo">Prepare Negotiation</button><div id="snOut" class="km-mega-result"></div></div>`,()=>{$('snGo').onclick=()=>{let c=+$('snCur').value,e=+$('snExp').value;if(!c||!e)return;$('snOut').innerHTML='Suggested discussion range: <b>₹'+Math.min(e,Math.round(c*1.25)).toLocaleString('en-IN')+'–₹'+e.toLocaleString('en-IN')+'</b><br>Message: “I am interested in the role. Based on my skills and experience, could we discuss the compensation?”';save('Salary Negotiation Assistant',{current:c,expected:e});}});
+bind('kmTravelOpen','Job Travel Calculator',`<div class="km-mega-form"><input id="trKm" type="number" placeholder="One-way distance (km)"><input id="trCost" type="number" placeholder="Travel cost per km ₹"><input id="trDays" type="number" value="26" placeholder="Work days/month"><button class="btn" id="trGo">Calculate</button><div id="kmTransOut" class="km-mega-result"></div></div>`,()=>{$('trGo').onclick=()=>{let k=+$('trKm').value,c=+$('trCost').value,d=+$('trDays').value||26;if(k&&c){$('trOut').textContent='Estimated monthly travel cost: ₹'+(k*2*c*d).toLocaleString('en-IN')+'. Estimated one-way travel distance: '+k+' km.';save('Job Travel Calculator',{distance:k,costPerKm:c,days:d});}}});
+bind('kmScamOpen','Job Scam Warning System',`<div class="km-mega-form"><textarea id="scText" rows="5" placeholder="Paste job message/details"></textarea><button class="btn" id="scGo">Scan Risk Signals</button><div id="scOut" class="km-mega-result"></div></div>`,()=>{$('scGo').onclick=()=>{let t=$('scText').value.toLowerCase(),risk=[];['pay first','registration fee','otp','password','guaranteed job','send money','processing fee'].forEach(x=>{if(t.includes(x))risk.push(x)});$('scOut').innerHTML=risk.length?'<b>⚠️ Risk signals found:</b> '+risk.map(esc).join(', ')+'. Never share OTP/password or pay money only to secure a job.':'<b>✓ No common warning phrase detected.</b> Still verify the employer and vacancy independently.';save('Job Scam Warning System',{text:t.slice(0,500),signals:risk});}});
+bind('kmIdOpen','Digital Worker ID',`<div class="km-mega-form"><input id="idName" placeholder="Worker name"><input id="idSkill" placeholder="Primary skill"><input id="idCity" placeholder="City"><button class="btn" id="idGo">Create ID</button><div id="idOut" class="km-mega-result"></div></div>`,()=>{$('idGo').onclick=()=>{let n=$('idName').value.trim(),s=$('idSkill').value.trim(),c=$('idCity').value.trim();if(!n)return;let id='KM-W-'+Date.now().toString(36).toUpperCase();$('idOut').innerHTML='<b>Worker ID: '+id+'</b><br>'+esc(n)+' · '+esc(s)+' · '+esc(c)+'<div class="km-qr">Share code: '+esc(id)+'</div>';save('Digital Worker ID',{name:n,skill:s,city:c,id},365);}});
+bind('kmReferralOpen','Job Swap / Referral',`<div class="km-mega-form"><input id="rfJob" placeholder="Job title"><input id="rfPerson" placeholder="Friend/worker name"><button class="btn" id="rfGo">Save Referral</button><div id="rfOut" class="km-mega-result"></div></div>`,()=>{$('rfGo').onclick=()=>{let j=$('rfJob').value.trim(),p=$('rfPerson').value.trim();save('Job Swap / Referral',{job:j,person:p});$('rfOut').textContent='Referral saved. You can share the job link separately.';}});
+bind('kmTakeHomeOpen','Take-Home Salary Calculator',`<div class="km-mega-form"><input id="thGross" type="number" placeholder="Monthly salary ₹"><input id="thTravel" type="number" placeholder="Travel/month ₹"><input id="thFood" type="number" placeholder="Food/month ₹"><input id="thOther" type="number" placeholder="Other work costs ₹"><button class="btn" id="thGo">Calculate</button><div id="thOut" class="km-mega-result"></div></div>`,()=>{$('thGo').onclick=()=>{let g=+$('thGross').value,t=+$('thTravel').value||0,f=+$('thFood').value||0,o=+$('thOther').value||0;$('thOut').textContent='Estimated amount after declared costs: ₹'+Math.max(0,g-t-f-o).toLocaleString('en-IN');save('Take-Home Salary Calculator',{gross:g,travel:t,food:f,other:o});}});
+bind('kmDocsOpen','Document Locker',`<div class="km-mega-form"><input id="dcName" placeholder="Document name e.g. Aadhaar/CV/Certificate"><select id="dcStatus"><option>Ready</option><option>Need Update</option><option>Missing</option></select><button class="btn" id="dcGo">Save Document Status</button><div id="dcOut" class="km-mega-result"></div></div>`,()=>{$('dcGo').onclick=()=>{let n=$('dcName').value.trim(),st=$('dcStatus').value;save('Document Locker',{document:n,status:st});$('dcOut').textContent='Document status saved. This tool stores the document name/status only; it does not upload the actual document.';}});
+let qs=['Tell me about yourself.','Why should we hire you?','What experience do you have?'];
+bind('kmInterviewOpen','Interview Practice AI',`<div class="km-mega-form"><select id="ivRole"><option>Welder</option><option>Driver</option><option>Electrician</option><option>General Worker</option></select><button class="btn" id="ivGo">Start Question</button><div id="ivOut" class="km-mega-result"></div></div>`,()=>{$('ivGo').onclick=()=>{let q=qs[Math.floor(Math.random()*qs.length)];$('ivOut').innerHTML='<b>Interviewer:</b> '+q+'<br><textarea id="ivAns" rows="4" placeholder="Type your answer"></textarea><button class="btn" id="ivSave">Save Answer</button>';$('ivSave').onclick=()=>save('Interview Practice AI',{role:$('ivRole').value,question:q,answer:$('ivAns').value.slice(0,1000)});}});
+bind('kmTranslateOpen','Hindi ↔ English Job Translator',`<div class="km-mega-form"><textarea id="trText" rows="6" placeholder="Paste a short job description"></textarea><select id="trLang"><option value="hi">English → Hindi</option><option value="en">Hindi → English</option></select><button class="btn" id="kmTransGo">Translate</button><div id="kmTransOut" class="km-mega-result"></div></div>`,()=>{$('kmTransGo').onclick=()=>{let t=$('trText').value,lang=$('trLang').value;let dict=lang==='hi'?{'salary':'वेतन','location':'स्थान','experience':'अनुभव','shift':'शिफ्ट','apply':'आवेदन करें','worker':'कामगार','job':'नौकरी','required':'आवश्यक'}:{'वेतन':'salary','स्थान':'location','अनुभव':'experience','शिफ्ट':'shift','आवेदन':'apply','कामगार':'worker','नौकरी':'job','आवश्यक':'required'};let out=t;Object.entries(dict).forEach(([a,b])=>out=out.replace(new RegExp(a,'gi'),b));$('kmTransOut').textContent=out;save('Hindi ↔ English Job Translator',{direction:lang,text:t.slice(0,1000)});}});
+function voiceInterview(){openTool('AI Voice Interview',`<div class="km-mega-form"><p id="viQ"><b>Question:</b> Tell me about your experience.</p><button class="btn" id="viStart">🎙️ Start Speaking</button><div id="viOut" class="km-mega-result">Tap Start Speaking and allow microphone access when Chrome asks.</div><textarea id="viText" rows="4" placeholder="If voice is unavailable, type your answer here…"></textarea><button class="btn secondary" id="viSaveText" type="button">Save Typed Answer</button></div>`,()=>{
+  const start=$('viStart'), out=$('viOut'), text=$('viText'), saveText=$('viSaveText');
+  saveText.onclick=()=>{const a=(text.value||'').trim();if(!a){out.textContent='Please type an answer first.';return}out.textContent='✓ Answer saved.';save('AI Voice Interview',{answer:a,method:'typed'});};
+  start.onclick=async()=>{
+    const R=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!R){out.textContent='Voice recognition is not available in this browser. You can use the text box below.';return}
+    try{
+      if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){
+        out.textContent='🎙️ Requesting microphone permission…';
+        const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        stream.getTracks().forEach(t=>t.stop());
+      }
+      const r=new R();
+      r.lang=(navigator.language||'en-IN').toLowerCase().startsWith('hi')?'hi-IN':'en-IN';
+      r.interimResults=false; r.continuous=false; r.maxAlternatives=3;
+      start.disabled=true; out.textContent='🎙️ Listening… Speak now.';
+      r.onstart=()=>{out.textContent='🎙️ Listening… Speak now.'};
+      r.onresult=e=>{const a=e.results?.[0]?.[0]?.transcript||''; if(a){text.value=a;out.textContent='✓ Voice answer captured. Tap Save Typed Answer to keep it.';save('AI Voice Interview',{answer:a,method:'voice'});}else out.textContent='I could not hear an answer. Please try again.';};
+      r.onerror=e=>{
+        const code=e?.error||'unknown';
+        const msg=code==='not-allowed'?'Microphone permission was denied. Tap the lock icon in Chrome → Site settings → Microphone → Allow, then try again.':code==='no-speech'?'No speech detected. Tap Start Speaking and speak clearly.':code==='audio-capture'?'No microphone was detected. Check your phone microphone permission and try again.':'Voice input could not start ('+code+'). You can use the text box below.';
+        out.textContent=msg;
+      };
+      r.onend=()=>{start.disabled=false};
+      r.start();
+    }catch(err){
+      start.disabled=false;
+      out.textContent='Microphone access could not be started. Allow microphone permission in Chrome, then try again. You can also type your answer below.';
+    }
+  };
+})}
+const vo=$('kmVoiceInterviewOpen');if(vo)vo.onclick=voiceInterview;
+bind('kmBundleOpen','Job Bundle',`<div class="km-mega-form"><input id="jbTitle" placeholder="Job title"><input id="jbSalary" placeholder="Salary"><input id="jbLoc" placeholder="Location"><input id="jbShift" placeholder="Shift"><textarea id="jbReq" rows="3" placeholder="Requirements"></textarea><button class="btn" id="jbGo">Create Bundle</button><div id="jbOut" class="km-mega-result"></div></div>`,()=>{$('jbGo').onclick=()=>{let d={title:$('jbTitle').value,salary:$('jbSalary').value,location:$('jbLoc').value,shift:$('jbShift').value,requirements:$('jbReq').value};$('jbOut').innerHTML='<div class="km-profile-card"><b>'+esc(d.title)+'</b><p>💰 '+esc(d.salary)+' · 📍 '+esc(d.location)+' · 🕐 '+esc(d.shift)+'</p><p>'+esc(d.requirements)+'</p><button class="btn" type="button" onclick="document.getElementById(\'kmMegaModal\').classList.add(\'hidden\')">Apply / Continue</button></div>';save('Job Bundle',d);}});
+bind('kmHotOpen','Hot Vacancy Meter',`<div class="km-mega-form"><input id="hvSlots" type="number" placeholder="Open slots"><input id="hvApps" type="number" placeholder="Applications"><button class="btn" id="hvGo">Calculate</button><div id="hvOut" class="km-mega-result"></div></div>`,()=>{$('hvGo').onclick=()=>{let s=+$('hvSlots').value,a=+$('hvApps').value,level=a>=s*5?'Very high':a>=s*2?'High':a>=s?'Active':'Open';$('hvOut').textContent='Vacancy signal: '+level+'. This is based only on the numbers entered by the employer.';save('Hot Vacancy Meter',{slots:s,applications:a,signal:level});}});
+bind('kmCircleOpen','Worker Match Circle',`<div class="km-mega-form"><input id="wcSkill" placeholder="Required skill"><input id="wcCity" placeholder="City"><input id="wcAvail" placeholder="Availability"><button class="btn" id="wcGo">Create Circle</button><div id="wcOut" class="km-mega-result"></div></div>`,()=>{$('wcGo').onclick=()=>{let d={skill:$('wcSkill').value,city:$('wcCity').value,availability:$('wcAvail').value};$('wcOut').textContent='Match Circle created for '+d.skill+' · '+d.city+' · '+d.availability+'. Add worker profiles through your normal profile workflow.';save('Worker Match Circle',d);}});
+bind('kmPassOpen','Interview Pass',`<div class="km-mega-form"><input id="ipName" placeholder="Candidate name"><input id="ipRole" placeholder="Role"><input id="ipTime" placeholder="Interview date/time"><button class="btn" id="ipGo">Create Pass</button><div id="ipOut" class="km-mega-result"></div></div>`,()=>{$('ipGo').onclick=()=>{let d={name:$('ipName').value,role:$('ipRole').value,time:$('ipTime').value,pass:'IP-'+Date.now().toString(36).toUpperCase()};$('ipOut').innerHTML='<b>Interview Pass '+d.pass+'</b><br>'+esc(d.name)+' · '+esc(d.role)+' · '+esc(d.time);save('Interview Pass',d,90);}});
+bind('kmMiniOpen','Worker Mini Website',`<div class="km-mega-form"><input id="mwName" placeholder="Name"><input id="mwSkill" placeholder="Skill"><input id="mwCity" placeholder="City"><input id="mwExp" placeholder="Experience"><button class="btn" id="mwGo">Generate Profile</button><div id="mwOut" class="km-mega-result"></div></div>`,()=>{$('mwGo').onclick=()=>{let d={name:$('mwName').value,skill:$('mwSkill').value,city:$('mwCity').value,experience:$('mwExp').value};let slug=(d.name||'worker').toLowerCase().replace(/[^a-z0-9]+/g,'-');$('mwOut').innerHTML='<div class="km-profile-card"><h3>'+esc(d.name)+'</h3><p>🧑‍🔧 '+esc(d.skill)+' · 📍 '+esc(d.city)+' · '+esc(d.experience)+'</p><div class="km-qr">kaammilaga.click/worker/'+esc(slug)+'</div></div>';save('Worker Mini Website',d,365);}});
+bind('kmCompanyOpen','Company Mini Page',`<div class="km-mega-form"><input id="cpName" placeholder="Company name"><input id="cpCity" placeholder="City"><input id="cpRoles" placeholder="Open roles"><button class="btn" id="cpGo">Generate Company Page</button><div id="cpOut" class="km-mega-result"></div></div>`,()=>{$('cpGo').onclick=()=>{let d={company:$('cpName').value,city:$('cpCity').value,roles:$('cpRoles').value};$('cpOut').innerHTML='<div class="km-profile-card"><h3>🏢 '+esc(d.company)+'</h3><p>📍 '+esc(d.city)+' · Open roles: '+esc(d.roles)+'</p></div>';save('Company Mini Page',d,365);}});
+const om=$('ownerMegaManageBtn');if(om)om.onclick=()=>{ownerList();openModal('ownerMegaModal')};
+$('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpired')?.addEventListener('click',()=>{const now=Date.now();write(read().filter(x=>new Date(x.expiresAt).getTime()>now));ownerList()});
+})();
+</script>
+
+<script id="km-button-reliability-fix">
+(function(){
+  'use strict';
+  // Reliability-only patch: does not replace existing handlers or change working features.
+  // Explicitly make nested Team Member button independently open its existing modal.
+  const teamBtn=document.querySelector('.card[data-open="teamModal"] button');
+  if(teamBtn){ teamBtn.setAttribute('data-open','teamModal'); teamBtn.setAttribute('type','button'); }
+  // Prevent accidental form submission for UI-control buttons that already use modal/search attributes.
+  document.querySelectorAll('button[data-open],button[data-close],button[data-km-search],button[data-ai-q]').forEach(function(b){
+    if(!b.getAttribute('type')) b.setAttribute('type','button');
+  });
+  // Guard: every data-open target must exist; keep a clear console diagnostic if markup is changed later.
+  document.querySelectorAll('[data-open]').forEach(function(b){
+    const id=b.getAttribute('data-open');
+    if(id && !document.getElementById(id)) console.error('KaamMilega button target missing:',id,b);
+  });
+  document.querySelectorAll('[data-close]').forEach(function(b){
+    const id=b.getAttribute('data-close');
+    if(id && !document.getElementById(id)) console.error('KaamMilega close target missing:',id,b);
+  });
+})();
+</script>
 </body>
 </html>

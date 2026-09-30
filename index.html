@@ -291,6 +291,12 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 .km-mega-wrap{max-width:1150px;margin:28px auto;padding:0 18px}.km-mega-head{display:flex;justify-content:space-between;gap:15px;align-items:end;flex-wrap:wrap}.km-mega-head h2{margin:4px 0}.km-mega-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:16px}.km-mega-card{background:#fff;border:1px solid #e6eaf0;border-radius:18px;padding:18px;box-shadow:0 8px 25px rgba(15,23,42,.06)}.km-mega-card h3{margin:6px 0 7px}.km-mega-card p{font-size:13px;color:#64748b;line-height:1.55}.km-mega-icon{font-size:27px}.km-mega-card .btn{margin-top:9px}.km-mega-form{display:grid;gap:9px;margin-top:12px}.km-mega-form input,.km-mega-form textarea,.km-mega-form select{width:100%;box-sizing:border-box;border:1px solid #dbe2ea;border-radius:10px;padding:11px;background:#fff}.km-mega-result{margin-top:10px;font-size:13px;color:#334155;line-height:1.5}.km-hot{display:inline-flex;padding:4px 8px;border-radius:999px;background:#fff1e8;color:#c2410c;font-size:11px;font-weight:800}.km-mini-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.km-mini-grid>div{background:#f8fafc;padding:9px;border-radius:10px;font-size:12px}.km-profile-card{background:linear-gradient(135deg,#071a36,#0b63ce);color:#fff;border-radius:18px;padding:18px}.km-profile-card p{color:#dbeafe}.km-owner-feature-list{display:grid;gap:10px}.km-owner-feature{display:flex;justify-content:space-between;align-items:center;gap:10px;border:1px solid #e5e7eb;border-radius:12px;padding:11px}.km-owner-feature small{display:block;color:#64748b;margin-top:3px}.km-danger-btn{background:#dc2626!important;color:#fff!important;border:0!important}.km-expired{opacity:.65}.km-qr{font-family:monospace;word-break:break-all;background:#f1f5f9;border-radius:10px;padding:8px;font-size:11px}@media(max-width:900px){.km-mega-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.km-mega-wrap{padding:0 12px}.km-mega-grid{grid-template-columns:1fr}.km-mini-grid{grid-template-columns:1fr}}
 </style>
 
+<style id="km-tools-clarity-css">
+.km-tools-guide{display:grid;gap:8px;margin:0 0 18px;padding:14px 16px;border:1px solid rgba(30,90,160,.18);border-radius:14px;background:rgba(30,90,160,.05);font-size:13px;line-height:1.55}
+.km-mega-card p{min-height:76px;line-height:1.55}
+.km-mega-card .btn{min-height:42px}
+.km-mega-card:after{content:'Open to enter details → see your result';display:block;margin-top:10px;font-size:11px;opacity:.65}
+</style>
 </head>
 <body><div id="toast" class="toast"></div>
 <header><div class="nav">
@@ -766,7 +772,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div class="formgroup"><label>Mobile</label><input id="profilePhone" class="input" readonly></div>
 </div>
 <div class="row">
-<div class="formgroup"><label>City</label><input id="profileCity" class="input" placeholder="City"></div>
+<div class="formgroup"><label>City</label><input id="profileCity" class="input" placeholder="Job city"></div>
 <div class="formgroup"><label>Skills</label><input id="profileSkills" class="input" placeholder="Welder, Electrician"></div>
 </div>
 <div id="profileMsg"></div>
@@ -3463,7 +3469,7 @@ if(document.getElementById("ownerReqSaveEdit")){
       <p class="muted">Save a job preference and use it to check for matching listings.</p>
       <div class="km-radar">
         <input id="kmRadarSkill" placeholder="Skill / job title" aria-label="Skill or job title">
-        <input id="kmRadarCity" placeholder="City" aria-label="City">
+        <input id="kmRadarCity" placeholder="Job city" aria-label="City">
         <input id="kmRadarSalary" type="number" min="0" placeholder="Min salary ₹" aria-label="Minimum salary">
         <button class="btn" type="button" id="kmRadarBtn">Save Radar</button>
       </div>
@@ -3634,7 +3640,7 @@ if(document.getElementById("ownerReqSaveEdit")){
       <div class="km-form-grid">
         <input class="input" id="kmCardName" placeholder="Name">
         <input class="input" id="kmCardSkill" placeholder="Main skill">
-        <input class="input" id="kmCardExperience" placeholder="Experience">
+        <input class="input" id="kmCardExperience" placeholder="Experience (e.g. 5 years)">
         <input class="input" id="kmCardCity" placeholder="Preferred city">
         <input class="input" id="kmCardSalary" placeholder="Expected salary">
         <select class="input" id="kmCardAvailability">
@@ -3661,7 +3667,7 @@ if(document.getElementById("ownerReqSaveEdit")){
       <p class="muted">Save your preferred skill and city for future matching jobs.</p>
       <div class="km-form-grid">
         <input class="input" id="kmAlertSkill" placeholder="Skill / job title">
-        <input class="input" id="kmAlertCity" placeholder="City">
+        <input class="input" id="kmAlertCity" placeholder="Job city">
       </div>
       <div class="km-job-actions">
         <button class="btn" type="button" id="kmSaveAlert">Save Alert</button>
@@ -3808,7 +3814,7 @@ if(document.getElementById("ownerReqSaveEdit")){
         <input class="input" id="kmCvName" placeholder="Full name">
         <input class="input" id="kmCvPhone" placeholder="Phone / Email">
         <input class="input" id="kmCvSkill" placeholder="Main skill">
-        <input class="input" id="kmCvExp" placeholder="Experience">
+        <input class="input" id="kmCvExp" placeholder="Experience (e.g. 5 years)">
       </div>
       <textarea class="input" id="kmCvSummary" rows="3" placeholder="Short professional summary"></textarea>
       <button class="btn" type="button" id="kmCvCreate">Create CV</button>
@@ -3833,7 +3839,7 @@ if(document.getElementById("ownerReqSaveEdit")){
       <h3>🪪 Verified Worker Profile</h3>
       <p class="muted">Prepare a profile with optional verification fields. Verification is only shown when the platform actually verifies the information.</p>
       <input class="input" id="kmProfileSkill" placeholder="Skill">
-      <input class="input" id="kmProfileExp" placeholder="Experience">
+      <input class="input" id="kmProfileExp" placeholder="Experience (e.g. 5 years)">
       <select class="input" id="kmProfileVerify">
         <option value="unverified">Not verified</option>
         <option value="pending">Verification requested</option>
@@ -4250,24 +4256,29 @@ if(document.getElementById("ownerReqSaveEdit")){
 
 <section class="km-mega-wrap" id="kmExclusiveFeatures">
   <div class="km-mega-head"><div><span class="eyebrow">KAAMMILEGA EXCLUSIVE TOOLS</span><h2>Next-Generation Job Tools</h2><p class="muted">Smart tools for workers and employers — all in one place.</p></div><span class="km-hot">⚡ LIVE TOOLS</span></div>
+  <div class="km-tools-guide" aria-label="How KaamMilega tools work">
+    <div><b>How to use:</b> Open any tool, enter the requested details, press its blue action button, and read the result shown below the form.</div>
+    <div><b>Saved data:</b> Most of these helper records are saved in this browser/device. They are not automatically visible to other users unless a tool specifically says it is public or is connected to the KaamMilega account/database.</div>
+    <div><b>Important:</b> These tools provide estimates, checklists or previews. They do not guarantee a job, salary, interview or employer decision.</div>
+  </div>
   <div class="km-mega-grid">
-    <article class="km-mega-card"><div class="km-mega-icon">🧠</div><h3>AI Job Match Explanation</h3><p>Enter a job and your skills to see why the opportunity may match.</p><button class="btn" type="button" id="kmMatchOpen">Check Match</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">💰</div><h3>Salary Negotiation Assistant</h3><p>Get a practical negotiation range and a ready-to-send message.</p><button class="btn" type="button" id="kmSalaryOpen">Negotiate Salary</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">📍</div><h3>Job Travel Calculator</h3><p>Estimate distance, travel time and daily travel cost.</p><button class="btn" type="button" id="kmTravelOpen">Calculate Travel</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🛡️</div><h3>Job Scam Warning System</h3><p>Check common risk signals before sharing money or documents.</p><button class="btn" type="button" id="kmScamOpen">Check Job Safety</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🪪</div><h3>Digital Worker ID</h3><p>Create a shareable KaamMilega worker ID and profile link.</p><button class="btn" type="button" id="kmIdOpen">Create Worker ID</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🔄</div><h3>Job Swap / Referral</h3><p>Save a referral record and share a job with another worker.</p><button class="btn" type="button" id="kmReferralOpen">Refer a Job</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🧮</div><h3>Take-Home Salary Calculator</h3><p>Compare salary after your declared monthly work-related costs.</p><button class="btn" type="button" id="kmTakeHomeOpen">Calculate Take-Home</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">📁</div><h3>Document Locker</h3><p>Organize document names and statuses locally without uploading files.</p><button class="btn" type="button" id="kmDocsOpen">Open Locker</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🎯</div><h3>Interview Practice AI</h3><p>Practice role-based interview questions and track your answers.</p><button class="btn" type="button" id="kmInterviewOpen">Start Practice</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🌐</div><h3>Hindi ↔ English Job Translator</h3><p>Paste a short job description and get a worker-friendly language view.</p><button class="btn" type="button" id="kmTranslateOpen">Translate Job</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🎙️</div><h3>AI Voice Interview</h3><p>Use browser speech recognition to answer interview questions by voice.</p><button class="btn" type="button" id="kmVoiceInterviewOpen">Voice Interview</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">📦</div><h3>Job Bundle</h3><p>See salary, location, shift, requirements and apply action together.</p><button class="btn" type="button" id="kmBundleOpen">Build Job Bundle</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🔥</div><h3>Hot Vacancy Meter</h3><p>Display a visual vacancy signal from declared slots and applications.</p><button class="btn" type="button" id="kmHotOpen">Check Vacancy</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">👥</div><h3>Worker Match Circle</h3><p>Create a shortlist from skill, city and availability information.</p><button class="btn" type="button" id="kmCircleOpen">Build Match Circle</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🎫</div><h3>Interview Pass</h3><p>Create a simple interview pass with candidate, role and time.</p><button class="btn" type="button" id="kmPassOpen">Create Pass</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">👤</div><h3>Worker Mini Website</h3><p>Generate a shareable public-style worker profile preview.</p><button class="btn" type="button" id="kmMiniOpen">Create Mini Profile</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🏢</div><h3>Company Mini Page</h3><p>Create a compact company hiring page preview with open roles.</p><button class="btn" type="button" id="kmCompanyOpen">Create Company Page</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🧠</div><h3>AI Job Match Explanation</h3><p>Enter your skill, job title and city. The tool explains the basic match signals so you can compare a job with your profile.</p><button class="btn" type="button" id="kmMatchOpen">See Match Explanation</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">💰</div><h3>Salary Negotiation Assistant</h3><p>Enter your current and expected salary. Get a simple discussion range and a ready-to-send salary message.</p><button class="btn" type="button" id="kmSalaryOpen">Get Salary Help</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">📍</div><h3>Job Travel Calculator</h3><p>Enter your one-way distance, travel cost per km and work days. See your estimated monthly travel expense before accepting a job.</p><button class="btn" type="button" id="kmTravelOpen">Calculate Travel Cost</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🛡️</div><h3>Job Scam Warning System</h3><p>Paste a job message or offer. The tool checks for common warning phrases such as fees, OTP requests or guaranteed-job claims.</p><button class="btn" type="button" id="kmScamOpen">Check for Scam Signs</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🪪</div><h3>Digital Worker ID</h3><p>Create a unique KaamMilega Worker ID. Use it as your worker profile reference and share the ID with employers.</p><button class="btn" type="button" id="kmIdOpen">Create Worker ID</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🔄</div><h3>Job Swap / Referral</h3><p>Save the job title and the worker you referred. Use this as your own referral record.</p><button class="btn" type="button" id="kmReferralOpen">Save Referral</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🧮</div><h3>Take-Home Salary Calculator</h3><p>Enter monthly salary and your travel, food and other work costs. See the estimated amount left after those declared costs.</p><button class="btn" type="button" id="kmTakeHomeOpen">Calculate Remaining Salary</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">📁</div><h3>Document Locker</h3><p>Keep a checklist of documents such as CV, ID or certificates. This version saves only the document name and status on your device.</p><button class="btn" type="button" id="kmDocsOpen">Open Document Checklist</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🎯</div><h3>Interview Practice AI</h3><p>Choose a job role, get a practice question, type your answer and save your practice record on this device.</p><button class="btn" type="button" id="kmInterviewOpen">Practice Interview</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🌐</div><h3>Hindi ↔ English Job Translator</h3><p>Paste a short job description and convert common job words between English and Hindi to make the vacancy easier to understand.</p><button class="btn" type="button" id="kmTranslateOpen">Translate Job Text</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🎙️</div><h3>AI Voice Interview</h3><p>Practice an interview answer by speaking. Chrome/browser speech recognition converts your voice to text; typing is available if voice is unavailable.</p><button class="btn" type="button" id="kmVoiceInterviewOpen">Practice by Voice</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">📦</div><h3>Job Bundle</h3><p>Enter the important job details and create one easy-to-read job summary card. Use it before contacting the employer.</p><button class="btn" type="button" id="kmBundleOpen">Create Job Summary</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🔥</div><h3>Hot Vacancy Meter</h3><p>Enter open slots and applications to get a simple vacancy signal. It is only a calculation from the numbers entered.</p><button class="btn" type="button" id="kmHotOpen">Check Vacancy Signal</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">👥</div><h3>Worker Match Circle</h3><p>Enter the required skill, city and availability to create a shortlist criteria record for employer-side matching.</p><button class="btn" type="button" id="kmCircleOpen">Create Match Criteria</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🎫</div><h3>Interview Pass</h3><p>Enter the candidate, role and interview date/time to create a simple interview reference pass.</p><button class="btn" type="button" id="kmPassOpen">Create Interview Pass</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">👤</div><h3>Worker Mini Website</h3><p>Enter worker name, skill, city and experience to create a shareable profile preview. It is a profile preview, not a separate hosted website.</p><button class="btn" type="button" id="kmMiniOpen">Create Profile Preview</button></article>
+    <article class="km-mega-card"><div class="km-mega-icon">🏢</div><h3>Company Mini Page</h3><p>Enter company name, city and open roles to create a compact hiring-page preview. It is a preview, not a separate hosted company website.</p><button class="btn" type="button" id="kmCompanyOpen">Create Company Preview</button></article>
   </div>
 </section>
 
@@ -4316,14 +4327,14 @@ function openTool(title,html,bind){$('kmMegaTitle').textContent=title;$('kmMegaB
 function card(type,label,data){return `<div class="km-owner-feature"><div><b>${esc(label)}</b><small>${esc(JSON.stringify(data))}</small></div><button class="btn km-danger-btn" data-del-tool="${esc(type)}" data-del-id="${esc(data._id||'')}">Delete</button></div>`}
 function ownerList(){const box=$('ownerMegaList');if(!box)return;const a=read();if(!a.length){box.innerHTML='<div class="card">No saved tool records.</div>';return}box.innerHTML=a.map(x=>{const d={...x.data,_id:x.id};return card(x.type,x.type.replace(/([A-Z])/g,' $1'),d)}).join('');box.querySelectorAll('[data-del-tool]').forEach(b=>b.onclick=()=>{write(read().filter(x=>x.id!==b.dataset.delId));ownerList();});}
 function bind(id,title,html,fn){const b=$(id);if(b)b.onclick=()=>openTool(title,html,fn)}
-bind('kmMatchOpen','AI Job Match Explanation',`<div class="km-mega-form"><input id="mtSkill" placeholder="Your skill"><input id="mtJob" placeholder="Job title"><input id="mtCity" placeholder="City"><button class="btn" id="mtGo">Explain Match</button><div id="mtOut" class="km-mega-result"></div></div>`,()=>{$('mtGo').onclick=()=>{let s=$('mtSkill').value.trim(),j=$('mtJob').value.trim(),c=$('mtCity').value.trim();let reasons=[];if(s&&j&&j.toLowerCase().includes(s.toLowerCase()))reasons.push('Your skill matches the job title.');if(c)reasons.push('Location preference recorded: '+c+'.');reasons.push('Final selection depends on the employer and vacancy details.');$('mtOut').innerHTML='<b>Match explanation</b><br>'+reasons.map(esc).join('<br>');save('AI Job Match Explanation',{skill:s,job:j,city:c});}});
-bind('kmSalaryOpen','Salary Negotiation Assistant',`<div class="km-mega-form"><input id="snCur" type="number" placeholder="Current salary ₹"><input id="snExp" type="number" placeholder="Expected salary ₹"><button class="btn" id="snGo">Prepare Negotiation</button><div id="snOut" class="km-mega-result"></div></div>`,()=>{$('snGo').onclick=()=>{let c=+$('snCur').value,e=+$('snExp').value;if(!c||!e)return;$('snOut').innerHTML='Suggested discussion range: <b>₹'+Math.min(e,Math.round(c*1.25)).toLocaleString('en-IN')+'–₹'+e.toLocaleString('en-IN')+'</b><br>Message: “I am interested in the role. Based on my skills and experience, could we discuss the compensation?”';save('Salary Negotiation Assistant',{current:c,expected:e});}});
-bind('kmTravelOpen','Job Travel Calculator',`<div class="km-mega-form"><input id="trKm" type="number" placeholder="One-way distance (km)"><input id="trCost" type="number" placeholder="Travel cost per km ₹"><input id="trDays" type="number" value="26" placeholder="Work days/month"><button class="btn" id="trGo">Calculate</button><div id="kmTransOut" class="km-mega-result"></div></div>`,()=>{$('trGo').onclick=()=>{let k=+$('trKm').value,c=+$('trCost').value,d=+$('trDays').value||26;if(k&&c){$('trOut').textContent='Estimated monthly travel cost: ₹'+(k*2*c*d).toLocaleString('en-IN')+'. Estimated one-way travel distance: '+k+' km.';save('Job Travel Calculator',{distance:k,costPerKm:c,days:d});}}});
+bind('kmMatchOpen','AI Job Match Explanation',`<div class="km-mega-form"><input id="mtSkill" placeholder="Your skill (e.g. MIG Welder)"><input id="mtJob" placeholder="Job title (e.g. MIG Welder)"><input id="mtCity" placeholder="Job city"><button class="btn" id="mtGo">Explain Match</button><div id="mtOut" class="km-mega-result"></div></div>`,()=>{$('mtGo').onclick=()=>{let s=$('mtSkill').value.trim(),j=$('mtJob').value.trim(),c=$('mtCity').value.trim();let reasons=[];if(s&&j&&j.toLowerCase().includes(s.toLowerCase()))reasons.push('Your skill matches the job title.');if(c)reasons.push('Location preference recorded: '+c+'.');reasons.push('Final selection depends on the employer and vacancy details.');$('mtOut').innerHTML='<b>Match explanation</b><br>'+reasons.map(esc).join('<br>');save('AI Job Match Explanation',{skill:s,job:j,city:c});}});
+bind('kmSalaryOpen','Salary Negotiation Assistant',`<div class="km-mega-form"><input id="snCur" type="number" placeholder="Current monthly salary ₹"><input id="snExp" type="number" placeholder="Expected monthly salary ₹"><button class="btn" id="snGo">Prepare Negotiation</button><div id="snOut" class="km-mega-result"></div></div>`,()=>{$('snGo').onclick=()=>{let c=+$('snCur').value,e=+$('snExp').value;if(!c||!e)return;$('snOut').innerHTML='Suggested discussion range: <b>₹'+Math.min(e,Math.round(c*1.25)).toLocaleString('en-IN')+'–₹'+e.toLocaleString('en-IN')+'</b><br>Message: “I am interested in the role. Based on my skills and experience, could we discuss the compensation?”';save('Salary Negotiation Assistant',{current:c,expected:e});}});
+bind('kmTravelOpen','Job Travel Calculator',`<div class="km-mega-form"><input id="trKm" type="number" placeholder="One-way distance in km"><input id="trCost" type="number" placeholder="Travel cost per km ₹"><input id="trDays" type="number" value="26" placeholder="Work days per month"><button class="btn" id="trGo">Calculate</button><div id="kmTransOut" class="km-mega-result"></div></div>`,()=>{$('trGo').onclick=()=>{let k=+$('trKm').value,c=+$('trCost').value,d=+$('trDays').value||26;if(k&&c){$('trOut').textContent='Estimated monthly travel cost: ₹'+(k*2*c*d).toLocaleString('en-IN')+'. Estimated one-way travel distance: '+k+' km.';save('Job Travel Calculator',{distance:k,costPerKm:c,days:d});}}});
 bind('kmScamOpen','Job Scam Warning System',`<div class="km-mega-form"><textarea id="scText" rows="5" placeholder="Paste job message/details"></textarea><button class="btn" id="scGo">Scan Risk Signals</button><div id="scOut" class="km-mega-result"></div></div>`,()=>{$('scGo').onclick=()=>{let t=$('scText').value.toLowerCase(),risk=[];['pay first','registration fee','otp','password','guaranteed job','send money','processing fee'].forEach(x=>{if(t.includes(x))risk.push(x)});$('scOut').innerHTML=risk.length?'<b>⚠️ Risk signals found:</b> '+risk.map(esc).join(', ')+'. Never share OTP/password or pay money only to secure a job.':'<b>✓ No common warning phrase detected.</b> Still verify the employer and vacancy independently.';save('Job Scam Warning System',{text:t.slice(0,500),signals:risk});}});
-bind('kmIdOpen','Digital Worker ID',`<div class="km-mega-form"><input id="idName" placeholder="Worker name"><input id="idSkill" placeholder="Primary skill"><input id="idCity" placeholder="City"><button class="btn" id="idGo">Create ID</button><div id="idOut" class="km-mega-result"></div></div>`,()=>{$('idGo').onclick=()=>{let n=$('idName').value.trim(),s=$('idSkill').value.trim(),c=$('idCity').value.trim();if(!n)return;let id='KM-W-'+Date.now().toString(36).toUpperCase();$('idOut').innerHTML='<b>Worker ID: '+id+'</b><br>'+esc(n)+' · '+esc(s)+' · '+esc(c)+'<div class="km-qr">Share code: '+esc(id)+'</div>';save('Digital Worker ID',{name:n,skill:s,city:c,id},365);}});
-bind('kmReferralOpen','Job Swap / Referral',`<div class="km-mega-form"><input id="rfJob" placeholder="Job title"><input id="rfPerson" placeholder="Friend/worker name"><button class="btn" id="rfGo">Save Referral</button><div id="rfOut" class="km-mega-result"></div></div>`,()=>{$('rfGo').onclick=()=>{let j=$('rfJob').value.trim(),p=$('rfPerson').value.trim();save('Job Swap / Referral',{job:j,person:p});$('rfOut').textContent='Referral saved. You can share the job link separately.';}});
-bind('kmTakeHomeOpen','Take-Home Salary Calculator',`<div class="km-mega-form"><input id="thGross" type="number" placeholder="Monthly salary ₹"><input id="thTravel" type="number" placeholder="Travel/month ₹"><input id="thFood" type="number" placeholder="Food/month ₹"><input id="thOther" type="number" placeholder="Other work costs ₹"><button class="btn" id="thGo">Calculate</button><div id="thOut" class="km-mega-result"></div></div>`,()=>{$('thGo').onclick=()=>{let g=+$('thGross').value,t=+$('thTravel').value||0,f=+$('thFood').value||0,o=+$('thOther').value||0;$('thOut').textContent='Estimated amount after declared costs: ₹'+Math.max(0,g-t-f-o).toLocaleString('en-IN');save('Take-Home Salary Calculator',{gross:g,travel:t,food:f,other:o});}});
-bind('kmDocsOpen','Document Locker',`<div class="km-mega-form"><input id="dcName" placeholder="Document name e.g. Aadhaar/CV/Certificate"><select id="dcStatus"><option>Ready</option><option>Need Update</option><option>Missing</option></select><button class="btn" id="dcGo">Save Document Status</button><div id="dcOut" class="km-mega-result"></div></div>`,()=>{$('dcGo').onclick=()=>{let n=$('dcName').value.trim(),st=$('dcStatus').value;save('Document Locker',{document:n,status:st});$('dcOut').textContent='Document status saved. This tool stores the document name/status only; it does not upload the actual document.';}});
+bind('kmIdOpen','Digital Worker ID',`<div class="km-mega-form"><input id="idName" placeholder="Worker full name"><input id="idSkill" placeholder="Primary skill / trade"><input id="idCity" placeholder="Job city"><button class="btn" id="idGo">Create ID</button><div id="idOut" class="km-mega-result"></div></div>`,()=>{$('idGo').onclick=()=>{let n=$('idName').value.trim(),s=$('idSkill').value.trim(),c=$('idCity').value.trim();if(!n)return;let id='KM-W-'+Date.now().toString(36).toUpperCase();$('idOut').innerHTML='<b>Worker ID: '+id+'</b><br>'+esc(n)+' · '+esc(s)+' · '+esc(c)+'<div class="km-qr">Share code: '+esc(id)+'</div>';save('Digital Worker ID',{name:n,skill:s,city:c,id},365);}});
+bind('kmReferralOpen','Job Swap / Referral',`<div class="km-mega-form"><input id="rfJob" placeholder="Job title (e.g. MIG Welder)"><input id="rfPerson" placeholder="Referred worker name"><button class="btn" id="rfGo">Save Referral</button><div id="rfOut" class="km-mega-result"></div></div>`,()=>{$('rfGo').onclick=()=>{let j=$('rfJob').value.trim(),p=$('rfPerson').value.trim();save('Job Swap / Referral',{job:j,person:p});$('rfOut').textContent='Referral saved. You can share the job link separately.';}});
+bind('kmTakeHomeOpen','Take-Home Salary Calculator',`<div class="km-mega-form"><input id="thGross" type="number" placeholder="Monthly salary / gross ₹"><input id="thTravel" type="number" placeholder="Travel cost per month ₹"><input id="thFood" type="number" placeholder="Food cost per month ₹"><input id="thOther" type="number" placeholder="Other work costs per month ₹"><button class="btn" id="thGo">Calculate</button><div id="thOut" class="km-mega-result"></div></div>`,()=>{$('thGo').onclick=()=>{let g=+$('thGross').value,t=+$('thTravel').value||0,f=+$('thFood').value||0,o=+$('thOther').value||0;$('thOut').textContent='Estimated amount after declared costs: ₹'+Math.max(0,g-t-f-o).toLocaleString('en-IN');save('Take-Home Salary Calculator',{gross:g,travel:t,food:f,other:o});}});
+bind('kmDocsOpen','Document Locker',`<div class="km-mega-form"><input id="dcName" placeholder="Document name (e.g. CV, ID, certificate)"><select id="dcStatus"><option>Ready</option><option>Need Update</option><option>Missing</option></select><button class="btn" id="dcGo">Save Document Status</button><div id="dcOut" class="km-mega-result"></div></div>`,()=>{$('dcGo').onclick=()=>{let n=$('dcName').value.trim(),st=$('dcStatus').value;save('Document Locker',{document:n,status:st});$('dcOut').textContent='Document status saved. This tool stores the document name/status only; it does not upload the actual document.';}});
 let qs=['Tell me about yourself.','Why should we hire you?','What experience do you have?'];
 bind('kmInterviewOpen','Interview Practice AI',`<div class="km-mega-form"><select id="ivRole"><option>Welder</option><option>Driver</option><option>Electrician</option><option>General Worker</option></select><button class="btn" id="ivGo">Start Question</button><div id="ivOut" class="km-mega-result"></div></div>`,()=>{$('ivGo').onclick=()=>{let q=qs[Math.floor(Math.random()*qs.length)];$('ivOut').innerHTML='<b>Interviewer:</b> '+q+'<br><textarea id="ivAns" rows="4" placeholder="Type your answer"></textarea><button class="btn" id="ivSave">Save Answer</button>';$('ivSave').onclick=()=>save('Interview Practice AI',{role:$('ivRole').value,question:q,answer:$('ivAns').value.slice(0,1000)});}});
 bind('kmTranslateOpen','Hindi ↔ English Job Translator',`<div class="km-mega-form"><textarea id="trText" rows="6" placeholder="Paste a short job description"></textarea><select id="trLang"><option value="hi">English → Hindi</option><option value="en">Hindi → English</option></select><button class="btn" id="kmTransGo">Translate</button><div id="kmTransOut" class="km-mega-result"></div></div>`,()=>{$('kmTransGo').onclick=()=>{let t=$('trText').value,lang=$('trLang').value;let dict=lang==='hi'?{'salary':'वेतन','location':'स्थान','experience':'अनुभव','shift':'शिफ्ट','apply':'आवेदन करें','worker':'कामगार','job':'नौकरी','required':'आवश्यक'}:{'वेतन':'salary','स्थान':'location','अनुभव':'experience','शिफ्ट':'shift','आवेदन':'apply','कामगार':'worker','नौकरी':'job','आवश्यक':'required'};let out=t;Object.entries(dict).forEach(([a,b])=>out=out.replace(new RegExp(a,'gi'),b));$('kmTransOut').textContent=out;save('Hindi ↔ English Job Translator',{direction:lang,text:t.slice(0,1000)});}});
@@ -4359,12 +4370,12 @@ function voiceInterview(){openTool('AI Voice Interview',`<div class="km-mega-for
   };
 })}
 const vo=$('kmVoiceInterviewOpen');if(vo)vo.onclick=voiceInterview;
-bind('kmBundleOpen','Job Bundle',`<div class="km-mega-form"><input id="jbTitle" placeholder="Job title"><input id="jbSalary" placeholder="Salary"><input id="jbLoc" placeholder="Location"><input id="jbShift" placeholder="Shift"><textarea id="jbReq" rows="3" placeholder="Requirements"></textarea><button class="btn" id="jbGo">Create Bundle</button><div id="jbOut" class="km-mega-result"></div></div>`,()=>{$('jbGo').onclick=()=>{let d={title:$('jbTitle').value,salary:$('jbSalary').value,location:$('jbLoc').value,shift:$('jbShift').value,requirements:$('jbReq').value};$('jbOut').innerHTML='<div class="km-profile-card"><b>'+esc(d.title)+'</b><p>💰 '+esc(d.salary)+' · 📍 '+esc(d.location)+' · 🕐 '+esc(d.shift)+'</p><p>'+esc(d.requirements)+'</p><button class="btn" type="button" onclick="document.getElementById(\'kmMegaModal\').classList.add(\'hidden\')">Apply / Continue</button></div>';save('Job Bundle',d);}});
+bind('kmBundleOpen','Job Bundle',`<div class="km-mega-form"><input id="jbTitle" placeholder="Job title (e.g. MIG Welder)"><input id="jbSalary" placeholder="Salary"><input id="jbLoc" placeholder="Location"><input id="jbShift" placeholder="Shift"><textarea id="jbReq" rows="3" placeholder="Requirements"></textarea><button class="btn" id="jbGo">Create Bundle</button><div id="jbOut" class="km-mega-result"></div></div>`,()=>{$('jbGo').onclick=()=>{let d={title:$('jbTitle').value,salary:$('jbSalary').value,location:$('jbLoc').value,shift:$('jbShift').value,requirements:$('jbReq').value};$('jbOut').innerHTML='<div class="km-profile-card"><b>'+esc(d.title)+'</b><p>💰 '+esc(d.salary)+' · 📍 '+esc(d.location)+' · 🕐 '+esc(d.shift)+'</p><p>'+esc(d.requirements)+'</p><button class="btn" type="button" onclick="document.getElementById(\'kmMegaModal\').classList.add(\'hidden\')">Apply / Continue</button></div>';save('Job Bundle',d);}});
 bind('kmHotOpen','Hot Vacancy Meter',`<div class="km-mega-form"><input id="hvSlots" type="number" placeholder="Open slots"><input id="hvApps" type="number" placeholder="Applications"><button class="btn" id="hvGo">Calculate</button><div id="hvOut" class="km-mega-result"></div></div>`,()=>{$('hvGo').onclick=()=>{let s=+$('hvSlots').value,a=+$('hvApps').value,level=a>=s*5?'Very high':a>=s*2?'High':a>=s?'Active':'Open';$('hvOut').textContent='Vacancy signal: '+level+'. This is based only on the numbers entered by the employer.';save('Hot Vacancy Meter',{slots:s,applications:a,signal:level});}});
-bind('kmCircleOpen','Worker Match Circle',`<div class="km-mega-form"><input id="wcSkill" placeholder="Required skill"><input id="wcCity" placeholder="City"><input id="wcAvail" placeholder="Availability"><button class="btn" id="wcGo">Create Circle</button><div id="wcOut" class="km-mega-result"></div></div>`,()=>{$('wcGo').onclick=()=>{let d={skill:$('wcSkill').value,city:$('wcCity').value,availability:$('wcAvail').value};$('wcOut').textContent='Match Circle created for '+d.skill+' · '+d.city+' · '+d.availability+'. Add worker profiles through your normal profile workflow.';save('Worker Match Circle',d);}});
-bind('kmPassOpen','Interview Pass',`<div class="km-mega-form"><input id="ipName" placeholder="Candidate name"><input id="ipRole" placeholder="Role"><input id="ipTime" placeholder="Interview date/time"><button class="btn" id="ipGo">Create Pass</button><div id="ipOut" class="km-mega-result"></div></div>`,()=>{$('ipGo').onclick=()=>{let d={name:$('ipName').value,role:$('ipRole').value,time:$('ipTime').value,pass:'IP-'+Date.now().toString(36).toUpperCase()};$('ipOut').innerHTML='<b>Interview Pass '+d.pass+'</b><br>'+esc(d.name)+' · '+esc(d.role)+' · '+esc(d.time);save('Interview Pass',d,90);}});
-bind('kmMiniOpen','Worker Mini Website',`<div class="km-mega-form"><input id="mwName" placeholder="Name"><input id="mwSkill" placeholder="Skill"><input id="mwCity" placeholder="City"><input id="mwExp" placeholder="Experience"><button class="btn" id="mwGo">Generate Profile</button><div id="mwOut" class="km-mega-result"></div></div>`,()=>{$('mwGo').onclick=()=>{let d={name:$('mwName').value,skill:$('mwSkill').value,city:$('mwCity').value,experience:$('mwExp').value};let slug=(d.name||'worker').toLowerCase().replace(/[^a-z0-9]+/g,'-');$('mwOut').innerHTML='<div class="km-profile-card"><h3>'+esc(d.name)+'</h3><p>🧑‍🔧 '+esc(d.skill)+' · 📍 '+esc(d.city)+' · '+esc(d.experience)+'</p><div class="km-qr">kaammilaga.click/worker/'+esc(slug)+'</div></div>';save('Worker Mini Website',d,365);}});
-bind('kmCompanyOpen','Company Mini Page',`<div class="km-mega-form"><input id="cpName" placeholder="Company name"><input id="cpCity" placeholder="City"><input id="cpRoles" placeholder="Open roles"><button class="btn" id="cpGo">Generate Company Page</button><div id="cpOut" class="km-mega-result"></div></div>`,()=>{$('cpGo').onclick=()=>{let d={company:$('cpName').value,city:$('cpCity').value,roles:$('cpRoles').value};$('cpOut').innerHTML='<div class="km-profile-card"><h3>🏢 '+esc(d.company)+'</h3><p>📍 '+esc(d.city)+' · Open roles: '+esc(d.roles)+'</p></div>';save('Company Mini Page',d,365);}});
+bind('kmCircleOpen','Worker Match Circle',`<div class="km-mega-form"><input id="wcSkill" placeholder="Required skill"><input id="wcCity" placeholder="Job city"><input id="wcAvail" placeholder="Availability"><button class="btn" id="wcGo">Create Circle</button><div id="wcOut" class="km-mega-result"></div></div>`,()=>{$('wcGo').onclick=()=>{let d={skill:$('wcSkill').value,city:$('wcCity').value,availability:$('wcAvail').value};$('wcOut').textContent='Match Circle created for '+d.skill+' · '+d.city+' · '+d.availability+'. Add worker profiles through your normal profile workflow.';save('Worker Match Circle',d);}});
+bind('kmPassOpen','Interview Pass',`<div class="km-mega-form"><input id="ipName" placeholder="Candidate full name"><input id="ipRole" placeholder="Interview role"><input id="ipTime" placeholder="Interview date and time"><button class="btn" id="ipGo">Create Pass</button><div id="ipOut" class="km-mega-result"></div></div>`,()=>{$('ipGo').onclick=()=>{let d={name:$('ipName').value,role:$('ipRole').value,time:$('ipTime').value,pass:'IP-'+Date.now().toString(36).toUpperCase()};$('ipOut').innerHTML='<b>Interview Pass '+d.pass+'</b><br>'+esc(d.name)+' · '+esc(d.role)+' · '+esc(d.time);save('Interview Pass',d,90);}});
+bind('kmMiniOpen','Worker Mini Website',`<div class="km-mega-form"><input id="mwName" placeholder="Name"><input id="mwSkill" placeholder="Skill"><input id="mwCity" placeholder="Job city"><input id="mwExp" placeholder="Experience (e.g. 5 years)"><button class="btn" id="mwGo">Generate Profile</button><div id="mwOut" class="km-mega-result"></div></div>`,()=>{$('mwGo').onclick=()=>{let d={name:$('mwName').value,skill:$('mwSkill').value,city:$('mwCity').value,experience:$('mwExp').value};let slug=(d.name||'worker').toLowerCase().replace(/[^a-z0-9]+/g,'-');$('mwOut').innerHTML='<div class="km-profile-card"><h3>'+esc(d.name)+'</h3><p>🧑‍🔧 '+esc(d.skill)+' · 📍 '+esc(d.city)+' · '+esc(d.experience)+'</p><div class="km-qr">kaammilaga.click/worker/'+esc(slug)+'</div></div>';save('Worker Mini Website',d,365);}});
+bind('kmCompanyOpen','Company Mini Page',`<div class="km-mega-form"><input id="cpName" placeholder="Company name"><input id="cpCity" placeholder="Job city"><input id="cpRoles" placeholder="Open roles (e.g. Welder, Helper)"><button class="btn" id="cpGo">Generate Company Page</button><div id="cpOut" class="km-mega-result"></div></div>`,()=>{$('cpGo').onclick=()=>{let d={company:$('cpName').value,city:$('cpCity').value,roles:$('cpRoles').value};$('cpOut').innerHTML='<div class="km-profile-card"><h3>🏢 '+esc(d.company)+'</h3><p>📍 '+esc(d.city)+' · Open roles: '+esc(d.roles)+'</p></div>';save('Company Mini Page',d,365);}});
 const om=$('ownerMegaManageBtn');if(om)om.onclick=()=>{ownerList();openModal('ownerMegaModal')};
 $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpired')?.addEventListener('click',()=>{const now=Date.now();write(read().filter(x=>new Date(x.expiresAt).getTime()>now));ownerList()});
 })();
@@ -4503,231 +4514,71 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
 </script>
 
 
-<!-- KaamMilega Brand Worker ID Card: isolated add-on; existing features untouched -->
-<section class="section" id="kmBrandWorkerCard">
-  <div class="trust-head">
-    <div>
-      <span class="eyebrow">KAAMMILEGA IDENTITY</span>
-      <h2>🪪 KaamMilega Worker ID Card</h2>
-      <p class="muted">Create your KaamMilega website profile card with your photo, ID, name, date of birth and experience. Download it as an image and share it with employers.</p>
-    </div>
-  </div>
-  <div class="km-brand-id-grid">
-    <article class="km-brand-id-form card">
-      <div class="km-brand-id-form-grid">
-        <label>First Name<input class="input" id="kmBrandIdFirstName" type="text" placeholder="First name" autocomplete="given-name"></label>
-        <label>Last Name<input class="input" id="kmBrandIdLastName" type="text" placeholder="Last name" autocomplete="family-name"></label>
-        <label>Date of Birth<input class="input" id="kmBrandIdDob" type="date"></label>
-        <label>Experience<input class="input" id="kmBrandIdExperience" type="text" placeholder="e.g. 3 Years"></label>
-        <label>Main Skill<input class="input" id="kmBrandIdSkill" type="text" placeholder="e.g. MIG Welder"></label>
-        <label>City<input class="input" id="kmBrandIdCity" type="text" placeholder="City"></label>
-        <label style="grid-column:1/-1">Address<input class="input" id="kmBrandIdAddress" type="text" placeholder="Full address" autocomplete="street-address"></label>
-        <label>Profile Photo<input class="input" id="kmBrandIdPhoto" type="file" accept="image/*"></label>
-      </div>
-      <div class="km-brand-id-actions">
-        <button class="btn orange" type="button" id="kmBrandIdCreate">Create KaamMilega ID Card</button>
-        <button class="btn secondary" type="button" id="kmBrandIdDownload" disabled>Download Card</button>
-      </div>
-      <div id="kmBrandIdMsg" class="muted" style="margin-top:10px"></div>
-      <p class="muted" style="font-size:12px;margin-top:12px">KaamMilega website profile card • Use the card only for your KaamMilega profile and employment profile sharing.</p>
-    </article>
-    <article class="card km-brand-id-preview-wrap">
-      <div class="eyebrow">LIVE CARD PREVIEW</div>
-      <div id="kmBrandIdPreview" class="km-brand-id-preview" aria-live="polite">
-        <div class="km-brand-id-placeholder">Fill the details and click <b>Create KaamMilega ID Card</b>.</div>
-      </div>
-    </article>
-  </div>
-</section>
-
-<style id="km-brand-id-card-style">
-#kmBrandWorkerCard{scroll-margin-top:78px}
-.km-brand-id-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,520px);gap:20px;align-items:start}
-.km-brand-id-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.km-brand-id-form-grid label{font-size:13px;font-weight:700;display:grid;gap:6px}
-.km-brand-id-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.km-brand-id-preview-wrap{overflow:hidden}
-.km-brand-id-placeholder{padding:55px 20px;text-align:center;border:1px dashed #64748b;border-radius:14px;color:#94a3b8}
-.km-id-card-canvas{width:100%;max-width:480px;aspect-ratio:1.586/1;margin:12px auto 0;border-radius:18px;display:block;box-shadow:0 16px 45px rgba(0,0,0,.25);background:#fff}
-@media(max-width:900px){.km-brand-id-grid{grid-template-columns:1fr}}
-@media(max-width:620px){.km-brand-id-form-grid{grid-template-columns:1fr}.km-brand-id-actions .btn{width:100%}}
-</style>
-
-<script id="km-brand-id-card-script">
+<!-- KAAMMILEGA-ID-CARD-FUNCTIONALITY-FINAL -->\n<script>
 (function(){
   'use strict';
   const $=id=>document.getElementById(id);
-  const STORAGE='km_brand_worker_id_card_v1';
-  let photoData='';
-  let lastCardData=null;
-  let photoImage=null;
-
-  function safe(v){return String(v||'').trim()}
-  function makeId(){
-    try{
-      const old=JSON.parse(localStorage.getItem(STORAGE)||'null');
-      if(old&&old.id)return old.id;
-    }catch(e){}
-    const id='KM-W-'+String(Math.floor(100000+Math.random()*900000));
-    return id;
-  }
-  function fmtDob(v){
-    if(!v)return 'Not provided';
-    const d=new Date(v+'T00:00:00');
-    if(Number.isNaN(d.getTime()))return v;
-    return d.toLocaleDateString('en-IN',{day:'2-digit',month:'2-digit',year:'numeric'});
-  }
-  function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-
-  function drawCard(data){
-    const canvas=document.createElement('canvas');
-    canvas.width=1200; canvas.height=756;
-    canvas.className='km-id-card-canvas';
-    canvas.setAttribute('aria-label','KaamMilega Worker ID Card');
-    const ctx=canvas.getContext('2d');
-    ctx.imageSmoothingEnabled=true;
-    // Card background
-    const bg=ctx.createLinearGradient(0,0,1200,756); bg.addColorStop(0,'#07111f'); bg.addColorStop(1,'#162b46');
-    ctx.fillStyle=bg; ctx.fillRect(0,0,1200,756);
-    // Brand header
-    ctx.fillStyle='#f59e0b'; ctx.fillRect(0,0,1200,118);
-    ctx.fillStyle='#0b1220'; ctx.font='700 52px Arial'; ctx.fillText('KaamMilega',54,76);
-    ctx.font='700 25px Arial'; ctx.fillText('WORKER ID CARD',860,70);
-    // Photo frame
-    const px=58,py=166,pw=260,ph=330;
-    ctx.fillStyle='#e2e8f0'; roundRect(ctx,px,py,pw,ph,22); ctx.fill();
-    if(photoImage){
-      const iw=photoImage.naturalWidth||photoImage.width, ih=photoImage.naturalHeight||photoImage.height;
-      const scale=Math.max(pw/iw,ph/ih); const dw=iw*scale,dh=ih*scale;
-      ctx.save(); roundRect(ctx,px,py,pw,ph,22); ctx.clip();
-      ctx.drawImage(photoImage,px+(pw-dw)/2,py+(ph-dh)/2,dw,dh); ctx.restore();
-    }else{
-      ctx.fillStyle='#64748b'; ctx.font='700 28px Arial'; ctx.textAlign='center'; ctx.fillText('PHOTO',px+pw/2,py+ph/2+10); ctx.textAlign='left';
-    }
-    // Details
-    const x=370; let y=192;
-    ctx.fillStyle='#94a3b8'; ctx.font='700 20px Arial'; ctx.fillText('ID',x,y);
-    ctx.fillStyle='#fff'; ctx.font='700 34px Arial'; ctx.fillText(data.id,x+95,y);
-    y+=68; detail('NAME',data.name); y+=64; detail('DATE OF BIRTH',fmtDob(data.dob)); y+=64; detail('EXPERIENCE',data.experience||'Not provided'); y+=64; detail('SKILL',data.skill||'Not provided'); y+=64; detail('CITY',data.city||'Not provided'); y+=64; detail('ADDRESS',data.address||'Not provided');
-    function detail(label,value){ctx.fillStyle='#94a3b8';ctx.font='700 18px Arial';ctx.fillText(label,x,y);ctx.fillStyle='#fff';ctx.font='600 25px Arial';let val=String(value||'—');if(val.length>38)val=val.slice(0,35)+'…';ctx.fillText(val,x,y+31)}
-    // Logo watermark
-    ctx.save();ctx.globalAlpha=.08;ctx.translate(1030,610);ctx.rotate(-.22);ctx.fillStyle='#fff';ctx.font='700 86px Arial';ctx.fillText('KaamMilega',0,0);ctx.restore();
-    // Footer
-    ctx.fillStyle='rgba(0,0,0,.28)';ctx.fillRect(0,650,1200,106);
-    ctx.fillStyle='#fff';ctx.font='600 19px Arial';ctx.fillText('KaamMilega website profile card • Verify profile details before relying on them.',54,690);
-    ctx.fillStyle='#cbd5e1';ctx.font='500 17px Arial';ctx.fillText('KaamMilega website profile card',54,723);
-    return canvas;
-  }
-  function roundRect(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath()}
-
-  function currentData(){
-    const first=safe($('kmBrandIdFirstName')?.value);
-    const last=safe($('kmBrandIdLastName')?.value);
-    return {id:makeId(),firstName:first,lastName:last,name:[first,last].filter(Boolean).join(' '),dob:$('kmBrandIdDob')?.value||'',experience:safe($('kmBrandIdExperience')?.value),skill:safe($('kmBrandIdSkill')?.value),city:safe($('kmBrandIdCity')?.value),address:safe($('kmBrandIdAddress')?.value)};
-  }
-  function render(data){
-    const box=$('kmBrandIdPreview'); if(!box)return;
-    box.innerHTML='';
-    const canvas=drawCard(data); box.appendChild(canvas); lastCardData=data;
-    const dl=$('kmBrandIdDownload'); if(dl)dl.disabled=false;
-  }
-  function message(t,good){const e=$('kmBrandIdMsg');if(e){e.textContent=t;e.style.color=good?'#16a34a':''}}
-
-  $('kmBrandIdPhoto')?.addEventListener('change',function(){
-    const file=this.files&&this.files[0]; if(!file)return;
-    if(!file.type.startsWith('image/')){message('Please select an image file.',false);return}
-    if(file.size>5*1024*1024){message('Photo must be 5 MB or smaller.',false);this.value='';return}
-    const reader=new FileReader(); reader.onload=function(e){
-      photoData=e.target.result; photoImage=new Image(); photoImage.onload=function(){ if(lastCardData)render(lastCardData); }; photoImage.src=photoData;
-    }; reader.readAsDataURL(file);
-  });
-
-  $('kmBrandIdCreate')?.addEventListener('click',function(){
-    const data=currentData();
-    if(!data.firstName || !data.lastName){message('Please enter both first name and last name.',false);(!data.firstName?$('kmBrandIdFirstName'):$('kmBrandIdLastName'))?.focus();return}
-    try{localStorage.setItem(STORAGE,JSON.stringify({...data,photo:photoData||''}));}catch(e){}
-    render(data);
-    message('✓ Your KaamMilega ID Card is ready. You can download it below.',true);
-  });
-
-  $('kmBrandIdDownload')?.addEventListener('click',function(){
-    if(!lastCardData)return;
-    const canvas=drawCard(lastCardData);
-    const a=document.createElement('a');
-    a.download=(lastCardData.id||'KaamMilega-Worker-ID')+'.png';
-    a.href=canvas.toDataURL('image/png'); a.click();
-  });
-
-  // Restore the user's own card on the same browser.
-  try{
-    const saved=JSON.parse(localStorage.getItem(STORAGE)||'null');
-    if(saved){
-      if($('kmBrandIdFirstName'))$('kmBrandIdFirstName').value=saved.firstName||((saved.name||'').trim().split(/\s+/)[0]||'');
-      if($('kmBrandIdLastName'))$('kmBrandIdLastName').value=saved.lastName||((saved.name||'').trim().split(/\s+/).slice(1).join(' ')||'');
-      if($('kmBrandIdDob'))$('kmBrandIdDob').value=saved.dob||'';
-      if($('kmBrandIdExperience'))$('kmBrandIdExperience').value=saved.experience||'';
-      if($('kmBrandIdSkill'))$('kmBrandIdSkill').value=saved.skill||'';
-      if($('kmBrandIdCity'))$('kmBrandIdCity').value=saved.city||'';
-      if($('kmBrandIdAddress'))$('kmBrandIdAddress').value=saved.address||'';
-      if(saved.photo){photoData=saved.photo;photoImage=new Image();photoImage.onload=function(){render(saved)};photoImage.src=saved.photo}else render(saved);
-    }
-  }catch(e){}
-})();
-</script>
-
-<script id="km-worker-id-owner-live-manager">
-(function(){
-  'use strict';
-  const KEY='km_brand_worker_id_cards_public_v1';
-  const $=id=>document.getElementById(id);
+  const CARD_KEY='km_brand_worker_id_card_v1';
+  const QUEUE_KEY='km_brand_worker_id_cards_public_v1';
   const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  function read(){try{const x=JSON.parse(localStorage.getItem(KEY)||'[]');return Array.isArray(x)?x:[]}catch(e){return[]}}
-  function write(a){try{localStorage.setItem(KEY,JSON.stringify(a))}catch(e){}}
-  function getCurrentCard(){try{return JSON.parse(localStorage.getItem('km_brand_worker_id_card_v1')||'null')}catch(e){return null}}
-  function upsertCurrent(){
-    const d=getCurrentCard(); if(!d||!d.id)return;
-    const a=read(); const i=a.findIndex(x=>x.id===d.id);
-    const row={...d,status:(i>=0?a[i].status:'pending'),submittedAt:(i>=0?a[i].submittedAt:new Date().toISOString())};
-    if(i>=0)a[i]=row; else a.unshift(row); write(a); renderPublic(); renderOwner();
+  function readCard(){try{return JSON.parse(localStorage.getItem(CARD_KEY)||'null')}catch(e){return null}}
+  function readQueue(){try{let x=JSON.parse(localStorage.getItem(QUEUE_KEY)||'[]');return Array.isArray(x)?x:[]}catch(e){return []}}
+  function writeQueue(x){try{localStorage.setItem(QUEUE_KEY,JSON.stringify(x));return true}catch(e){return false}}
+  function ensureQueue(){
+    const d=readCard(); if(!d||!d.id)return null;
+    let a=readQueue(), i=a.findIndex(x=>x.id===d.id);
+    const row={...d,status:i>=0?(a[i].status||'pending'):'pending',submittedAt:i>=0?(a[i].submittedAt||new Date().toISOString()):new Date().toISOString()};
+    if(i>=0)a[i]=row; else a.unshift(row);
+    writeQueue(a); return row;
   }
-  function renderPublic(){
-    const box=$('kmLiveWorkerCardsGrid'); if(!box)return;
-    const a=read().filter(x=>x.status==='live');
-    if(!a.length){box.innerHTML='<div class="card">No live worker ID cards yet.</div>';return}
-    box.innerHTML=a.map(x=>{
-      const photo=x.photo?'<img class="km-live-id-photo" src="'+esc(x.photo)+'" alt="Worker profile photo">':'<div class="km-live-id-photo" style="display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:700">PHOTO</div>';
-      return '<article class="km-live-id-card"><div class="km-live-id-head"><b>KaamMilega</b><b>WORKER ID CARD</b></div><div class="km-live-id-body">'+photo+'<div><div class="km-live-id-row"><div class="km-live-id-label">ID</div><div class="km-live-id-value">'+esc(x.id)+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">NAME</div><div class="km-live-id-value">'+esc(x.name)+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">DATE OF BIRTH</div><div class="km-live-id-value">'+esc(x.dob||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">EXPERIENCE</div><div class="km-live-id-value">'+esc(x.experience||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">SKILL</div><div class="km-live-id-value">'+esc(x.skill||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">CITY</div><div class="km-live-id-value">'+esc(x.city||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">ADDRESS</div><div class="km-live-id-value">'+esc(x.address||'Not provided')+'</div></div></div></div><div class="km-live-id-foot">KaamMilega website profile card • Verify profile details before relying on them.</div></article>';
-    }).join('');
+  function setMsg(t,ok){const e=$('kmBrandIdMsg');if(e){e.textContent=t;e.style.color=ok?'#16a34a':'#dc2626'}}
+  function shareUrl(d){
+    // Keep the share link compact; photo is omitted from the URL because data-URLs can be extremely large.
+    const payload={id:d.id,name:d.name,firstName:d.firstName,lastName:d.lastName,dob:d.dob||'',experience:d.experience||'',skill:d.skill||'',city:d.city||'',address:d.address||''};
+    const raw=JSON.stringify(payload);
+    const b64=btoa(unescape(encodeURIComponent(raw))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    return location.origin+location.pathname+'#km-worker-id='+b64;
   }
-  function renderOwner(){
-    const box=$('ownerWorkerCardsList'); if(!box)return;
-    const a=read();
-    if(!a.length){box.innerHTML='<div class="card">No Worker ID Cards submitted yet.</div>';return}
-    box.innerHTML=a.map(x=>'<div class="km-owner-id-row"><div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap"><div><b>'+esc(x.name||'Worker')+'</b><div class="muted">'+esc(x.id)+' · '+esc(x.skill||'')+' · '+esc(x.city||'')+'</div></div><span class="owner-badge">'+esc((x.status||'pending').toUpperCase())+'</span></div><div class="muted" style="margin-top:7px">DOB: '+esc(x.dob||'—')+' · Experience: '+esc(x.experience||'—')+'</div><div class="km-owner-id-actions"><button class="btn" type="button" data-km-id-live="'+esc(x.id)+'">Live</button><button class="btn secondary" type="button" data-km-id-hide="'+esc(x.id)+'">Hide</button><button class="btn danger" type="button" data-km-id-delete="'+esc(x.id)+'">Delete</button></div></div>').join('');
-    box.querySelectorAll('[data-km-id-live]').forEach(b=>b.onclick=()=>setStatus(b.dataset.kmIdLive,'live'));
-    box.querySelectorAll('[data-km-id-hide]').forEach(b=>b.onclick=()=>setStatus(b.dataset.kmIdHide,'hidden'));
-    box.querySelectorAll('[data-km-id-delete]').forEach(b=>b.onclick=()=>{if(!confirm('Delete this Worker ID Card?'))return;write(read().filter(x=>x.id!==b.dataset.kmIdDelete));renderOwner();renderPublic();});
+  function addShareButton(){
+    const dl=$('kmBrandIdDownload'); if(!dl||$('kmBrandIdShare'))return;
+    const b=document.createElement('button');b.className='btn ghost';b.type='button';b.id='kmBrandIdShare';b.textContent='Share / Copy Link';
+    dl.parentNode.insertBefore(b,dl.nextSibling);
+    b.addEventListener('click',async function(){
+      const d=readCard(); if(!d||!d.id){setMsg('Create your ID card first.',false);return}
+      const url=shareUrl(d);
+      try{await navigator.clipboard.writeText(url);setMsg('✓ Share link copied. Send it to the user/employer.',true)}
+      catch(e){window.prompt('Copy this KaamMilega Worker ID link:',url)}
+    });
   }
-  function setStatus(id,status){const a=read();const x=a.find(v=>v.id===id);if(!x)return;x.status=status;x.updatedAt=new Date().toISOString();write(a);renderOwner();renderPublic()}
-  // User creates a card: put it into the owner review queue as Pending.
-  const create=$('kmBrandIdCreate');
-  if(create){
-    // The card creator uses addEventListener, so wrapping onclick did not fire.
-    // Listen independently and send the newly created card to the Owner review queue.
-    create.addEventListener('click',function(){setTimeout(function(){
-      upsertCurrent();
-      const refresh=$('ownerWorkerCardsRefresh');
-      if(refresh && !$('ownerWorkerCardsModal')?.classList.contains('hidden')) refresh.click();
-    },120)});
+  function publicSharedCard(){
+    const hash=location.hash||''; const prefix='#km-worker-id='; if(!hash.startsWith(prefix))return;
+    try{
+      const b64=hash.slice(prefix.length).replace(/-/g,'+').replace(/_/g,'/');
+      const pad=b64+'='.repeat((4-b64.length%4)%4);
+      const d=JSON.parse(decodeURIComponent(escape(atob(pad))));
+      let sec=$('kmLiveWorkerCards');
+      if(!sec){sec=document.createElement('section');sec.className='section';sec.id='kmLiveWorkerCards';document.body.appendChild(sec)}
+      sec.scrollIntoView({behavior:'smooth',block:'start'});
+      const box=$('kmLiveWorkerCardsGrid');
+      if(box){box.innerHTML='<article class="km-live-id-card"><div class="km-live-id-head"><b>KaamMilega</b><b>WORKER ID CARD</b></div><div class="km-live-id-body"><div class="km-live-id-photo" style="display:flex;align-items:center;justify-content:center;color:#64748b;font-weight:700">PHOTO</div><div><div class="km-live-id-row"><div class="km-live-id-label">ID</div><div class="km-live-id-value">'+esc(d.id)+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">NAME</div><div class="km-live-id-value">'+esc(d.name)+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">DATE OF BIRTH</div><div class="km-live-id-value">'+esc(d.dob||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">EXPERIENCE</div><div class="km-live-id-value">'+esc(d.experience||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">SKILL</div><div class="km-live-id-value">'+esc(d.skill||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">CITY</div><div class="km-live-id-value">'+esc(d.city||'Not provided')+'</div></div><div class="km-live-id-row"><div class="km-live-id-label">ADDRESS</div><div class="km-live-id-value">'+esc(d.address||'Not provided')+'</div></div></div></div><div class="km-live-id-foot">KaamMilega website profile card • Verify profile details before relying on them.</div></article>'}
+    }catch(e){}
   }
-  const manage=$('ownerWorkerCardsManageBtn');
-  if(manage)manage.addEventListener('click',async function(){try{const u=await (window.getOwnerUser?window.getOwnerUser():null);if(!u){if(window.openModal)window.openModal('ownerLoginModal');else $('ownerLoginModal')?.classList.remove('hidden');return}}catch(e){return}renderOwner();if(window.openModal)window.openModal('ownerWorkerCardsModal');else $('ownerWorkerCardsModal')?.classList.remove('hidden')});
-  $('ownerWorkerCardsRefresh')?.addEventListener('click',renderOwner);
-  renderPublic();
-  window.addEventListener('storage',function(e){if(e.key===KEY){renderPublic();renderOwner()}});
+  function init(){
+    addShareButton();
+    const create=$('kmBrandIdCreate');
+    if(create){
+      create.addEventListener('click',function(){setTimeout(function(){const d=readCard();if(d&&d.id){ensureQueue();const dl=$('kmBrandIdDownload');if(dl)dl.disabled=false;addShareButton()}},180)})
+    }
+    $('kmBrandIdDownload')?.addEventListener('click',function(){setTimeout(addShareButton,50)});
+    const refresh=$('ownerWorkerCardsRefresh'); if(refresh)refresh.addEventListener('click',function(){
+      const d=readCard(); if(d&&d.id)ensureQueue();
+    });
+    window.addEventListener('hashchange',publicSharedCard);
+    setTimeout(publicSharedCard,250);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
-</script>
-</body>
+</script>\n</body>
 </html>
 <!-- Targeted fixes: only the buttons/errors reported by the owner -->
 <script id="km-targeted-button-fixes-v6">
@@ -4749,7 +4600,7 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
         const modal=$('kmMegaModal'), title=$('kmMegaTitle'), body=$('kmMegaBody');
         if(!modal||!title||!body)return;
         title.textContent='Job Travel Calculator';
-        body.innerHTML='<div class="km-mega-form"><input id="trKm" type="number" min="0" step="0.1" placeholder="One-way distance (km)"><input id="trCost" type="number" min="0" step="0.01" placeholder="Travel cost per km ₹"><input id="trDays" type="number" min="1" value="26" placeholder="Work days/month"><button class="btn" type="button" id="trGo">Calculate</button><div id="kmTransOut" class="km-mega-result"></div></div>';
+        body.innerHTML='<div class="km-mega-form"><input id="trKm" type="number" min="0" step="0.1" placeholder="One-way distance in km"><input id="trCost" type="number" min="0" step="0.01" placeholder="Travel cost per km ₹"><input id="trDays" type="number" min="1" value="26" placeholder="Work days per month"><button class="btn" type="button" id="trGo">Calculate</button><div id="kmTransOut" class="km-mega-result"></div></div>';
         modal.classList.remove('hidden');
         const go=$('trGo');
         if(go)go.onclick=function(){
@@ -4770,7 +4621,7 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
         const modal=$('kmMegaModal'),title=$('kmMegaTitle'),body=$('kmMegaBody');
         if(!modal||!title||!body)return;
         title.textContent='Digital Worker ID';
-        body.innerHTML='<div class="km-mega-form"><input id="idName" placeholder="Worker name"><input id="idSkill" placeholder="Primary skill"><input id="idCity" placeholder="City"><button class="btn" type="button" id="idGo">Create ID</button><div id="idOut" class="km-mega-result"></div></div>';
+        body.innerHTML='<div class="km-mega-form"><input id="idName" placeholder="Worker full name"><input id="idSkill" placeholder="Primary skill / trade"><input id="idCity" placeholder="Job city"><button class="btn" type="button" id="idGo">Create ID</button><div id="idOut" class="km-mega-result"></div></div>';
         modal.classList.remove('hidden');
         $('idGo').onclick=function(){
           const n=($('idName')?.value||'').trim(), s=($('idSkill')?.value||'').trim(), c=($('idCity')?.value||'').trim(), out=$('idOut');
@@ -4793,7 +4644,7 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
         const modal=$('kmMegaModal'),title=$('kmMegaTitle'),body=$('kmMegaBody');
         if(!modal||!title||!body)return;
         title.textContent='Salary Negotiation Assistant';
-        body.innerHTML='<div class="km-mega-form"><input id="snCur" type="number" min="0" placeholder="Current salary ₹"><input id="snExp" type="number" min="0" placeholder="Expected salary ₹"><button class="btn" type="button" id="snGo">Prepare Negotiation</button><div id="snOut" class="km-mega-result"></div></div>';
+        body.innerHTML='<div class="km-mega-form"><input id="snCur" type="number" min="0" placeholder="Current monthly salary ₹"><input id="snExp" type="number" min="0" placeholder="Expected monthly salary ₹"><button class="btn" type="button" id="snGo">Prepare Negotiation</button><div id="snOut" class="km-mega-result"></div></div>';
         modal.classList.remove('hidden');
         $('snGo').onclick=function(){
           const c=Number($('snCur')?.value||0), e=Number($('snExp')?.value||0), out=$('snOut');

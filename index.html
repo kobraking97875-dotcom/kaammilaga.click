@@ -1400,25 +1400,70 @@ $("ownerLogout").onclick=async()=>{
 async function loadCompanyRequirements(){
   const box=$("companyRequirements");
   if(!box)return;
-  try{
-    const r=await supa("company_requirements?select=*&status=eq.active&order=created_at.desc",{headers:{"Prefer":"return=representation"}});
-    if(!r.ok)throw new Error(await r.text());
-    const rows=await r.json();
-    if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card">No active company requirements yet.</div>';return;}
+  box.innerHTML='<div class="card">Loading company requirements...</div>';
+
+  const renderRows=(rows)=>{
+    if(!Array.isArray(rows)||!rows.length){
+      box.innerHTML='<div class="card">No active company requirements yet.</div>';
+      return;
+    }
     box.innerHTML=rows.map(x=>`<article class="requirement-card">
-      <div class="requirement-top"><div><span class="eyebrow">HIRING REQUIREMENT</span><h3 style="margin:5px 0">${escapeHtml(x.company_name)}</h3></div><span class="requirement-status">ACTIVE</span></div>
+      <div class="requirement-top">
+        <div><span class="eyebrow">HIRING REQUIREMENT</span><h3 style="margin:5px 0">${escapeHtml(x.company_name)}</h3></div>
+        <span class="requirement-status">ACTIVE</span>
+      </div>
       <div class="requirement-meta">
-        <div><div class="requirement-label">Members Needed</div><div class="requirement-value">${escapeHtml(String(x.members_needed))}</div></div>
-        <div><div class="requirement-label">Worker Required</div><div class="requirement-value">${escapeHtml(x.worker_requirement)}</div></div>
-        <div><div class="requirement-label">Calling</div><div class="requirement-value">${escapeHtml(x.caller_role)} — ${escapeHtml(x.caller_name)}</div></div>
-        <div><div class="requirement-label">Salary / Rate</div><div class="requirement-value">${escapeHtml(x.salary)}</div></div>
-        <div><div class="requirement-label">Location</div><div class="requirement-value">${escapeHtml(x.location)}</div></div>
+        <div><div class="requirement-label">Members Needed</div><div class="requirement-value">${escapeHtml(String(x.members_needed??''))}</div></div>
+        <div><div class="requirement-label">Worker Required</div><div class="requirement-value">${escapeHtml(x.worker_requirement||'')}</div></div>
+        <div><div class="requirement-label">Calling</div><div class="requirement-value">${escapeHtml(x.caller_role||'')} — ${escapeHtml(x.caller_name||'')}</div></div>
+        <div><div class="requirement-label">Salary / Rate</div><div class="requirement-value">${escapeHtml(x.salary||'')}</div></div>
+        <div><div class="requirement-label">Location</div><div class="requirement-value">${escapeHtml(x.location||'')}</div></div>
         <div><div class="requirement-label">Joining</div><div class="requirement-value">${escapeHtml(x.joining_date||"As per company")}</div></div>
       </div>
       ${x.details?`<p style="margin:14px 0 0">${escapeHtml(x.details)}</p>`:""}
       <div class="requirement-owner">Posted through KaamMilega Owner Hiring Desk</div>
     </article>`).join('');
-  }catch(e){box.innerHTML='<div class="card">Company requirements are temporarily unavailable.</div>';console.error(e);}
+  };
+
+  // First render the owner's latest local cache when available.
+  let cacheRows=[];
+  try{
+    const cached=JSON.parse(localStorage.getItem("km_public_company_requirements")||"[]");
+    if(Array.isArray(cached)) cacheRows=cached.filter(x=>String(x.status||'active')==='active');
+  }catch(_){}
+  if(cacheRows.length) renderRows(cacheRows);
+
+  try{
+    // If an owner session exists, include it. This lets the owner see the
+    // same records even when the public anon SELECT policy is restrictive.
+    const token=await getSession();
+    const headers=token
+      ? {"Authorization":"Bearer "+token,"Prefer":"return=representation"}
+      : {"Prefer":"return=representation"};
+    let r=await supa("company_requirements?select=*&status=eq.active&order=created_at.desc", {headers});
+    let raw=await r.text();
+    let rows=[];
+    try{rows=raw?JSON.parse(raw):[]}catch(_){rows=[]}
+
+    // Retry anonymously if an expired/invalid owner token caused the request to fail.
+    if(!r.ok && token){
+      r=await supa("company_requirements?select=*&status=eq.active&order=created_at.desc", {headers:{"Prefer":"return=representation"}});
+      raw=await r.text();
+      try{rows=raw?JSON.parse(raw):[]}catch(_){rows=[]}
+    }
+
+    if(!r.ok) throw new Error(rows?.message||rows?.hint||raw||"Could not load company requirements.");
+    if(!Array.isArray(rows)) rows=[];
+    try{localStorage.setItem("km_public_company_requirements",JSON.stringify(rows));}catch(_){}
+    renderRows(rows);
+  }catch(e){
+    if(cacheRows.length){
+      renderRows(cacheRows);
+    }else{
+      box.innerHTML='<div class="card"><b>Company requirements could not be loaded.</b><br><span class="muted">Please tap Refresh or enable the public company-requirements view in Supabase.</span></div>';
+    }
+    console.error("Public company requirements:",e);
+  }
 }
 
 function escapeHtml(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','\"':'&quot;'}[c]));}
@@ -1566,6 +1611,14 @@ async function loadOwnerCompanyRequirements(){
     const raw = await r.text();
     if(!r.ok) throw new Error(raw);
     const rows = JSON.parse(raw);
+
+    // Keep the latest owner data locally so the public section can render
+    // immediately on this browser even if the public SELECT policy is missing.
+    try{
+      const activeRows = Array.isArray(rows) ? rows.filter(x=>String(x.status||'active')==='active') : [];
+      localStorage.setItem("km_public_company_requirements", JSON.stringify(activeRows));
+    }catch(_){}
+
     if(!Array.isArray(rows) || !rows.length){
       box.innerHTML='<div class="card">No company requirements found.</div>';
       return;
@@ -1589,10 +1642,10 @@ async function loadOwnerCompanyRequirements(){
         </div>
         <div class="owner-actions">
           ${x.status !== "completed"
-            ? `<button class="btn secondary" onclick="ownerCompleteRequirement(${x.id})">Mark Complete</button>`
-            : `<button class="btn" onclick="ownerReopenRequirement(${x.id})">Re-Open</button>`}
-          <button class="btn secondary" onclick="ownerEditRequirement(${x.id})">Update</button>
-          <button class="btn danger" onclick="ownerDeleteRequirement(${x.id})">Delete</button>
+            ? `<button class="btn secondary" type="button" onclick="ownerCompleteRequirement(${x.id})">Mark Complete</button>`
+            : `<button class="btn" type="button" onclick="ownerReopenRequirement(${x.id})">Re-Open</button>`}
+          <button class="btn secondary" type="button" onclick="ownerEditRequirement(${x.id})">Update</button>
+          <button class="btn danger" type="button" onclick="ownerDeleteRequirement(${x.id})">Delete</button>
         </div>
       </article>
     `).join("");
@@ -1607,7 +1660,7 @@ window.ownerCompleteRequirement = async function(id){
   try{
     await ownerRequirementsMutation("PATCH","company_requirements?id=eq."+encodeURIComponent(id),{status:"completed"});
     await loadOwnerCompanyRequirements();
-    await loadCompanyRequirements();
+    await window.loadCompanyRequirementsFinal?.();
     showToast("Company requirement marked completed.");
   }catch(e){msg("ownerRequirementsMsg",e.message,"error");}
 };
@@ -1617,7 +1670,7 @@ window.ownerReopenRequirement = async function(id){
   try{
     await ownerRequirementsMutation("PATCH","company_requirements?id=eq."+encodeURIComponent(id),{status:"active"});
     await loadOwnerCompanyRequirements();
-    await loadCompanyRequirements();
+    await window.loadCompanyRequirementsFinal?.();
     showToast("Company requirement re-opened.");
   }catch(e){msg("ownerRequirementsMsg",e.message,"error");}
 };
@@ -1627,7 +1680,7 @@ window.ownerDeleteRequirement = async function(id){
   try{
     await ownerRequirementsMutation("DELETE","company_requirements?id=eq."+encodeURIComponent(id));
     await loadOwnerCompanyRequirements();
-    await loadCompanyRequirements();
+    await window.loadCompanyRequirementsFinal?.();
     showToast("Company requirement deleted permanently.");
   }catch(e){msg("ownerRequirementsMsg",e.message,"error");}
 };
@@ -1690,7 +1743,7 @@ if(document.getElementById("ownerReqSaveEdit")){
       await ownerRequirementsMutation("PATCH","company_requirements?id=eq."+encodeURIComponent(id),body);
       document.getElementById("ownerRequirementEditModal").classList.add("hidden");
       await loadOwnerCompanyRequirements();
-      await loadCompanyRequirements();
+      await window.loadCompanyRequirementsFinal?.();
       showToast("Company requirement updated.");
     }catch(e){msg("ownerReqEditMsg",e.message,"error");}
   };
@@ -4029,7 +4082,7 @@ if(document.getElementById("ownerReqSaveEdit")){
 
 
 <section class="section km-bottom-leads" id="companyRequirementsSection">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">COMPANY HIRING REQUIREMENTS</span><h2 style="margin:5px 0">Workers Required by Companies</h2><p class="muted" style="margin:0">Company requirements posted through KaamMilega. Contact the support team for current verification.</p></div><button class="btn" id="ownerRequirementBtn" data-open="ownerRequirementModal">Post Company Requirement</button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">COMPANY HIRING REQUIREMENTS</span><h2 style="margin:5px 0">Workers Required by Companies</h2><p class="muted" style="margin:0">Company requirements posted through KaamMilega. Contact the support team for current verification.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" id="publicCompanyRefresh" type="button">Refresh Requirements</button><button class="btn" id="ownerRequirementBtn" data-open="ownerRequirementModal">Post Company Requirement</button></div>
 <div id="companyRequirements" class="requirement-grid" style="margin-top:18px"><div class="card">Loading company requirements...</div></div>
 </section>
 
@@ -4327,5 +4380,263 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
   });
 })();
 </script>
+
+<script id="km-company-public-final-fix">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const esc2=window.escapeHtml||((v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
+  function renderCompanyPublic(rows){
+    const box=$('companyRequirements'); if(!box)return;
+    rows=Array.isArray(rows)?rows.filter(x=>String(x.status||'active')==='active'):[];
+    if(!rows.length){box.innerHTML='<div class="card">No active company requirements yet.</div>';return;}
+    box.innerHTML=rows.map(x=>`<article class="requirement-card">
+      <div class="requirement-top"><div><span class="eyebrow">HIRING REQUIREMENT</span><h3 style="margin:5px 0">${esc2(x.company_name)}</h3></div><span class="requirement-status">ACTIVE</span></div>
+      <div class="requirement-meta">
+        <div><div class="requirement-label">Members Needed</div><div class="requirement-value">${esc2(x.members_needed)}</div></div>
+        <div><div class="requirement-label">Worker Required</div><div class="requirement-value">${esc2(x.worker_requirement)}</div></div>
+        <div><div class="requirement-label">Calling</div><div class="requirement-value">${esc2(x.caller_role)} — ${esc2(x.caller_name)}</div></div>
+        <div><div class="requirement-label">Salary / Rate</div><div class="requirement-value">${esc2(x.salary)}</div></div>
+        <div><div class="requirement-label">Location</div><div class="requirement-value">${esc2(x.location)}</div></div>
+        <div><div class="requirement-label">Joining</div><div class="requirement-value">${esc2(x.joining_date||'As per company')}</div></div>
+      </div>
+      ${x.details?`<p style="margin:14px 0 0">${esc2(x.details)}</p>`:''}
+      <div class="requirement-owner">Posted through KaamMilega Owner Hiring Desk</div>
+    </article>`).join('');
+  }
+  window.loadCompanyRequirementsFinal=async function(){
+    const box=$('companyRequirements'); if(!box)return;
+    box.innerHTML='<div class="card">Loading company requirements...</div>';
+    let cached=[];
+    try{cached=JSON.parse(localStorage.getItem('km_public_company_requirements')||'[]');}catch(_){}
+    if(Array.isArray(cached)&&cached.length) renderCompanyPublic(cached);
+
+    try{
+      const token=typeof getSession==='function'?await getSession():null;
+      const base='company_requirements?select=*&status=eq.active&order=created_at.desc';
+      let r=await supa(base,{headers:token?{Authorization:'Bearer '+token,'Prefer':'return=representation'}:{'Prefer':'return=representation'}});
+      let raw=await r.text(), rows=[];
+      try{rows=raw?JSON.parse(raw):[]}catch(_){}
+      if(!r.ok && token){
+        r=await supa(base,{headers:{'Prefer':'return=representation'}});
+        raw=await r.text(); try{rows=raw?JSON.parse(raw):[]}catch(_){}
+      }
+      if(!r.ok)throw new Error(rows?.message||rows?.hint||raw||'Public company requirement read failed.');
+      if(!Array.isArray(rows))rows=[];
+      localStorage.setItem('km_public_company_requirements',JSON.stringify(rows));
+      renderCompanyPublic(rows);
+    }catch(e){
+      if(Array.isArray(cached)&&cached.length)renderCompanyPublic(cached);
+      else box.innerHTML='<div class="card"><b>Company requirements could not be loaded.</b><br><span class="muted">Please refresh the page.</span></div>';
+      console.error(e);
+    }
+  };
+  window.loadCompanyRequirements=window.loadCompanyRequirementsFinal;
+  // Run after all legacy scripts have initialized.
+  window.addEventListener('load',()=>window.loadCompanyRequirementsFinal(),{once:true});
+  const rb=document.getElementById('publicCompanyRefresh'); if(rb){rb.addEventListener('click',async()=>{const old=rb.textContent;rb.disabled=true;rb.textContent='Refreshing...';try{await window.loadCompanyRequirementsFinal();}finally{rb.disabled=false;rb.textContent=old;}});}
+})();
+</script>
+
+<script id="km-public-publish-final-fix">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  function bind(){
+    const btn=$('saveRequirement');
+    if(!btn || btn.dataset.publicPublishFinal==='1') return;
+    btn.dataset.publicPublishFinal='1';
+    btn.addEventListener('click', async function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      try{
+        const owner=await (window.getOwnerUser?window.getOwnerUser():null);
+        if(owner){
+          // Existing publisher is already working; invoke it directly.
+          const handler=btn.onclick;
+          if(typeof handler==='function') return handler.call(btn,e);
+          return;
+        }
+        // Preserve the filled form and take the user to the required Owner Login.
+        window.__kmPendingCompanyPublish=true;
+        const m=$('reqMsg');
+        if(m)m.innerHTML='<div class="notice">Please login as Owner. Your completed company requirement will remain filled.</div>';
+        $('ownerLoginModal')?.classList.remove('hidden');
+        $('ownerPassword')?.focus();
+        clearInterval(window.__kmPublishWaiter);
+        let tries=0;
+        window.__kmPublishWaiter=setInterval(async()=>{
+          tries++;
+          try{
+            const u=await (window.getOwnerUser?window.getOwnerUser():null);
+            if(u){
+              clearInterval(window.__kmPublishWaiter);
+              window.__kmPendingCompanyPublish=false;
+              $('ownerLoginModal')?.classList.add('hidden');
+              setTimeout(()=>{
+                const b=$('saveRequirement');
+                if(b && typeof b.onclick==='function') b.onclick(new Event('click',{bubbles:true,cancelable:true}));
+              },200);
+            }
+          }catch(_){ }
+          if(tries>=120){clearInterval(window.__kmPublishWaiter);window.__kmPendingCompanyPublish=false;}
+        },500);
+      }catch(err){
+        const m=$('reqMsg');if(m)m.innerHTML='<div class="notice error">'+String(err?.message||'Owner login is required.')+'</div>';
+      }
+    }, true);
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true}); else bind();
+})();
+</script>
 </body>
 </html>
+<!-- Targeted fixes: only the buttons/errors reported by the owner -->
+<script id="km-targeted-button-fixes-v6">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const esc=window.escapeHtml||((v)=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])));
+
+  function onReady(fn){
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',fn,{once:true});
+    else fn();
+  }
+
+  onReady(function(){
+    /* 1) Job Travel Calculator: fix the wrong output element id (trOut -> kmTransOut). */
+    const travelOpen=$('kmTravelOpen');
+    if(travelOpen){
+      travelOpen.onclick=function(){
+        const modal=$('kmMegaModal'), title=$('kmMegaTitle'), body=$('kmMegaBody');
+        if(!modal||!title||!body)return;
+        title.textContent='Job Travel Calculator';
+        body.innerHTML='<div class="km-mega-form"><input id="trKm" type="number" min="0" step="0.1" placeholder="One-way distance (km)"><input id="trCost" type="number" min="0" step="0.01" placeholder="Travel cost per km ₹"><input id="trDays" type="number" min="1" value="26" placeholder="Work days/month"><button class="btn" type="button" id="trGo">Calculate</button><div id="kmTransOut" class="km-mega-result"></div></div>';
+        modal.classList.remove('hidden');
+        const go=$('trGo');
+        if(go)go.onclick=function(){
+          const k=Number($('trKm')?.value||0), c=Number($('trCost')?.value||0), d=Number($('trDays')?.value||26);
+          const out=$('kmTransOut');
+          if(!k||k<0||!c||c<0){if(out)out.textContent='Please enter distance and travel cost.';return;}
+          const monthly=k*2*c*(d>0?d:26);
+          if(out)out.innerHTML='<b>Estimated monthly travel cost: ₹'+monthly.toLocaleString('en-IN')+'</b><br>One-way distance: '+k+' km · Work days: '+(d>0?d:26);
+          try{localStorage.setItem('km_last_travel',JSON.stringify({distance:k,costPerKm:c,days:d,monthly,date:new Date().toISOString()}));}catch(e){}
+        };
+      };
+    }
+
+    /* 2) Digital Worker ID: allow all fields to be saved and show validation instead of doing nothing. */
+    const idOpen=$('kmIdOpen');
+    if(idOpen){
+      idOpen.onclick=function(){
+        const modal=$('kmMegaModal'),title=$('kmMegaTitle'),body=$('kmMegaBody');
+        if(!modal||!title||!body)return;
+        title.textContent='Digital Worker ID';
+        body.innerHTML='<div class="km-mega-form"><input id="idName" placeholder="Worker name"><input id="idSkill" placeholder="Primary skill"><input id="idCity" placeholder="City"><button class="btn" type="button" id="idGo">Create ID</button><div id="idOut" class="km-mega-result"></div></div>';
+        modal.classList.remove('hidden');
+        $('idGo').onclick=function(){
+          const n=($('idName')?.value||'').trim(), s=($('idSkill')?.value||'').trim(), c=($('idCity')?.value||'').trim(), out=$('idOut');
+          if(!n){out.textContent='Please enter the worker name.';return;}
+          const id='KM-W-'+Date.now().toString(36).toUpperCase();
+          out.innerHTML='<b>Worker ID: '+esc(id)+'</b><br>'+esc(n)+' · '+esc(s||'Skill not added')+' · '+esc(c||'City not added')+'<div class="km-qr">Share code: '+esc(id)+'</div>';
+          try{
+            const a=JSON.parse(localStorage.getItem('km_exclusive_records_v1')||'[]');
+            a.unshift({id:'worker-'+Date.now(),type:'Digital Worker ID',data:{name:n,skill:s,city:c,id},createdAt:new Date().toISOString(),expiresAt:new Date(Date.now()+365*864e5).toISOString()});
+            localStorage.setItem('km_exclusive_records_v1',JSON.stringify(a));
+          }catch(e){}
+        };
+      };
+    }
+
+    /* 3) Salary Negotiation: keep the existing tool, but make its action always give feedback. */
+    const salaryOpen=$('kmSalaryOpen');
+    if(salaryOpen){
+      salaryOpen.onclick=function(){
+        const modal=$('kmMegaModal'),title=$('kmMegaTitle'),body=$('kmMegaBody');
+        if(!modal||!title||!body)return;
+        title.textContent='Salary Negotiation Assistant';
+        body.innerHTML='<div class="km-mega-form"><input id="snCur" type="number" min="0" placeholder="Current salary ₹"><input id="snExp" type="number" min="0" placeholder="Expected salary ₹"><button class="btn" type="button" id="snGo">Prepare Negotiation</button><div id="snOut" class="km-mega-result"></div></div>';
+        modal.classList.remove('hidden');
+        $('snGo').onclick=function(){
+          const c=Number($('snCur')?.value||0), e=Number($('snExp')?.value||0), out=$('snOut');
+          if(!c||!e){out.textContent='Please enter current salary and expected salary.';return;}
+          const low=Math.min(e,Math.round(c*1.25));
+          out.innerHTML='Suggested discussion range: <b>₹'+low.toLocaleString('en-IN')+'–₹'+e.toLocaleString('en-IN')+'</b><br>Message: “I am interested in the role. Based on my skills and experience, could we discuss the compensation?”';
+          try{const a=JSON.parse(localStorage.getItem('km_exclusive_records_v1')||'[]');a.unshift({id:'salary-'+Date.now(),type:'Salary Negotiation Assistant',data:{current:c,expected:e},createdAt:new Date().toISOString(),expiresAt:new Date(Date.now()+30*864e5).toISOString()});localStorage.setItem('km_exclusive_records_v1',JSON.stringify(a));}catch(x){}
+        };
+      };
+    }
+
+    /* 4) AI Voice Interview: do not block SpeechRecognition behind getUserMedia.
+       Chrome's speech API requests the microphone itself. If unavailable, the text fallback remains usable. */
+    const voiceOpen=$('kmVoiceInterviewOpen');
+    if(voiceOpen){
+      voiceOpen.onclick=function(){
+        const modal=$('kmMegaModal'),title=$('kmMegaTitle'),body=$('kmMegaBody');
+        if(!modal||!title||!body)return;
+        title.textContent='AI Voice Interview';
+        body.innerHTML='<div class="km-mega-form"><p id="viQ"><b>Question:</b> Tell me about your experience.</p><button class="btn" type="button" id="viStart">🎙️ Start Speaking</button><div id="viOut" class="km-mega-result">Tap Start Speaking and speak clearly.</div><textarea id="viText" rows="4" placeholder="If voice is unavailable, type your answer here…"></textarea><button class="btn secondary" id="viSaveText" type="button">Save Typed Answer</button></div>';
+        modal.classList.remove('hidden');
+        const start=$('viStart'),out=$('viOut'),text=$('viText'),saveText=$('viSaveText');
+        saveText.onclick=function(){const a=(text.value||'').trim();if(!a){out.textContent='Please type an answer first.';return;}out.textContent='✓ Answer saved.';try{const arr=JSON.parse(localStorage.getItem('km_exclusive_records_v1')||'[]');arr.unshift({id:'voice-'+Date.now(),type:'AI Voice Interview',data:{answer:a,method:'typed'},createdAt:new Date().toISOString(),expiresAt:new Date(Date.now()+30*864e5).toISOString()});localStorage.setItem('km_exclusive_records_v1',JSON.stringify(arr));}catch(e){}};
+        start.onclick=function(){
+          const R=window.SpeechRecognition||window.webkitSpeechRecognition;
+          if(!R){out.textContent='Voice input is not supported in this browser. Type your answer below and save it.';return;}
+          let r;
+          try{
+            r=new R(); r.lang=(navigator.language||'en-IN').toLowerCase().startsWith('hi')?'hi-IN':'en-IN'; r.interimResults=false;r.continuous=false;r.maxAlternatives=3;
+            start.disabled=true;out.textContent='🎙️ Listening… Speak now.';
+            r.onresult=function(e){const a=e.results?.[0]?.[0]?.transcript||'';if(a){text.value=a;out.textContent='✓ Voice answer captured. Tap Save Typed Answer to keep it.';}else out.textContent='No answer was detected. Please try again.';};
+            r.onerror=function(e){const code=e?.error||''; if(code==='not-allowed'||code==='service-not-allowed') out.textContent='Microphone permission is blocked. In Chrome, open Site settings → Microphone → Allow, then tap Start Speaking again. You can also type your answer below.'; else if(code==='no-speech') out.textContent='No speech detected. Tap Start Speaking and speak clearly.'; else out.textContent='Voice input is unavailable right now. You can type your answer below.';};
+            r.onend=function(){start.disabled=false;}; r.start();
+          }catch(e){start.disabled=false;out.textContent='Voice input could not start on this page. You can still type and save your answer below.';}
+        };
+      };
+    }
+
+    /* 5) Nearby Jobs: geolocation is not available on many local/content:// pages.
+       Keep the button useful by providing a city fallback instead of the error shown in the screenshot. */
+    const locBtn=$('kmLocationBtn'),locResult=$('kmLocationResult');
+    if(locBtn&&locResult){
+      locBtn.onclick=function(){
+        locResult.innerHTML='Checking location access…';
+        if(!window.isSecureContext || !navigator.geolocation){
+          locResult.innerHTML='<div><b>Nearby location access is unavailable on this page.</b><br>Enter your city to continue nearby-job search.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><input id="kmManualCity" placeholder="Enter city" style="flex:1;min-width:180px;padding:10px;border:1px solid #d1d5db;border-radius:10px"><button class="btn" type="button" id="kmManualCityBtn">Use City</button></div>';
+          const b=$('kmManualCityBtn'); if(b)b.onclick=function(){const city=($('kmManualCity')?.value||'').trim();if(!city){locResult.insertAdjacentHTML('beforeend','<div class="muted" style="margin-top:8px">Please enter a city.</div>');return;}try{localStorage.setItem('km_nearby_city',city);}catch(e){}locResult.innerHTML='<b>✓ City saved:</b> '+esc(city)+'. Nearby-job search can use this city.';const searchCity=$('searchCity');if(searchCity)searchCity.value=city;const searchBtn=$('searchBtn');if(searchBtn)searchBtn.click();};
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(
+          function(p){try{localStorage.setItem('km_nearby_coords',JSON.stringify({lat:p.coords.latitude,lng:p.coords.longitude,at:new Date().toISOString()}));}catch(e){}locResult.innerHTML='<b>✓ Location available.</b> Nearby-job search can now use your current area.';},
+          function(){locResult.innerHTML='<div><b>Location permission was not granted.</b><br>You can still search nearby jobs by city.</div><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px"><input id="kmManualCity" placeholder="Enter city" style="flex:1;min-width:180px;padding:10px;border:1px solid #d1d5db;border-radius:10px"><button class="btn" type="button" id="kmManualCityBtn">Use City</button></div>';const b=$('kmManualCityBtn');if(b)b.onclick=function(){const city=($('kmManualCity')?.value||'').trim();if(!city)return;try{localStorage.setItem('km_nearby_city',city);}catch(e){}locResult.innerHTML='<b>✓ City saved:</b> '+esc(city);const searchCity=$('searchCity');if(searchCity)searchCity.value=city;const searchBtn=$('searchBtn');if(searchBtn)searchBtn.click();};},
+          {enableHighAccuracy:false,timeout:10000,maximumAge:300000}
+        );
+      };
+    }
+
+    /* 6) Publish Requirement: if owner is not logged in, open Owner Login instead of silently doing nothing. */
+    const pub=$('saveRequirement');
+    if(pub){
+      const original=pub.onclick;
+      pub.onclick=async function(e){
+        if(pub.dataset.kmPublishFix==='1')return;
+        pub.dataset.kmPublishFix='1';
+        try{
+          const owner=await (window.getOwnerUser?window.getOwnerUser():null);
+          if(!owner){
+            pub.dataset.kmPublishFix='';
+            const modal=$('ownerLoginModal');
+            if(modal)modal.classList.remove('hidden');
+            const m=$('reqMsg');if(m)m.textContent='Please login as Owner first. Your company requirement form will remain filled.';
+            return;
+          }
+          pub.dataset.kmPublishFix='';
+          if(typeof original==='function')return original.call(pub,e);
+        }catch(err){
+          pub.dataset.kmPublishFix='';
+          const m=$('reqMsg');if(m)m.textContent=err?.message||'Owner login is required.';
+        }
+      };
+    }
+  });
+})();
+</script>

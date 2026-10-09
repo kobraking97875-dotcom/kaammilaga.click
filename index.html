@@ -301,55 +301,31 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </head>
 
 <style id="km-google-gate-style">
-#kmGoogleGate{position:relative;z-index:1;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:24px 18px;margin:24px auto;width:calc(100% - 36px);max-width:1150px;border-radius:24px;font-family:Arial,sans-serif;color:#fff;box-shadow:0 18px 44px rgba(7,27,60,.18)}#kmGoogleGate .km-gate-card{width:min(100%,900px);max-height:none;overflow:visible;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 16px 44px #0002;text-align:center}
-#kmGoogleGate .km-gate-info{max-width:760px;margin:22px auto 0}
-#kmGoogleLoginBtn{max-width:440px;margin:0 auto}
-#kmGoogleGate .km-gate-small{color:#64748b}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:auto}
-/* Public site is never locked behind login. The sign-in panel stays in normal page flow. */
-#kmGoogleGate{position:relative!important;inset:auto!important;z-index:1!important;display:flex!important;align-items:center;justify-content:center;margin:22px auto!important;width:calc(100% - 32px)!important;max-width:1150px!important;padding:18px!important;background:linear-gradient(135deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%)!important;border-radius:20px!important;box-shadow:0 12px 32px rgba(7,27,60,.14)!important}
-#kmGoogleGate .km-gate-card{width:100%!important;max-width:100%!important;max-height:none!important;overflow:visible!important;padding:22px!important;border-radius:16px!important}
-#kmGoogleGate .km-gate-info{max-width:900px!important}
-#kmGoogleLoginBtn{max-width:440px;margin:0 auto}
-#kmMemberDashboard{scroll-margin-top:90px}
-@media(max-width:600px){#kmGoogleGate{width:calc(100% - 20px)!important;padding:10px!important;margin:14px auto!important}#kmGoogleGate .km-gate-card{padding:17px!important}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr!important}}
-
-/* Full-screen responsive Google login page: edge-to-edge on phones and desktop */
-#kmGoogleGate{
-  box-sizing:border-box!important;
-  width:100vw!important;
-  max-width:none!important;
-  margin:0!important;
-  min-height:100vh!important;
-  min-height:100svh!important;
-  padding:clamp(12px,2.5vw,36px)!important;
-  border-radius:0!important;
-  align-items:stretch!important;
-  justify-content:center!important;
-}
-#kmGoogleGate .km-gate-card{
-  box-sizing:border-box!important;
-  width:100%!important;
-  max-width:none!important;
-  min-height:calc(100vh - 2 * clamp(12px,2.5vw,36px))!important;
-  min-height:calc(100svh - 2 * clamp(12px,2.5vw,36px))!important;
-  padding:clamp(18px,3vw,42px)!important;
-  border-radius:clamp(12px,1.5vw,22px)!important;
-}
-#kmGoogleGate .km-gate-info{max-width:none!important}
-#kmGoogleGate #kmLiveHiringShowcase{width:100%!important;max-width:none!important;box-sizing:border-box!important}
-#kmGoogleGate .km-live-showcase-grid{width:100%!important}
-@media(min-width:900px){
-  #kmGoogleGate .km-gate-card{padding:clamp(28px,3vw,56px)!important}
-  #kmGoogleGate h1{font-size:clamp(28px,2.8vw,44px)!important}
-  #kmGoogleGate .km-live-showcase-head h2{font-size:clamp(28px,2.3vw,38px)!important}
-}
-@media(max-width:600px){
-  #kmGoogleGate{padding:8px!important}
-  #kmGoogleGate .km-gate-card{min-height:calc(100svh - 16px)!important;padding:16px!important;border-radius:14px!important}
-}
-
+#kmGoogleGate{position:fixed;inset:0;z-index:999999;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:22px;font-family:Arial,sans-serif;color:#fff}#kmGoogleGate .km-gate-card{width:min(100%,520px);max-height:calc(100dvh - 28px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 24px 80px #0005;text-align:center}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:hidden}
 </style>
-<body>
+<body class="km-auth-locked">
+<div id="kmGoogleGate" role="dialog" aria-modal="true" aria-labelledby="kmGateTitle">
+  <div class="km-gate-card">
+    <div class="km-gate-logo">Kaam<span>Milega</span></div>
+    <h1 id="kmGateTitle">Login to open KaamMilega</h1>
+    <p>Find work, connect with employers, and explore hiring tools — all in one place. Sign in with Google to enter KaamMilega.</p>
+    <button id="kmGoogleLoginBtn" type="button"><span class="km-google-g">G</span><span>Continue with Google</span></button>
+    <div id="kmGoogleGateMsg" aria-live="polite"></div>
+    <div class="km-gate-info">
+      <h2>What can you do on KaamMilega?</h2>
+      <div class="km-gate-benefits">
+        <div class="km-gate-benefit"><strong>👷 For Workers</strong>Explore jobs by skill and city, prepare a worker profile, save opportunities, and review hiring details.</div>
+        <div class="km-gate-benefit"><strong>🏢 For Employers</strong>Post vacancies, explain the skills you need, and submit requests when multiple workers are required.</div>
+        <div class="km-gate-benefit"><strong>🧰 Helpful Tools</strong>Use CV and worker-card tools, interview practice, salary calculations, and job-search support where available.</div>
+        <div class="km-gate-benefit"><strong>🤝 Support</strong>Contact KaamMilega support for website assistance and hiring enquiries.</div>
+      </div>
+      <h2>How it works</h2>
+      <div class="km-gate-steps"><strong>1.</strong> Sign in securely with your Google account.<br><strong>2.</strong> Explore job listings and tools relevant to you.<br><strong>3.</strong> Check the employer, salary, location, and job conditions before making a decision.</div>
+      <p class="km-gate-notice">KaamMilega is an independent employment platform, not a government agency. Job listings and availability may change, and employment is not guaranteed. Always verify an employer and never share your password or OTP.</p>
+    </div>
+    <div class="km-gate-small">Your Google password is handled by Google. Never share your password or OTP with anyone.</div>
+  </div>
+</div>
 <div id="toast" class="toast"></div>
 <header><div class="nav">
 <div class="brand">Kaam<span>Milega</span><small class="brand-sub">Jobs • Workers • Opportunities</small></div>
@@ -404,156 +380,6 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
   </div>
 </section>
 
-<section id="kmGoogleGate" aria-labelledby="kmGateTitle">
-  <div class="km-gate-card">
-    <div class="km-gate-logo">Kaam<span>Milega</span></div>
-    <h1 id="kmGateTitle">Build your next step with KaamMilega</h1>
-    <p>Explore public job information freely. Sign in with Google when you are ready to manage your profile, post a vacancy, follow your hiring activity, or use your personal workspace.</p>
-    <button id="kmGoogleLoginBtn" type="button"><span class="km-google-g">G</span><span>Continue with Google</span></button>
-    <div id="kmGoogleGateMsg" aria-live="polite"></div>
-
-    <!-- Interactive KaamMilega work-and-hiring showcase (original live HTML, not a static screenshot) -->
-    <section id="kmLiveHiringShowcase" aria-label="KaamMilega live work and hiring preview">
-      <div class="km-live-showcase-head">
-        <span class="km-live-eyebrow">KAAMMILEGA WORK &amp; HIRING HUB</span>
-        <h2 id="kmLiveHeadline">Find the right work. Build the right team.</h2>
-        <p id="kmLiveSubhead">Explore the tools workers and employers use to take the next step—then sign in to open the full marketplace.</p>
-      </div>
-      <div class="km-live-showcase-grid">
-        <div class="km-live-search-panel">
-          <div class="km-live-tabs" role="tablist" aria-label="Choose marketplace view">
-            <button type="button" class="km-live-tab is-active" id="kmLiveFindTab" role="tab" aria-selected="true">Find work</button>
-            <button type="button" class="km-live-tab" id="kmLiveHireTab" role="tab" aria-selected="false">Hire workers</button>
-          </div>
-          <div class="km-live-panel-title">
-            <span class="km-live-icon" aria-hidden="true">⌕</span>
-            <div>
-              <h3 id="kmLivePanelTitle">Explore job opportunities</h3>
-              <p id="kmLivePanelText">Choose a skill and city to prepare your search.</p>
-            </div>
-          </div>
-          <label class="km-live-label" for="kmLiveRole">Job title or skill</label>
-          <input id="kmLiveRole" class="km-live-input" type="text" placeholder="e.g. MIG Welder, Electrician">
-          <label class="km-live-label" for="kmLiveCity">City or location</label>
-          <input id="kmLiveCity" class="km-live-input" type="text" placeholder="e.g. Mumbai, Ahmedabad">
-          <div class="km-live-chips" aria-label="Popular skills">
-            <button type="button" data-km-live-role="MIG Welder">MIG Welder</button>
-            <button type="button" data-km-live-role="Electrician">Electrician</button>
-            <button type="button" data-km-live-role="Driver">Driver</button>
-            <button type="button" data-km-live-role="Helper">Helper</button>
-            <button type="button" data-km-live-role="Delivery Executive">Delivery</button>
-          </div>
-          <button type="button" class="km-live-primary" id="kmLiveContinueBtn">Sign in to explore jobs <span aria-hidden="true">→</span></button>
-          <p class="km-live-action-note" id="kmLiveActionNote" aria-live="polite">Your search details will be kept for the next step.</p>
-        </div>
-        <div class="km-live-dashboard-panel">
-          <div class="km-live-dashboard-top">
-            <div>
-              <span class="km-live-overline">YOUR NEXT STEP</span>
-              <h3 id="kmLiveDashboardTitle">Work &amp; hiring overview</h3>
-            </div>
-            <span class="km-live-status"><i></i> Interactive preview</span>
-          </div>
-          <div class="km-live-summary-grid">
-            <div class="km-live-summary-card"><span class="km-live-summary-symbol">⌕</span><span class="km-live-summary-label">Job search</span><strong>By skill &amp; city</strong><small>Prepare your search</small></div>
-            <div class="km-live-summary-card"><span class="km-live-summary-symbol">♙</span><span class="km-live-summary-label">Worker profiles</span><strong>Skills &amp; experience</strong><small>Build your profile</small></div>
-            <div class="km-live-summary-card"><span class="km-live-summary-symbol">▣</span><span class="km-live-summary-label">Hiring requests</span><strong>Role &amp; location</strong><small>Organize requirements</small></div>
-          </div>
-          <div class="km-live-chart-card">
-            <div class="km-live-chart-heading"><div><strong id="kmLiveChartTitle">A clearer way to get started</strong><span id="kmLiveChartCaption">Choose your next action below</span></div><span class="km-live-chart-badge">KM</span></div>
-            <div class="km-live-chart" aria-label="Decorative workflow illustration">
-              <div class="km-live-chart-y"><span>Profile</span><span>Search</span><span>Connect</span><span>Next step</span></div>
-              <div class="km-live-chart-bars" aria-hidden="true"><i style="height:34%"></i><i style="height:49%"></i><i style="height:42%"></i><i style="height:67%"></i><i style="height:58%"></i><i style="height:78%"></i><i style="height:70%"></i><i style="height:91%"></i><i style="height:82%"></i><i style="height:100%"></i></div>
-            </div>
-            <div class="km-live-chart-footer"><span><i></i> Profile</span><span><i></i> Search</span><span><i></i> Connect</span></div>
-          </div>
-          <div class="km-live-next-row">
-            <div><span class="km-live-next-icon">✓</span><div><strong id="kmLiveNextTitle">Ready when you are</strong><p id="kmLiveNextText">Sign in to access the actual job service and your account tools.</p></div></div>
-            <button type="button" id="kmLiveOpenBtn" aria-label="Sign in to open KaamMilega">Open workspace ↗</button>
-          </div>
-          <p class="km-live-honesty">This is an interactive preview. Live vacancies and hiring requests are shown only when the connected service returns real data; no sample listings or invented counts are used.</p>
-        </div>
-      </div>
-    </section>
-    <div class="km-gate-info">
-      <h2>One platform for the next step in your work journey</h2>
-      <div class="km-gate-benefits">
-        <div class="km-gate-benefit"><strong>👷 For Workers</strong>Find opportunities by skill and location, keep your profile useful, and organize your next job-search steps.</div>
-        <div class="km-gate-benefit"><strong>🏢 For Employers</strong>Describe the role, location and skills required, then manage job-posting steps from your account.</div>
-        <div class="km-gate-benefit"><strong>🧰 Practical Tools</strong>Use available profile, CV, interview-practice and salary-planning tools to prepare for work.</div>
-        <div class="km-gate-benefit"><strong>🤝 Helpful Support</strong>Reach the KaamMilega support team for website questions and worker-requirement enquiries.</div>
-      </div>
-      <h2>How it works</h2>
-      <div class="km-gate-steps"><strong>1.</strong> Continue with Google to open your personal workspace.<br><strong>2.</strong> Use shortcuts to reach job posting, your profile, urgent hiring and support.<br><strong>3.</strong> Verify the employer, pay, location and work conditions before accepting an opportunity.</div>
-      <p class="km-gate-notice">KaamMilega is an independent employment platform, not a government agency. Job listings and availability may change, and employment is not guaranteed. Always verify an employer and never share your password or OTP.</p>
-    </div>
-    <div class="km-gate-small">Your Google password is handled by Google. Never share your password or OTP with anyone.</div>
-  </div>
-</section>
-
-<section id="kmMemberDashboard" class="section hidden" aria-labelledby="kmDashboardTitle">
-  <div class="km-dashboard-shell">
-    <div class="km-dashboard-head">
-      <div>
-        <span class="eyebrow">YOUR KAAMMILEGA WORKSPACE</span>
-        <h2 id="kmDashboardTitle">Welcome back<span id="kmDashboardName"></span></h2>
-        <p class="muted">Your next step, organized in one place. Choose a task below to continue.</p>
-      </div>
-      <div class="km-dashboard-account"><span class="km-dashboard-avatar" aria-hidden="true">KM</span><div><b id="kmDashboardAccountLabel">Signed in with Google</b><small id="kmDashboardEmail"></small></div></div>
-    </div>
-    <div class="km-dashboard-grid">
-      <article class="km-dashboard-card km-dashboard-primary">
-        <span class="km-dashboard-icon">＋</span><h3>Post a job</h3>
-        <p>Share the role, location, skills and pay details so interested workers can review the opportunity.</p>
-        <button class="btn" type="button" data-open="jobModal">Create job post</button>
-      </article>
-      <article class="km-dashboard-card">
-        <span class="km-dashboard-icon">⌕</span><h3>Explore opportunities</h3>
-        <p>Search public listings by skill, city and job type. Review details before contacting an employer.</p>
-        <a class="btn secondary" href="#jobs">Browse latest jobs</a>
-      </article>
-      <article class="km-dashboard-card">
-        <span class="km-dashboard-icon">⚡</span><h3>Urgent hiring</h3>
-        <p>Tell the team what worker type, quantity, location and joining timeline your requirement needs.</p>
-        <button class="btn secondary" type="button" data-open="urgentModal">Submit requirement</button>
-      </article>
-      <article class="km-dashboard-card">
-        <span class="km-dashboard-icon">◎</span><h3>Manage your profile</h3>
-        <p>Keep your account details and work information up to date for a smoother experience.</p>
-        <button class="btn secondary" type="button" data-open="profileModal">Open my profile</button>
-      </article>
-      <article class="km-dashboard-card">
-        <span class="km-dashboard-icon">✓</span><h3>Prepare for the next step</h3>
-        <p>Review job-search guidance, check work conditions and keep your skills and experience ready.</p>
-        <a class="btn secondary" href="#forWorkers">Worker guide</a>
-      </article>
-      <article class="km-dashboard-card">
-        <span class="km-dashboard-icon">?</span><h3>Get help</h3>
-        <p>Need help with a listing, account or hiring request? Contact support through the website.</p>
-        <button class="btn secondary" type="button" data-open="supportModal">Contact support</button>
-      </article>
-    </div>
-    <div class="km-dashboard-note"><b>Safety reminder</b><span>Never share your password or OTP. Confirm the employer, location, salary and working conditions directly. KaamMilega does not guarantee employment.</span></div>
-  </div>
-</section>
-<style id="km-member-dashboard-css">
-#kmMemberDashboard{padding-top:8px}
-.km-dashboard-shell{background:#fff;border:1px solid #dfe7f2;border-radius:22px;padding:24px;box-shadow:0 12px 35px rgba(15,35,63,.06)}
-.km-dashboard-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
-.km-dashboard-head h2{margin:6px 0;font-size:clamp(24px,3vw,32px)}
-.km-dashboard-account{display:flex;align-items:center;gap:10px;background:#f5f8fc;border:1px solid #e1e8f2;border-radius:14px;padding:10px 13px;max-width:100%}
-.km-dashboard-avatar{width:42px;height:42px;display:grid;place-items:center;background:linear-gradient(135deg,#0b63ce,#0d9488);color:#fff;border-radius:13px;font-weight:900}
-.km-dashboard-account div{display:grid;gap:3px;min-width:0}.km-dashboard-account small{color:#64748b;overflow-wrap:anywhere}
-.km-dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
-.km-dashboard-card{border:1px solid #e2e8f0;border-radius:16px;padding:18px;background:linear-gradient(180deg,#fff,#fbfdff);display:flex;flex-direction:column;align-items:flex-start;min-height:235px}
-.km-dashboard-card h3{margin:10px 0 5px}.km-dashboard-card p{color:#64748b;line-height:1.55;font-size:14px;flex:1;margin:0 0 15px}
-.km-dashboard-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:#eaf2ff;color:#0b63ce;font-size:24px;font-weight:800}
-.km-dashboard-primary{border-color:#b8d4fb;background:linear-gradient(145deg,#f4f8ff,#fff)}
-.km-dashboard-note{display:flex;gap:12px;align-items:flex-start;background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;border-radius:13px;padding:13px 15px;margin-top:16px;font-size:13px;line-height:1.55}
-.km-dashboard-note b{white-space:nowrap}
-@media(max-width:850px){.km-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
-@media(max-width:560px){.km-dashboard-shell{padding:16px}.km-dashboard-grid{grid-template-columns:1fr}.km-dashboard-card{min-height:0}.km-dashboard-note{display:grid}.km-dashboard-note b{white-space:normal}}
-</style>
 
 <section class="section" style="padding-top:20px">
 <div class="trust-strip">
@@ -646,33 +472,6 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn ghost" id="publicReviewsRefresh" type="button">Refresh Ratings</button></div><div id="publicReviews" class="cards"><div class="card">Loading ratings...</div></div>
 <div id="publicRatingAction" class="notice" style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><b>Want to rate your job?</b><div class="muted" id="publicRatingStatus">Login to see your posted job and the rating button.</div></div><button class="btn secondary" id="publicRateJobBtn" type="button">Rate / Comment</button></div>
 </section>
-
-<section class="section hidden" id="kmLiveHiringDashboard" aria-labelledby="kmLiveHiringTitle">
-  <div class="km-live-dashboard-shell">
-    <div class="km-live-dashboard-top">
-      <div><span class="eyebrow">YOUR KAAMMILEGA WORKSPACE</span><h2 id="kmLiveHiringTitle">Good to see you<span id="kmLiveDashName"></span></h2><p class="muted">Your hiring activity and real job listings, together in one place.</p></div>
-      <div class="km-live-user-pill"><span class="km-live-user-avatar" id="kmLiveDashAvatar">K</span><span><b id="kmLiveDashEmail">Signed-in account</b><small>Google account</small></span><button type="button" class="btn ghost" data-open="profileModal">Profile</button></div>
-    </div>
-    <div class="km-live-dashboard-layout">
-      <aside class="km-live-dashboard-side"><b>Workspace</b><a href="#jobs">⌕ &nbsp; Find jobs</a><button type="button" data-open="jobModal">＋ &nbsp; Post a job</button><button type="button" data-open="urgentModal">⚡ &nbsp; Urgent hiring</button><button type="button" data-open="profileModal">◎ &nbsp; My profile</button><button type="button" data-open="supportModal">? &nbsp; Help center</button><div class="km-live-side-note">Keep job details accurate and confirm pay, location and working conditions before making decisions.</div></aside>
-      <div class="km-live-dashboard-main">
-        <div class="km-live-stats">
-          <article><span>Active jobs on KaamMilega</span><strong id="kmLiveActiveJobs">—</strong><small>Live count from job listings</small></article>
-          <article><span>Your job posts</span><strong id="kmLiveMyJobs">—</strong><small>Associated with this account</small></article>
-          <article><span>Account status</span><strong class="km-live-status">Signed in</strong><small id="kmLiveProfileStatus">Google session detected</small></article>
-        </div>
-        <div class="km-live-dashboard-panels">
-          <article class="km-live-panel"><div class="km-live-panel-heading"><div><h3>Jobs by category</h3><p>Based on current live listings</p></div><button class="btn ghost" type="button" id="kmLiveDashRefresh">Refresh data</button></div><div id="kmLiveCategoryChart" class="km-live-chart"><div class="km-live-empty">Loading live job data…</div></div></article>
-          <article class="km-live-panel"><div class="km-live-panel-heading"><div><h3>Latest opportunities</h3><p>Recent listings from KaamMilega</p></div><a class="btn secondary" href="#jobs">View all jobs</a></div><div id="kmLiveRecentJobs" class="km-live-recent"><div class="km-live-empty">Loading recent jobs…</div></div></article>
-        </div>
-        <div class="km-live-dashboard-foot"><span><b>Next step:</b> search opportunities or publish a clear vacancy.</span><button type="button" class="btn" data-open="jobModal">Post a job</button></div>
-      </div>
-    </div>
-  </div>
-</section>
-<style id="km-live-dashboard-after-login-css">
-#kmLiveHiringDashboard{padding-top:10px;padding-bottom:30px}#kmLiveHiringDashboard.hidden{display:none!important}.km-live-dashboard-shell{background:#f7faff;border:1px solid #dbe6f5;border-radius:22px;padding:clamp(14px,2.5vw,26px);box-shadow:0 14px 35px rgba(16,42,77,.07)}.km-live-dashboard-top{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}.km-live-dashboard-top h2{font-size:clamp(24px,3vw,32px);margin:5px 0}.km-live-user-pill{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #e0e8f2;border-radius:15px;padding:10px 12px;max-width:100%;min-width:0}.km-live-user-pill>span:nth-child(2){display:flex;flex-direction:column;min-width:0}.km-live-user-pill b{max-width:220px;overflow-wrap:anywhere;font-size:12px}.km-live-user-pill small{font-size:11px;color:#718096;margin-top:3px}.km-live-user-avatar{display:grid;place-items:center;width:40px;height:40px;flex:0 0 40px;border-radius:50%;background:#dbeafe;color:#1454a2;font-weight:800}.km-live-dashboard-layout{display:grid;grid-template-columns:190px minmax(0,1fr);gap:16px}.km-live-dashboard-side{display:flex;flex-direction:column;gap:8px;background:#fff;border:1px solid #e1e9f4;border-radius:16px;padding:14px;align-self:start}.km-live-dashboard-side>b{font-size:13px;margin:3px 5px 8px}.km-live-dashboard-side a,.km-live-dashboard-side button{display:block;text-align:left;text-decoration:none;background:#f7faff;border:1px solid transparent;color:#34445c;border-radius:9px;padding:10px;font:inherit;font-size:12px;cursor:pointer}.km-live-dashboard-side a:hover,.km-live-dashboard-side button:hover{border-color:#bfdbfe;background:#eff6ff}.km-live-side-note{font-size:11px;line-height:1.55;color:#64748b;border-top:1px solid #e5edf7;margin-top:10px;padding-top:12px}.km-live-dashboard-main{min-width:0}.km-live-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:12px}.km-live-stats article{min-width:0;background:#fff;border:1px solid #e0e8f2;border-radius:14px;padding:14px}.km-live-stats span,.km-live-stats small{display:block;color:#64748b;font-size:11px;line-height:1.4}.km-live-stats strong{display:block;font-size:27px;color:#172b4d;margin:7px 0 5px;overflow-wrap:anywhere}.km-live-stats .km-live-status{font-size:18px;color:#14804a}.km-live-dashboard-panels{display:grid;grid-template-columns:1fr 1fr;gap:12px}.km-live-panel{background:#fff;border:1px solid #e0e8f2;border-radius:15px;padding:15px;min-width:0}.km-live-panel-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.km-live-panel-heading h3{font-size:15px;margin:0 0 4px}.km-live-panel-heading p{font-size:11px;color:#64748b;margin:0}.km-live-panel-heading .btn{font-size:11px;padding:8px 10px}.km-live-chart{display:flex;flex-direction:column;gap:11px;min-height:130px}.km-live-chart-row{display:grid;grid-template-columns:minmax(70px,105px) minmax(30px,1fr) 26px;gap:8px;align-items:center;font-size:11px;color:#52627a}.km-live-bar-track{height:9px;background:#edf2f8;border-radius:99px;overflow:hidden}.km-live-bar{height:100%;width:0;background:linear-gradient(90deg,#2168d5,#27b7a1);border-radius:99px;transition:width .35s ease}.km-live-recent{display:flex;flex-direction:column;gap:8px}.km-live-job-row{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;background:#f8faff;border:1px solid #edf1f7;border-radius:10px}.km-live-job-row>div{min-width:0}.km-live-job-row b{display:block;font-size:12px;overflow-wrap:anywhere}.km-live-job-row small{display:block;color:#64748b;font-size:11px;margin-top:4px}.km-live-job-tag{flex:0 0 auto;font-size:10px;background:#eaf3ff;color:#1c5ca9;border-radius:99px;padding:5px 7px}.km-live-empty{font-size:12px;color:#64748b;background:#f8fafc;border:1px dashed #d8e2ee;border-radius:10px;padding:14px;line-height:1.5}.km-live-dashboard-foot{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:12px;background:#eaf3ff;border-radius:12px;padding:12px 14px;font-size:12px;color:#34445c}.km-live-dashboard-foot .btn{white-space:nowrap}@media(max-width:720px){.km-live-dashboard-layout{grid-template-columns:1fr}.km-live-dashboard-side{display:grid;grid-template-columns:1fr 1fr}.km-live-dashboard-side>b,.km-live-side-note{grid-column:1/-1}.km-live-stats{grid-template-columns:1fr 1fr}.km-live-stats article:last-child{grid-column:1/-1}.km-live-dashboard-panels{grid-template-columns:1fr}}@media(max-width:420px){.km-live-user-pill{width:100%}.km-live-user-pill b{max-width:155px}.km-live-dashboard-side{grid-template-columns:1fr 1fr}.km-live-stats strong{font-size:23px}}
-</style>
 
 <section class="info-section anchor-offset" id="aboutKaamMilega">
   <span class="eyebrow">ABOUT KAAMMILEGA</span>
@@ -988,8 +787,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <!-- LOGIN -->
 <div id="loginModal" class="modal hidden"><div class="modalbox">
 <button class="close" data-close>×</button><h2>Login / Sign Up</h2>
-<p class="muted">Create an account or login with your email and password, or continue securely with Google.</p>
-<button class="btn ghost" id="kmModalGoogleLoginBtn" type="button" style="width:100%;margin:0 0 14px"><span style="font-weight:900;color:#4285f4;margin-right:8px">G</span> Continue with Google</button>
+<p class="muted">Create an account or login with your email and password.</p>
 <div style="display:flex;gap:8px;margin-bottom:14px"><button class="btn secondary" id="showSignupBtn" type="button">Sign Up</button><button class="btn ghost" id="showLoginBtn" type="button">Login</button></div>
 <div id="signupArea">
 <div class="formgroup"><label>Email</label><input id="signupEmail" class="input" type="email" placeholder="you@example.com"></div>
@@ -1071,12 +869,8 @@ document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if
 function msg(id,text,type="notice"){const x=$(id); if(x)x.innerHTML='<div class="notice '+type+'">'+text+'</div>'}
 
 async function supa(path, options={}){
-  // Explicitly target the existing public schema. This prevents PostgREST
-  // from resolving jobs as api.jobs when the project's default schema differs.
   const headers=Object.assign({
     "apikey":SUPABASE_ANON_KEY,
-    "Accept-Profile":"public",
-    "Content-Profile":"public",
     "Content-Type":"application/json"
   },options.headers||{});
   return fetch(SUPABASE_URL+"/rest/v1/"+path,Object.assign({},options,{headers}));
@@ -2595,11 +2389,7 @@ if(document.getElementById("ownerReqSaveEdit")){
         return `<article class="card job"><div style="flex:1"><span class="tag">${esc(j.category||'Job')}</span><h3>${esc(j.title||'Job')}</h3><p class="muted">${esc(j.city||'')} · ${esc(j.salary||'Salary not specified')} · ${esc(j.job_type||'')}</p><p>${esc(j.description||'')}</p><div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid #edf1f6"><img class="avatar" style="width:44px;height:44px" src="${esc(avatar)}" alt="Employer profile"><div><b>${esc(p.name||'Employer')}</b><div class="muted" style="font-size:12px">${esc(p.city||j.city||'')}${skills?' · '+esc(skills):''}</div></div></div></div><div><button class="btn secondary applyBtn" data-phone="${esc(j.contact_phone||'')}">Contact</button></div></article>`;
       }).join('');
       box.querySelectorAll('.applyBtn').forEach(b=>b.onclick=()=>{const p=b.dataset.phone;if(p)location.href='https://wa.me/'+p.replace(/\D/g,'');});
-    }catch(e){
-      const detail=String(e&&e.message||'Unknown jobs service error').slice(0,500);
-      box.innerHTML='<div class="card km-jobs-unavailable"><h3>Job listings need a service check</h3><p class="muted">The public website is available, but the live jobs database did not return listings. No sample jobs are being shown as real vacancies.</p><details style="margin-top:10px"><summary>Technical error details</summary><code style="display:block;white-space:pre-wrap;overflow-wrap:anywhere;margin-top:8px">'+esc(detail)+'</code></details><p style="margin-top:12px"><a href="mailto:kaammilaga.official@gmail.com?subject=KaamMilega%20Jobs%20Service%20Error">Contact support</a></p></div>';
-      console.error('Public jobs load error:',e);
-    }
+    }catch(e){box.innerHTML='<div class="card"><h3>Jobs are temporarily unavailable</h3><p class="muted">The jobs service is not configured correctly yet. Please try again later or contact KaamMilega support.</p></div>'; console.error('Public jobs load error:',e);}
   };
 
   /* ---------- VIDEO UPLOAD: use the actual file input directly ---------- */
@@ -3175,13 +2965,7 @@ if(document.getElementById("ownerReqSaveEdit")){
   function setMsg(id,text,type){try{if(typeof window.msg==='function')window.msg(id,text,type);else if($(id))$(id).innerHTML='<div class="notice '+(type||'')+'">'+String(text)+'</div>';}catch(_){} }
   function timeoutFetch(input,options={},ms=TIMEOUT){
     const c=new AbortController(); const t=setTimeout(()=>c.abort(),ms);
-    const url=typeof input==='string'?input:(input&&input.url)||'';
-    let opts=options;
-    if(url.includes('/rest/v1/')){
-      const headers=Object.assign({'Accept-Profile':'public','Content-Profile':'public'},options.headers||{});
-      opts=Object.assign({},options,{headers});
-    }
-    return fetch(input,Object.assign({},opts,{signal:c.signal})).finally(()=>clearTimeout(t));
+    return fetch(input,Object.assign({},options,{signal:c.signal})).finally(()=>clearTimeout(t));
   }
   async function parseResp(r){
     const raw=await r.text(); let data={}; try{data=raw?JSON.parse(raw):{}}catch(_){data={raw}}
@@ -4660,93 +4444,54 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
 
 <script id="km-google-gate-script">
 (function(){
-  'use strict';
   const gate=document.getElementById('kmGoogleGate');
-  const dashboard=document.getElementById('kmMemberDashboard');
+  const button=document.getElementById('kmGoogleLoginBtn');
   const message=document.getElementById('kmGoogleGateMsg');
   const SUPA='https://cvlinhjhyxuntbbxrrxq.supabase.co';
-  const SITE_URL='https://kaammilaga.click/';
-  const buttons=[document.getElementById('kmGoogleLoginBtn'),document.getElementById('kmModalGoogleLoginBtn')].filter(Boolean);
-  let signedInUser=null;
+  const KEY='sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2';
   function say(text){if(message)message.textContent=text||'';}
+  function acceptGoogleUser(user){
+    const providers=(user&&user.identities||[]).map(x=>x.provider);
+    return !!user && (user.app_metadata?.provider==='google'||providers.includes('google'));
+  }
+  // Supabase's implicit OAuth callback returns the session in the URL hash. Save it for the site's existing auth code.
   async function readOAuthCallback(){
-    const hash=new URLSearchParams((location.hash||'').replace(/^#/,''));
+    const hash=new URLSearchParams(location.hash.replace(/^#/, ''));
     const access=hash.get('access_token');
     const refresh=hash.get('refresh_token');
-    const error=hash.get('error_description')||hash.get('error');
-    if(error)say(error.replace(/\+/g,' '));
+    const err=hash.get('error_description')||new URLSearchParams(location.search).get('error_description');
+    if(err) say(decodeURIComponent(err.replace(/\+/g,' ')));
     if(access){
-      try{
-        localStorage.setItem('km_access_token',access);
-        if(refresh)localStorage.setItem('km_refresh_token',refresh);
-        history.replaceState({},document.title,location.pathname);
-      }catch(e){say('Sign-in completed, but this browser could not save the session. Please allow site storage and try again.');}
+      localStorage.setItem('km_access_token',access);
+      if(refresh)localStorage.setItem('km_refresh_token',refresh);
+      history.replaceState(null,document.title,location.pathname+location.search);
     }
   }
-  async function getUser(){
-    try{return typeof window.getCurrentUser==='function'?await window.getCurrentUser():null;}
-    catch(_){return null;}
-  }
-  function setGoogleButtons(isSignedIn){
-    buttons.forEach(button=>{
-      button.disabled=false;
-      button.innerHTML=isSignedIn
-        ? '<span style="font-weight:900;color:#16803d;margin-right:8px">✓</span><span>Open My Profile</span>'
-        : '<span class="km-google-g">G</span><span>Continue with Google</span>';
-    });
+  async function getGoogleUser(){
+    try{
+      if(typeof window.getCurrentUser!=='function')return null;
+      return await window.getCurrentUser();
+    }catch(_){return null}
   }
   async function checkAccess(){
     await readOAuthCallback();
-    signedInUser=await getUser();
-    const isSignedIn=!!(signedInUser&&signedInUser.id);
-    // Required flow: Google login first; reveal the website only after a valid session.
-    if(gate){
-      gate.style.display=isSignedIn?'none':'flex';
-      gate.setAttribute('aria-hidden',isSignedIn?'true':'false');
+    const user=await getGoogleUser();
+    if(acceptGoogleUser(user)){
+      gate.style.display='none';document.body.classList.remove('km-auth-locked');
+      return true;
     }
-    document.body.classList.toggle('km-auth-locked',!isSignedIn);
-    if(isSignedIn){
-      if(dashboard)dashboard.classList.remove('hidden');
-      const meta=signedInUser.user_metadata||{};
-      const name=String(meta.full_name||meta.name||meta.given_name||'').trim();
-      const email=String(signedInUser.email||'').trim();
-      const nameEl=document.getElementById('kmDashboardName');
-      const emailEl=document.getElementById('kmDashboardEmail');
-      if(nameEl)nameEl.textContent=name?', '+name.split(/\s+/)[0]:'';
-      if(emailEl)emailEl.textContent=email;
-      setGoogleButtons(true);
-      say('You are signed in. Welcome to KaamMilega.');
-    }else{
-      if(dashboard)dashboard.classList.add('hidden');
-      setGoogleButtons(false);
-      if(!message?.textContent||!/(access|error|failed|could not)/i.test(message.textContent))
-        say('Sign in with Google to open KaamMilega.');
-    }
-    if(typeof window.updateAuthUI==='function')await window.updateAuthUI();
-    return isSignedIn;
+    gate.style.display='flex';document.body.classList.add('km-auth-locked');
+    if(user) say('Please sign in with Google to continue. Email/password login is not accepted for website access.');
+    return false;
   }
-  async function startOrOpenAccount(button){
-    if(signedInUser&&signedInUser.id){
-      const authNav=document.getElementById('authNavBtn');
-      if(authNav)authNav.click();
-      else if(typeof window.openModal==='function')window.openModal('profileModal');
-      return;
-    }
-    if(button){button.disabled=true;button.setAttribute('aria-busy','true');}
-    say('Opening Google sign-in…');
-    const url=SUPA+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(SITE_URL);
-    // SITE_URL must be present in Supabase Authentication → URL Configuration → Redirect URLs.
-    location.assign(url);
-  }
-  buttons.forEach(button=>button.addEventListener('click',()=>startOrOpenAccount(button)));
-  checkAccess().catch(()=>{if(gate){gate.style.display='flex';gate.setAttribute('aria-hidden','false');}document.body.classList.add('km-auth-locked');});
-  window.addEventListener('pageshow',()=>{checkAccess();});
-  window.addEventListener('storage',()=>{checkAccess();});
-  // Refresh the visible account/dashboard state after the existing email login, signup, OTP, or logout handlers run.
-  ['loginSubmit','signupSubmit','verifyOtp','logoutBtn'].forEach(id=>{
-    const element=document.getElementById(id);
-    if(element)element.addEventListener('click',()=>setTimeout(()=>{checkAccess();},900));
+  button?.addEventListener('click',function(){
+    say('Opening Google sign-in…');button.disabled=true;
+    const redirect=location.origin+location.pathname+location.search;
+    const url=SUPA+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(redirect);
+    location.href=url;
   });
+  checkAccess().finally(()=>{if(button)button.disabled=false;});
+  window.addEventListener('pageshow',()=>{checkAccess();});
 })();
 </script>
 
@@ -4768,13 +4513,7 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
     };
   }
   async function callBackend(token, payload) {
-    let r;
-    try {
-      r = await fetch(endpoint, {method:'POST', mode:'cors', headers:{'Authorization':'Bearer '+token,'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(payload)});
-    } catch (networkError) {
-      console.error('KaamMilega job-posting Edge Function network/CORS error:', networkError);
-      throw new Error('Could not reach the job-posting service (network/CORS). The Supabase razorpay-job-posting Edge Function must be deployed with the updated CORS headers. Check that the function is deployed and its URL is correct, then try again.');
-    }
+    const r = await fetch(endpoint, {method:'POST', headers:{'Authorization':'Bearer '+token,'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(payload)});
     const raw = await r.text(); let d={}; try{d=raw?JSON.parse(raw):{}}catch(_){}
     if(!r.ok) { const e=new Error(d.error || d.message || raw || ('Request failed (HTTP '+r.status+')')); e.status=r.status; e.code=d.code || ''; throw e; }
     return d;
@@ -4837,77 +4576,6 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
     if(payCard){payCard.onclick=()=>{if(window.openModal)window.openModal('featuredModal');else $('featuredModal')?.classList.remove('hidden');};payCard.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();payCard.click();}};}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
-})();
-</script>
-
-
-<style id="km-login-first-overlay-final">
-#kmGoogleGate{position:fixed!important;inset:0!important;z-index:999999!important;display:flex;align-items:center;justify-content:center;width:100%!important;max-width:none!important;height:100vh;height:100dvh;max-height:100dvh;margin:0!important;padding:16px!important;overflow-y:auto!important;border-radius:0!important;box-sizing:border-box;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%)!important;box-shadow:none!important}
-#kmGoogleGate .km-gate-card{width:min(100%,520px)!important;max-width:520px!important;max-height:calc(100dvh - 32px)!important;overflow-y:auto!important;margin:auto!important;padding:25px 22px!important;border-radius:20px!important;box-sizing:border-box}
-body.km-auth-locked{overflow:hidden!important}
-#kmGoogleGate[aria-hidden="true"]{display:none!important}
-@media(max-width:480px){#kmGoogleGate{padding:10px!important}#kmGoogleGate .km-gate-card{max-height:calc(100dvh - 20px)!important;padding:21px 16px!important}}
-</style>
-<script id="km-live-dashboard-after-login-script">
-(function(){
- 'use strict';
- const section=document.getElementById('kmLiveHiringDashboard');
- if(!section)return;
- const SUPA='https://cvlinhjhyxuntbbxrrxq.supabase.co';
- const KEY='sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2';
- const $=id=>document.getElementById(id);
- let loading=false,lastUserId='';
- const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
- async function request(path,token){
-   const headers={'apikey':KEY,'Accept':'application/json','Accept-Profile':'public','Content-Profile':'public'};if(token)headers.Authorization='Bearer '+token;
-   const r=await fetch(SUPA+'/rest/v1/'+path,{headers});
-   let data;try{data=await r.json()}catch(_){data=[]}
-   if(!r.ok)throw new Error(data?.message||data?.hint||('HTTP '+r.status));return data;
- }
- function showMessage(id,text){const el=$(id);if(el)el.innerHTML='<div class="km-live-empty">'+esc(text)+'</div>';}
- async function loadData(user){
-   if(loading)return;loading=true;
-   const recent=$('kmLiveRecentJobs'),chart=$('kmLiveCategoryChart');
-   try{
-     const token=typeof window.getSession==='function'?await window.getSession():null;
-     const jobs=await request('jobs?select=id,title,category,city,job_type,status,created_at,employer_id&status=eq.active&order=created_at.desc&limit=100',token);
-     if(!Array.isArray(jobs))throw new Error('The jobs API did not return a list.');
-     $('kmLiveActiveJobs').textContent=String(jobs.length);
-     let mine='—';
-     if(user?.id){
-       try{const own=await request('jobs?select=id&employer_id=eq.'+encodeURIComponent(user.id)+'&limit=1000',token);if(Array.isArray(own))mine=String(own.length)}catch(_){mine='—'}
-     }
-     $('kmLiveMyJobs').textContent=mine;
-     const counts={};jobs.forEach(j=>{const cat=String(j.category||'Other').trim()||'Other';counts[cat]=(counts[cat]||0)+1});
-     const cats=Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,5);const max=Math.max(1,...cats.map(x=>x[1]));
-     chart.innerHTML=cats.length?cats.map(([cat,count])=>'<div class="km-live-chart-row"><span title="'+esc(cat)+'">'+esc(cat.length>15?cat.slice(0,14)+'…':cat)+'</span><div class="km-live-bar-track"><div class="km-live-bar" style="width:'+Math.round(count/max*100)+'%"></div></div><b>'+count+'</b></div>').join(''):'<div class="km-live-empty">No active job listings are available yet. New approved listings will appear here.</div>';
-     const latest=jobs.slice(0,5);
-     recent.innerHTML=latest.length?latest.map(j=>'<div class="km-live-job-row"><div><b>'+esc(j.title||'Job opportunity')+'</b><small>'+esc(j.city||'Location not listed')+' · '+esc(j.job_type||'Job type not listed')+'</small></div><span class="km-live-job-tag">'+esc(j.category||'Job')+'</span></div>').join(''):'<div class="km-live-empty">No active jobs to show right now. Use “Find jobs” to check the public listings later.</div>';
-   }catch(e){
-     $('kmLiveActiveJobs').textContent='—';$('kmLiveMyJobs').textContent='—';
-     showMessage('kmLiveCategoryChart','Live job data could not be loaded. '+(e.message||'Please try again.'));
-     showMessage('kmLiveRecentJobs','Recent listings are temporarily unavailable. Check the Jobs section or try Refresh data.');
-   }finally{loading=false;}
- }
- async function sync(){
-   try{
-     const user=typeof window.getCurrentUser==='function'?await window.getCurrentUser():null;
-     const signed=!!(user&&user.id);
-     section.classList.toggle('hidden',!signed);
-     section.setAttribute('aria-hidden',signed?'false':'true');
-     if(!signed){lastUserId='';return;}
-     const meta=user.user_metadata||{};const name=String(meta.full_name||meta.name||meta.given_name||'').trim();
-     const email=String(user.email||'').trim();
-     $('kmLiveDashName').textContent=name?', '+name.split(/\s+/)[0]:'';
-     $('kmLiveDashEmail').textContent=email||'Signed-in account';
-     $('kmLiveDashAvatar').textContent=(name||email||'K').charAt(0).toUpperCase();
-     $('kmLiveProfileStatus').textContent=email?'Account verified for this session':'Google session detected';
-     if(lastUserId!==user.id){lastUserId=user.id;loadData(user);}
-   }catch(_){section.classList.add('hidden');section.setAttribute('aria-hidden','true');}
- }
- $('kmLiveDashRefresh')?.addEventListener('click',async()=>{lastUserId='';await sync();const user=typeof window.getCurrentUser==='function'?await window.getCurrentUser():null;if(user?.id)await loadData(user);});
- document.addEventListener('click',e=>{const id=e.target.closest('button')?.id;if(['loginSubmit','signupSubmit','verifyOtp','logoutBtn','kmGoogleLoginBtn','kmModalGoogleLoginBtn'].includes(id))setTimeout(sync,1200)});
- window.addEventListener('pageshow',sync);window.addEventListener('storage',sync);setInterval(sync,5000);sync();
 })();
 </script>
 
@@ -5115,7 +4783,7 @@ body.km-auth-locked{overflow:hidden!important}
         if(email && email!=='kaammilaga.official@gmail.com') throw new Error('This account is not authorized for Owner publishing.');
         const base=(window.SUPABASE_URL||SUPABASE_URL)+'/rest/v1/company_requirements';
         const api=(window.SUPABASE_ANON_KEY||SUPABASE_ANON_KEY);
-        const send=async t=>fetch(base,{method:'POST',headers:{'apikey':api,'Authorization':'Bearer '+t,'Accept-Profile':'public','Content-Profile':'public','Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(body)});
+        const send=async t=>fetch(base,{method:'POST',headers:{'apikey':api,'Authorization':'Bearer '+t,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(body)});
         let r=await send(token);
         if(r.status===401 && typeof window.getSession==='function'){
           token=await window.getSession();
@@ -5137,138 +4805,6 @@ body.km-auth-locked{overflow:hidden!important}
         btn.disabled=false; btn.textContent='Publish Requirement';
       }
     };
-  });
-})();
-</script>
-
-
-<style id="km-live-hiring-showcase-style">
-#kmLiveHiringShowcase{width:100%;margin:24px 0 22px;padding:0;color:#14223b;font-family:Inter,Arial,sans-serif}
-#kmLiveHiringShowcase *{box-sizing:border-box}
-#kmLiveHiringShowcase .km-live-showcase-head{text-align:left;margin:0 0 16px}
-#kmLiveHiringShowcase .km-live-eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.14em;font-weight:800;color:#0b63ce;background:#eaf3ff;border:1px solid #d6e7ff;border-radius:999px;padding:7px 10px}
-#kmLiveHiringShowcase .km-live-showcase-head h2{font-size:clamp(23px,3.2vw,32px);line-height:1.15;letter-spacing:-.035em;margin:12px 0 8px;color:#13213b}
-#kmLiveHiringShowcase .km-live-showcase-head p{font-size:13px;line-height:1.65;color:#64748b;margin:0;max-width:680px}
-#kmLiveHiringShowcase .km-live-showcase-grid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:14px;align-items:stretch}
-#kmLiveHiringShowcase .km-live-search-panel,#kmLiveHiringShowcase .km-live-dashboard-panel{min-width:0;border:1px solid #dce7f5;border-radius:18px;background:#fff;box-shadow:0 10px 26px rgba(19,45,84,.08);padding:16px}
-#kmLiveHiringShowcase .km-live-search-panel{background:linear-gradient(155deg,#f7fbff,#edf5ff 65%,#effcf9)}
-#kmLiveHiringShowcase .km-live-tabs{display:flex;gap:6px;background:#e5edf8;border-radius:11px;padding:4px;margin-bottom:18px}
-#kmLiveHiringShowcase .km-live-tab{flex:1;border:0;border-radius:8px;padding:10px 8px;background:transparent;color:#52637d;font-size:12px;font-weight:800;cursor:pointer}
-#kmLiveHiringShowcase .km-live-tab.is-active{background:#fff;color:#0b63ce;box-shadow:0 2px 8px #173b6814}
-#kmLiveHiringShowcase .km-live-panel-title{display:flex;gap:10px;align-items:center;margin-bottom:15px}
-#kmLiveHiringShowcase .km-live-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:#0b63ce;color:#fff;font-size:28px;font-weight:700}
-#kmLiveHiringShowcase .km-live-panel-title h3{font-size:16px;margin:0 0 4px;color:#152744}
-#kmLiveHiringShowcase .km-live-panel-title p{font-size:11px;line-height:1.45;color:#65748b;margin:0}
-#kmLiveHiringShowcase .km-live-label{display:block;font-size:11px;font-weight:800;color:#354763;margin:11px 0 6px}
-#kmLiveHiringShowcase .km-live-input{display:block;width:100%;min-width:0;border:1px solid #d5dfed;background:#fff;color:#18263c;border-radius:10px;padding:12px 11px;font:inherit;font-size:13px;outline:none}
-#kmLiveHiringShowcase .km-live-input:focus{border-color:#0b63ce;box-shadow:0 0 0 3px #0b63ce1c}
-#kmLiveHiringShowcase .km-live-chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0 14px}
-#kmLiveHiringShowcase .km-live-chips button{border:1px solid #cbdcf1;border-radius:999px;background:#fff;color:#315477;padding:7px 9px;font-size:10px;font-weight:700;cursor:pointer}
-#kmLiveHiringShowcase .km-live-chips button:focus,#kmLiveHiringShowcase .km-live-chips button:hover{background:#dcecff;border-color:#8eb9f0}
-#kmLiveHiringShowcase .km-live-primary{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;border:0;border-radius:10px;background:linear-gradient(100deg,#0b63ce,#0d9488);color:#fff;font-size:13px;font-weight:800;padding:13px 12px;cursor:pointer;box-shadow:0 6px 15px #0b63ce25}
-#kmLiveHiringShowcase .km-live-primary:hover{filter:brightness(1.04)}
-#kmLiveHiringShowcase .km-live-action-note{font-size:10px;line-height:1.5;color:#65748b;margin:9px 0 0;text-align:center}
-#kmLiveHiringShowcase .km-live-dashboard-panel{background:linear-gradient(145deg,#fff,#f8fbff)}
-#kmLiveHiringShowcase .km-live-dashboard-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:14px}
-#kmLiveHiringShowcase .km-live-overline{font-size:9px;font-weight:900;letter-spacing:.13em;color:#0b63ce}
-#kmLiveHiringShowcase .km-live-dashboard-top h3{font-size:16px;line-height:1.3;margin:5px 0 0;color:#152744}
-#kmLiveHiringShowcase .km-live-status{white-space:nowrap;font-size:9px;font-weight:800;color:#26745b;background:#e9f8f1;border-radius:999px;padding:7px 8px}
-#kmLiveHiringShowcase .km-live-status i{display:inline-block;width:6px;height:6px;border-radius:50%;background:#18a66a;margin-right:4px;vertical-align:middle}
-#kmLiveHiringShowcase .km-live-summary-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
-#kmLiveHiringShowcase .km-live-summary-card{min-width:0;border:1px solid #e1eaf5;background:#fff;border-radius:11px;padding:10px 8px;display:flex;flex-direction:column;gap:5px}
-#kmLiveHiringShowcase .km-live-summary-symbol{display:grid;place-items:center;width:25px;height:25px;border-radius:8px;background:#eaf3ff;color:#0b63ce;font-size:17px;font-weight:800}
-#kmLiveHiringShowcase .km-live-summary-label{font-size:9px;color:#66758c}
-#kmLiveHiringShowcase .km-live-summary-card strong{font-size:10px;line-height:1.3;color:#172b48;overflow-wrap:anywhere}
-#kmLiveHiringShowcase .km-live-summary-card small{font-size:9px;line-height:1.4;color:#8995a7}
-#kmLiveHiringShowcase .km-live-chart-card{border:1px solid #e1eaf5;border-radius:13px;background:#fff;padding:12px;margin-top:10px}
-#kmLiveHiringShowcase .km-live-chart-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
-#kmLiveHiringShowcase .km-live-chart-heading strong{display:block;font-size:11px;color:#263c59}
-#kmLiveHiringShowcase .km-live-chart-heading span:not(.km-live-chart-badge){display:block;font-size:9px;color:#8591a4;margin-top:4px}
-#kmLiveHiringShowcase .km-live-chart-badge{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;background:#0b63ce;color:#fff;font-size:10px;font-weight:900}
-#kmLiveHiringShowcase .km-live-chart{height:108px;display:grid;grid-template-columns:46px minmax(0,1fr);gap:9px;margin-top:8px}
-#kmLiveHiringShowcase .km-live-chart-y{display:flex;flex-direction:column;justify-content:space-between;font-size:8px;color:#8a96a8;padding:4px 0}
-#kmLiveHiringShowcase .km-live-chart-bars{display:flex;align-items:flex-end;gap:5px;padding:4px 2px 0;border-bottom:1px solid #dce5f0;background:repeating-linear-gradient(to bottom,transparent 0,transparent 25px,#eaf0f7 26px,#eaf0f7 27px);overflow:hidden}
-#kmLiveHiringShowcase .km-live-chart-bars i{flex:1;min-width:4px;border-radius:4px 4px 0 0;background:linear-gradient(180deg,#27b4a2,#2879e5);opacity:.84;transform-origin:bottom;animation:kmLiveBarRise .9s ease-out both}
-#kmLiveHiringShowcase .km-live-chart-bars i:nth-child(2n){background:linear-gradient(180deg,#63c5d6,#4486ee)}
-#kmLiveHiringShowcase .km-live-chart-bars i:nth-child(3n){animation-delay:.08s}
-@keyframes kmLiveBarRise{from{transform:scaleY(.15);opacity:.3}to{transform:scaleY(1);opacity:.84}}
-#kmLiveHiringShowcase .km-live-chart-footer{display:flex;gap:12px;flex-wrap:wrap;margin-top:9px}
-#kmLiveHiringShowcase .km-live-chart-footer span{display:flex;align-items:center;gap:5px;font-size:9px;color:#75839a}
-#kmLiveHiringShowcase .km-live-chart-footer i{width:6px;height:6px;border-radius:50%;background:#2879e5}
-#kmLiveHiringShowcase .km-live-chart-footer span:nth-child(2) i{background:#20a89a}
-#kmLiveHiringShowcase .km-live-chart-footer span:nth-child(3) i{background:#91a7c5}
-#kmLiveHiringShowcase .km-live-next-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:10px;padding:10px;border-radius:12px;background:#eef6ff}
-#kmLiveHiringShowcase .km-live-next-row>div{display:flex;align-items:flex-start;gap:8px;min-width:0}
-#kmLiveHiringShowcase .km-live-next-icon{display:grid;place-items:center;flex:0 0 24px;height:24px;border-radius:8px;background:#d6f5e8;color:#13875a;font-weight:900}
-#kmLiveHiringShowcase .km-live-next-row strong{display:block;font-size:10px;color:#243a58}
-#kmLiveHiringShowcase .km-live-next-row p{font-size:9px;line-height:1.45;color:#66758c;margin:4px 0 0}
-#kmLiveHiringShowcase .km-live-next-row button{flex:0 0 auto;border:1px solid #c5d8f1;background:#fff;color:#0b63ce;border-radius:8px;padding:8px;font-size:9px;font-weight:800;cursor:pointer}
-#kmLiveHiringShowcase .km-live-honesty{font-size:9px;line-height:1.5;color:#7b8798;margin:10px 0 0}
-@media(max-width:720px){#kmLiveHiringShowcase .km-live-showcase-grid{grid-template-columns:1fr}#kmLiveHiringShowcase .km-live-showcase-head h2{font-size:24px}#kmLiveHiringShowcase .km-live-search-panel,#kmLiveHiringShowcase .km-live-dashboard-panel{padding:13px}#kmLiveHiringShowcase .km-live-summary-grid{gap:5px}#kmLiveHiringShowcase .km-live-summary-card{padding:8px 6px}#kmLiveHiringShowcase .km-live-summary-card strong{font-size:9px}#kmLiveHiringShowcase .km-live-next-row{align-items:flex-start;flex-wrap:wrap}#kmLiveHiringShowcase .km-live-next-row button{margin-left:32px}}
-@media(prefers-reduced-motion:reduce){#kmLiveHiringShowcase .km-live-chart-bars i{animation:none}}
-</style>
-<script id="km-live-hiring-showcase-script">
-(function(){
-  'use strict';
-  function ready(fn){if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',fn,{once:true});else fn();}
-  ready(function(){
-    const $=id=>document.getElementById(id);
-    const role=$('kmLiveRole'), city=$('kmLiveCity'), note=$('kmLiveActionNote');
-    const findTab=$('kmLiveFindTab'), hireTab=$('kmLiveHireTab');
-    let mode='find';
-    function setMode(next){
-      mode=next;
-      const hiring=mode==='hire';
-      findTab?.classList.toggle('is-active',!hiring);
-      hireTab?.classList.toggle('is-active',hiring);
-      findTab?.setAttribute('aria-selected',String(!hiring));
-      hireTab?.setAttribute('aria-selected',String(hiring));
-      if($('kmLiveHeadline'))$('kmLiveHeadline').textContent=hiring?'Find the people your business needs.':'Find the right work. Build the right team.';
-      if($('kmLiveSubhead'))$('kmLiveSubhead').textContent=hiring?'Describe the skills and location you need, then sign in to manage hiring through KaamMilega.':'Explore the tools workers and employers use to take the next step—then sign in to open the full marketplace.';
-      if($('kmLivePanelTitle'))$('kmLivePanelTitle').textContent=hiring?'Plan your worker requirement':'Explore job opportunities';
-      if($('kmLivePanelText'))$('kmLivePanelText').textContent=hiring?'Enter the worker skill and location your team needs.':'Choose a skill and city to prepare your search.';
-      if(role)role.placeholder=hiring?'e.g. Welders, Helpers, Electricians':'e.g. MIG Welder, Electrician';
-      if($('kmLiveContinueBtn'))$('kmLiveContinueBtn').innerHTML=(hiring?'Sign in to hire workers':'Sign in to explore jobs')+' <span aria-hidden="true">→</span>';
-      if($('kmLiveDashboardTitle'))$('kmLiveDashboardTitle').textContent=hiring?'Employer hiring overview':'Work & hiring overview';
-      if($('kmLiveChartTitle'))$('kmLiveChartTitle').textContent=hiring?'Organize your hiring plan':'A clearer way to get started';
-      if($('kmLiveChartCaption'))$('kmLiveChartCaption').textContent=hiring?'Role • skills • location':'Choose your next action below';
-      if($('kmLiveNextTitle'))$('kmLiveNextTitle').textContent=hiring?'Ready to arrange a team?':'Ready when you are';
-      if($('kmLiveNextText'))$('kmLiveNextText').textContent=hiring?'Sign in to access worker-requirement and hiring tools.':'Sign in to access the actual job service and your account tools.';
-      if(note)note.textContent=hiring?'Your worker requirement details will be kept for the next step.':'Your search details will be kept for the next step.';
-    }
-    findTab?.addEventListener('click',()=>setMode('find'));
-    hireTab?.addEventListener('click',()=>setMode('hire'));
-    document.querySelectorAll('[data-km-live-role]').forEach(btn=>btn.addEventListener('click',()=>{
-      if(role)role.value=btn.getAttribute('data-km-live-role')||'';
-      document.querySelectorAll('[data-km-live-role]').forEach(b=>b.classList.toggle('is-selected',b===btn));
-      if(note)note.textContent='Selected: '+(role?.value||'skill')+'. Add a city, then sign in to continue.';
-    }));
-    function continueToLogin(){
-      const payload={mode,role:(role?.value||'').trim(),city:(city?.value||'').trim(),savedAt:Date.now()};
-      try{localStorage.setItem('km_pending_marketplace_action',JSON.stringify(payload));}catch(_){}
-      if(note)note.textContent='Opening secure Google sign-in…';
-      const google=$('kmGoogleLoginBtn');
-      if(google)google.click();
-      else if(note)note.textContent='Use the Continue with Google button above to open KaamMilega.';
-    }
-    $('kmLiveContinueBtn')?.addEventListener('click',continueToLogin);
-    $('kmLiveOpenBtn')?.addEventListener('click',continueToLogin);
-    [role,city].forEach(el=>el?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();continueToLogin();}}));
-    // After OAuth, carry the prepared search into the existing live search controls without fabricating vacancies.
-    try{
-      const raw=localStorage.getItem('km_pending_marketplace_action');
-      const pending=raw?JSON.parse(raw):null;
-      if(pending && Date.now()-Number(pending.savedAt||0)<30*60*1000){
-        if($('searchSkill')&&pending.role)$('searchSkill').value=pending.role;
-        if($('searchCity')&&pending.city)$('searchCity').value=pending.city;
-        if(pending.mode==='hire'&&$('ownerRequirementModal')){
-          // Keep the saved details for the user to apply from the authenticated workspace; do not auto-submit.
-          if($('reqWorker')&&pending.role)$('reqWorker').value=pending.role;
-          if($('reqLocation')&&pending.city)$('reqLocation').value=pending.city;
-        }
-        localStorage.removeItem('km_pending_marketplace_action');
-      }
-    }catch(_){}
   });
 })();
 </script>

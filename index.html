@@ -301,31 +301,12 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </head>
 
 <style id="km-google-gate-style">
-#kmGoogleGate{position:fixed;inset:0;z-index:999999;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:22px;font-family:Arial,sans-serif;color:#fff}#kmGoogleGate .km-gate-card{width:min(100%,520px);max-height:calc(100dvh - 28px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 24px 80px #0005;text-align:center}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:hidden}
+#kmGoogleGate{position:relative;z-index:1;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:24px 18px;margin:24px auto;width:calc(100% - 36px);max-width:1150px;border-radius:24px;font-family:Arial,sans-serif;color:#fff;box-shadow:0 18px 44px rgba(7,27,60,.18)}#kmGoogleGate .km-gate-card{width:min(100%,900px);max-height:none;overflow:visible;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 16px 44px #0002;text-align:center}
+#kmGoogleGate .km-gate-info{max-width:760px;margin:22px auto 0}
+#kmGoogleLoginBtn{max-width:440px;margin:0 auto}
+#kmGoogleGate .km-gate-small{color:#64748b}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:auto}
 </style>
-<body class="km-auth-locked">
-<div id="kmGoogleGate" role="dialog" aria-modal="true" aria-labelledby="kmGateTitle">
-  <div class="km-gate-card">
-    <div class="km-gate-logo">Kaam<span>Milega</span></div>
-    <h1 id="kmGateTitle">Login to open KaamMilega</h1>
-    <p>Find work, connect with employers, and explore hiring tools — all in one place. Sign in with Google to enter KaamMilega.</p>
-    <button id="kmGoogleLoginBtn" type="button"><span class="km-google-g">G</span><span>Continue with Google</span></button>
-    <div id="kmGoogleGateMsg" aria-live="polite"></div>
-    <div class="km-gate-info">
-      <h2>What can you do on KaamMilega?</h2>
-      <div class="km-gate-benefits">
-        <div class="km-gate-benefit"><strong>👷 For Workers</strong>Explore jobs by skill and city, prepare a worker profile, save opportunities, and review hiring details.</div>
-        <div class="km-gate-benefit"><strong>🏢 For Employers</strong>Post vacancies, explain the skills you need, and submit requests when multiple workers are required.</div>
-        <div class="km-gate-benefit"><strong>🧰 Helpful Tools</strong>Use CV and worker-card tools, interview practice, salary calculations, and job-search support where available.</div>
-        <div class="km-gate-benefit"><strong>🤝 Support</strong>Contact KaamMilega support for website assistance and hiring enquiries.</div>
-      </div>
-      <h2>How it works</h2>
-      <div class="km-gate-steps"><strong>1.</strong> Sign in securely with your Google account.<br><strong>2.</strong> Explore job listings and tools relevant to you.<br><strong>3.</strong> Check the employer, salary, location, and job conditions before making a decision.</div>
-      <p class="km-gate-notice">KaamMilega is an independent employment platform, not a government agency. Job listings and availability may change, and employment is not guaranteed. Always verify an employer and never share your password or OTP.</p>
-    </div>
-    <div class="km-gate-small">Your Google password is handled by Google. Never share your password or OTP with anyone.</div>
-  </div>
-</div>
+<body>
 <div id="toast" class="toast"></div>
 <header><div class="nav">
 <div class="brand">Kaam<span>Milega</span><small class="brand-sub">Jobs • Workers • Opportunities</small></div>
@@ -380,6 +361,92 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
   </div>
 </section>
 
+<section id="kmGoogleGate" aria-labelledby="kmGateTitle">
+  <div class="km-gate-card">
+    <div class="km-gate-logo">Kaam<span>Milega</span></div>
+    <h1 id="kmGateTitle">Build your next step with KaamMilega</h1>
+    <p>Explore public job information freely. Sign in with Google when you are ready to manage your profile, post a vacancy, follow your hiring activity, or use your personal workspace.</p>
+    <button id="kmGoogleLoginBtn" type="button"><span class="km-google-g">G</span><span>Continue with Google</span></button>
+    <div id="kmGoogleGateMsg" aria-live="polite"></div>
+    <div class="km-gate-info">
+      <h2>One platform for the next step in your work journey</h2>
+      <div class="km-gate-benefits">
+        <div class="km-gate-benefit"><strong>👷 For Workers</strong>Find opportunities by skill and location, keep your profile useful, and organize your next job-search steps.</div>
+        <div class="km-gate-benefit"><strong>🏢 For Employers</strong>Describe the role, location and skills required, then manage job-posting steps from your account.</div>
+        <div class="km-gate-benefit"><strong>🧰 Practical Tools</strong>Use available profile, CV, interview-practice and salary-planning tools to prepare for work.</div>
+        <div class="km-gate-benefit"><strong>🤝 Helpful Support</strong>Reach the KaamMilega support team for website questions and worker-requirement enquiries.</div>
+      </div>
+      <h2>How it works</h2>
+      <div class="km-gate-steps"><strong>1.</strong> Continue with Google to open your personal workspace.<br><strong>2.</strong> Use shortcuts to reach job posting, your profile, urgent hiring and support.<br><strong>3.</strong> Verify the employer, pay, location and work conditions before accepting an opportunity.</div>
+      <p class="km-gate-notice">KaamMilega is an independent employment platform, not a government agency. Job listings and availability may change, and employment is not guaranteed. Always verify an employer and never share your password or OTP.</p>
+    </div>
+    <div class="km-gate-small">Your Google password is handled by Google. Never share your password or OTP with anyone.</div>
+  </div>
+</section>
+
+<section id="kmMemberDashboard" class="section hidden" aria-labelledby="kmDashboardTitle">
+  <div class="km-dashboard-shell">
+    <div class="km-dashboard-head">
+      <div>
+        <span class="eyebrow">YOUR KAAMMILEGA WORKSPACE</span>
+        <h2 id="kmDashboardTitle">Welcome back<span id="kmDashboardName"></span></h2>
+        <p class="muted">Your next step, organized in one place. Choose a task below to continue.</p>
+      </div>
+      <div class="km-dashboard-account"><span class="km-dashboard-avatar" aria-hidden="true">KM</span><div><b id="kmDashboardAccountLabel">Signed in with Google</b><small id="kmDashboardEmail"></small></div></div>
+    </div>
+    <div class="km-dashboard-grid">
+      <article class="km-dashboard-card km-dashboard-primary">
+        <span class="km-dashboard-icon">＋</span><h3>Post a job</h3>
+        <p>Share the role, location, skills and pay details so interested workers can review the opportunity.</p>
+        <button class="btn" type="button" data-open="jobModal">Create job post</button>
+      </article>
+      <article class="km-dashboard-card">
+        <span class="km-dashboard-icon">⌕</span><h3>Explore opportunities</h3>
+        <p>Search public listings by skill, city and job type. Review details before contacting an employer.</p>
+        <a class="btn secondary" href="#jobs">Browse latest jobs</a>
+      </article>
+      <article class="km-dashboard-card">
+        <span class="km-dashboard-icon">⚡</span><h3>Urgent hiring</h3>
+        <p>Tell the team what worker type, quantity, location and joining timeline your requirement needs.</p>
+        <button class="btn secondary" type="button" data-open="urgentModal">Submit requirement</button>
+      </article>
+      <article class="km-dashboard-card">
+        <span class="km-dashboard-icon">◎</span><h3>Manage your profile</h3>
+        <p>Keep your account details and work information up to date for a smoother experience.</p>
+        <button class="btn secondary" type="button" data-open="profileModal">Open my profile</button>
+      </article>
+      <article class="km-dashboard-card">
+        <span class="km-dashboard-icon">✓</span><h3>Prepare for the next step</h3>
+        <p>Review job-search guidance, check work conditions and keep your skills and experience ready.</p>
+        <a class="btn secondary" href="#forWorkers">Worker guide</a>
+      </article>
+      <article class="km-dashboard-card">
+        <span class="km-dashboard-icon">?</span><h3>Get help</h3>
+        <p>Need help with a listing, account or hiring request? Contact support through the website.</p>
+        <button class="btn secondary" type="button" data-open="supportModal">Contact support</button>
+      </article>
+    </div>
+    <div class="km-dashboard-note"><b>Safety reminder</b><span>Never share your password or OTP. Confirm the employer, location, salary and working conditions directly. KaamMilega does not guarantee employment.</span></div>
+  </div>
+</section>
+<style id="km-member-dashboard-css">
+#kmMemberDashboard{padding-top:8px}
+.km-dashboard-shell{background:#fff;border:1px solid #dfe7f2;border-radius:22px;padding:24px;box-shadow:0 12px 35px rgba(15,35,63,.06)}
+.km-dashboard-head{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:20px}
+.km-dashboard-head h2{margin:6px 0;font-size:clamp(24px,3vw,32px)}
+.km-dashboard-account{display:flex;align-items:center;gap:10px;background:#f5f8fc;border:1px solid #e1e8f2;border-radius:14px;padding:10px 13px;max-width:100%}
+.km-dashboard-avatar{width:42px;height:42px;display:grid;place-items:center;background:linear-gradient(135deg,#0b63ce,#0d9488);color:#fff;border-radius:13px;font-weight:900}
+.km-dashboard-account div{display:grid;gap:3px;min-width:0}.km-dashboard-account small{color:#64748b;overflow-wrap:anywhere}
+.km-dashboard-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.km-dashboard-card{border:1px solid #e2e8f0;border-radius:16px;padding:18px;background:linear-gradient(180deg,#fff,#fbfdff);display:flex;flex-direction:column;align-items:flex-start;min-height:235px}
+.km-dashboard-card h3{margin:10px 0 5px}.km-dashboard-card p{color:#64748b;line-height:1.55;font-size:14px;flex:1;margin:0 0 15px}
+.km-dashboard-icon{display:grid;place-items:center;width:42px;height:42px;border-radius:13px;background:#eaf2ff;color:#0b63ce;font-size:24px;font-weight:800}
+.km-dashboard-primary{border-color:#b8d4fb;background:linear-gradient(145deg,#f4f8ff,#fff)}
+.km-dashboard-note{display:flex;gap:12px;align-items:flex-start;background:#fff7ed;border:1px solid #fed7aa;color:#7c2d12;border-radius:13px;padding:13px 15px;margin-top:16px;font-size:13px;line-height:1.55}
+.km-dashboard-note b{white-space:nowrap}
+@media(max-width:850px){.km-dashboard-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.km-dashboard-shell{padding:16px}.km-dashboard-grid{grid-template-columns:1fr}.km-dashboard-card{min-height:0}.km-dashboard-note{display:grid}.km-dashboard-note b{white-space:normal}}
+</style>
 
 <section class="section" style="padding-top:20px">
 <div class="trust-strip">
@@ -4447,6 +4514,7 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
   const gate=document.getElementById('kmGoogleGate');
   const button=document.getElementById('kmGoogleLoginBtn');
   const message=document.getElementById('kmGoogleGateMsg');
+  const dashboard=document.getElementById('kmMemberDashboard');
   const SUPA='https://cvlinhjhyxuntbbxrrxq.supabase.co';
   const KEY='sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2';
   function say(text){if(message)message.textContent=text||'';}
@@ -4477,11 +4545,24 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
     await readOAuthCallback();
     const user=await getGoogleUser();
     if(acceptGoogleUser(user)){
-      gate.style.display='none';document.body.classList.remove('km-auth-locked');
+      gate.style.display='none';
+      document.body.classList.remove('km-auth-locked');
+      if(dashboard){
+        dashboard.classList.remove('hidden');
+        const meta=user.user_metadata||{};
+        const name=String(meta.full_name||meta.name||meta.given_name||'').trim();
+        const email=String(user.email||'').trim();
+        const nameEl=document.getElementById('kmDashboardName');
+        const emailEl=document.getElementById('kmDashboardEmail');
+        if(nameEl)nameEl.textContent=name ? ', '+name.split(/\\s+/)[0] : '';
+        if(emailEl)emailEl.textContent=email;
+      }
       return true;
     }
-    gate.style.display='flex';document.body.classList.add('km-auth-locked');
-    if(user) say('Please sign in with Google to continue. Email/password login is not accepted for website access.');
+    gate.style.display='flex';
+    document.body.classList.remove('km-auth-locked');
+    if(dashboard)dashboard.classList.add('hidden');
+    if(user) say('Please continue with Google to open your personal workspace.');
     return false;
   }
   button?.addEventListener('click',function(){

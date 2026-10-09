@@ -297,8 +297,36 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 .km-mega-card .btn{min-height:42px}
 .km-mega-card:after{content:'Open to enter details → see your result';display:block;margin-top:10px;font-size:11px;opacity:.65}
 </style>
+<style id="km-jobs-unavailable-style">.km-jobs-unavailable{max-width:100%;padding:18px}.km-jobs-unavailable h3{margin-top:0}</style>
 </head>
-<body><div id="toast" class="toast"></div>
+
+<style id="km-google-gate-style">
+#kmGoogleGate{position:fixed;inset:0;z-index:999999;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:22px;font-family:Arial,sans-serif;color:#fff}#kmGoogleGate .km-gate-card{width:min(100%,520px);max-height:calc(100dvh - 28px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 24px 80px #0005;text-align:center}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:hidden}
+</style>
+<body class="km-auth-locked">
+<div id="kmGoogleGate" role="dialog" aria-modal="true" aria-labelledby="kmGateTitle">
+  <div class="km-gate-card">
+    <div class="km-gate-logo">Kaam<span>Milega</span></div>
+    <h1 id="kmGateTitle">Login to open KaamMilega</h1>
+    <p>Find work, connect with employers, and explore hiring tools — all in one place. Sign in with Google to enter KaamMilega.</p>
+    <button id="kmGoogleLoginBtn" type="button"><span class="km-google-g">G</span><span>Continue with Google</span></button>
+    <div id="kmGoogleGateMsg" aria-live="polite"></div>
+    <div class="km-gate-info">
+      <h2>What can you do on KaamMilega?</h2>
+      <div class="km-gate-benefits">
+        <div class="km-gate-benefit"><strong>👷 For Workers</strong>Explore jobs by skill and city, prepare a worker profile, save opportunities, and review hiring details.</div>
+        <div class="km-gate-benefit"><strong>🏢 For Employers</strong>Post vacancies, explain the skills you need, and submit requests when multiple workers are required.</div>
+        <div class="km-gate-benefit"><strong>🧰 Helpful Tools</strong>Use CV and worker-card tools, interview practice, salary calculations, and job-search support where available.</div>
+        <div class="km-gate-benefit"><strong>🤝 Support</strong>Contact KaamMilega support for website assistance and hiring enquiries.</div>
+      </div>
+      <h2>How it works</h2>
+      <div class="km-gate-steps"><strong>1.</strong> Sign in securely with your Google account.<br><strong>2.</strong> Explore job listings and tools relevant to you.<br><strong>3.</strong> Check the employer, salary, location, and job conditions before making a decision.</div>
+      <p class="km-gate-notice">KaamMilega is an independent employment platform, not a government agency. Job listings and availability may change, and employment is not guaranteed. Always verify an employer and never share your password or OTP.</p>
+    </div>
+    <div class="km-gate-small">Your Google password is handled by Google. Never share your password or OTP with anyone.</div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
 <header><div class="nav">
 <div class="brand">Kaam<span>Milega</span><small class="brand-sub">Jobs • Workers • Opportunities</small></div>
 <div class="navlinks">
@@ -353,18 +381,17 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </section>
 
 
-
 <section class="section" style="padding-top:20px">
 <div class="trust-strip">
 <div class="trust-mini km-click-card" id="quickLoginCard" role="button" tabindex="0"><b>Secure account login</b><span>Email + password account access</span></div>
 <div class="trust-mini km-click-card" id="quickJobsCard" role="button" tabindex="0"><b>Real job listings</b><span>Structured employer requirements</span></div>
-<div class="trust-mini km-click-card" id="quickPaymentCard" role="button" tabindex="0"><b>Payment checkout</b><span>PayU checkout for featured job promotion</span></div>
+<div class="trust-mini km-click-card" id="quickPaymentCard" role="button" tabindex="0"><b>Payment checkout</b><span>Razorpay checkout for job posting</span></div>
 <div class="trust-mini km-click-card" id="quickSupportCard" role="button" tabindex="0"><b>Customer support</b><span>Direct KaamMilega assistance</span></div>
 </div>
 </section>
 
 <section class="section">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2>Latest Jobs</h2><button class="btn secondary" data-open="jobModal">Post a Job</button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2>Latest Jobs</h2><p class="muted">Employers get one free job post. After that, each post costs ₹299 for 30 days after owner approval. KaamMilega helps connect employers and workers but cannot guarantee hiring.</p><button class="btn secondary" data-open="jobModal">Post a Job</button></div>
 <div id="jobs" class="cards"><div class="card">Loading jobs...</div></div>
 </section>
 
@@ -382,7 +409,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <h2>For Employers</h2>
 <div class="cards">
 <div class="card"><h3>Post a Job</h3><p class="muted">Reach workers by skill and location.</p><button class="btn" data-open="jobModal">Post Job</button></div>
-<div class="card"><h3>Featured Jobs</h3><p class="muted">Promote a job for 7, 15 or 30 days.</p><button class="btn orange" data-open="featuredModal">Feature a Job</button></div>
+<div class="card"><h3>Job Posting Plan</h3><p class="muted">Your first job post is free. After that, pay ₹299 per job post for 30 days after owner approval.</p><button class="btn orange" data-open="jobModal">Post a Job</button></div>
 <div class="card"><h3>Urgent Hiring</h3><p class="muted">Tell our team exactly which workers you need.</p><button class="btn" data-open="urgentModal">Request Workers</button></div>
 <div class="card"><h3>Customer Support</h3><p class="muted">Get direct email assistance from KaamMilega support.</p><button class="btn secondary" data-open="supportModal">Contact Support</button></div>
 </div>
@@ -390,12 +417,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 
 
 <!-- TOOLNEST / PLATINUM TOOL LINK -->
-<section class="section" id="toolnestPlatinumLink" style="padding-top:20px;padding-bottom:20px;text-align:center">
-  <div class="card" style="max-width:1150px;margin:0 auto">
-    <h3 style="margin:0 0 14px">All types PDF download and Business tool download</h3>
-    <a href="https://kobraking97875-dotcom.github.io/toolnest.com/" target="_blank" rel="noopener noreferrer" class="btn orange">💎 Platinum Tools</a>
-  </div>
-</section>
+
 
 <!-- HIRING DESK -->
 <section class="section" id="hiringDesk">
@@ -426,41 +448,10 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
       <div id="needMsg"></div>
     </div>
 
-    <div class="card" style="cursor:pointer" data-open="teamModal">
-      <span class="eyebrow">MY TEAM MEMBER</span>
-      <h3>My Team member</h3>
-      <p class="muted">Click here to view the KaamMilega team.</p>
-      <button class="btn" type="button" data-open="teamModal">View My Team Member</button>
-    </div>
+    
   </div>
 </section>
 
-<section class="section" id="latestUpdates">
-  <div class="trust-head">
-    <div>
-      <span class="eyebrow">LATEST UPDATES</span>
-      <h2>News, Announcements &amp; Updates</h2>
-      <p class="muted">Important information and platform updates for workers, employers and contractors.</p>
-    </div>
-  </div>
-  <div class="updates-grid">
-    <article class="update-card">
-      <span class="eyebrow">JOB SEARCH</span>
-      <h3>Check vacancy details before applying</h3>
-      <p class="muted">Confirm the employer, job location, salary, joining date and current vacancy status before travelling or accepting an offer.</p>
-    </article>
-    <article class="update-card">
-      <span class="eyebrow">HIRING</span>
-      <h3>Companies can request multiple workers</h3>
-      <p class="muted">Use the urgent hiring or company requirement workflow to provide the worker type, number of workers, location and other requirements.</p>
-    </article>
-    <article class="update-card">
-      <span class="eyebrow">SUPPORT</span>
-      <h3>KaamMilega customer support</h3>
-      <p class="muted">For job posting, urgent hiring requirements and website assistance, contact kaammilaga.official@gmail.com.</p>
-    </article>
-  </div>
-</section>
 
 <!-- INFORMATIONAL CONTENT FOR USERS AND SEARCH ENGINES -->
 <!-- WORK RESULT VIDEO UPLOAD -->
@@ -517,14 +508,14 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 
 <section class="info-section anchor-offset" id="safety">
   <span class="eyebrow">TRUST &amp; SAFETY</span><h2>Important checks before a job or payment</h2>
-  <div class="info-grid"><article class="info-card"><h3>Verify the opportunity</h3><p>Confirm the company name, job location, role, salary and joining details directly with the employer. Public vacancy information can become outdated when a position is filled.</p></article><article class="info-card"><h3>Protect account information</h3><p>Never share your login OTP, password, payment PIN or private account credentials with another person. KaamMilega support does not need your OTP or password to provide normal assistance.</p></article><article class="info-card"><h3>Understand payments</h3><p>Featured Job promotion is a paid service for employers. Review the package and details before payment. A promotion fee does not guarantee hiring, applications or employment.</p></article></div>
+  <div class="info-grid"><article class="info-card"><h3>Verify the opportunity</h3><p>Confirm the company name, job location, role, salary and joining details directly with the employer. Public vacancy information can become outdated when a position is filled.</p></article><article class="info-card"><h3>Protect account information</h3><p>Never share your login OTP, password, payment PIN or private account credentials with another person. KaamMilega support does not need your OTP or password to provide normal assistance.</p></article><article class="info-card"><h3>Understand payments</h3><p>Job posting after the free trial costs ₹299 for a 30-day listing period after owner approval. Payment does not guarantee hiring, applications or employment.</p></article></div>
   <p>For any suspicious communication, stop the conversation and contact KaamMilega through the support email shown on this website. Do not send money merely because a person claims to represent a company or KaamMilega.</p>
 </section>
 
 <section class="info-section anchor-offset" id="faq">
   <span class="eyebrow">FREQUENTLY ASKED QUESTIONS</span><h2>KaamMilega FAQ</h2>
   <div class="faq-item"><h3>Is KaamMilega a government job website?</h3><p>No. KaamMilega is an independent employment marketplace. It is not a government department or government agency. Users should verify any government-job claim through the relevant official government source.</p></div>
-  <div class="faq-item"><h3>Can I post a job for free?</h3><p>The standard Post a Job workflow is available through the website. Additional services, such as Featured Job promotion, may have a separate fee. Check the package shown on the payment screen before paying.</p></div>
+  <div class="faq-item"><h3>Can I post a job for free?</h3><p>Every registered employer gets one free job post. After that, each job post costs ₹299 and is listed for 30 days after owner approval. Razorpay payment is required before a paid post is submitted.</p></div>
   <div class="faq-item"><h3>Does KaamMilega guarantee a job?</h3><p>No. A listing or support request does not guarantee employment. The employer decides whether to interview or hire a candidate, and the worker should confirm the final terms directly with the employer.</p></div>
   <div class="faq-item"><h3>How can a company request multiple workers?</h3><p>Use Need Workers Urgently or the Company Hiring Requirements workflow. Provide the company name, number of workers, worker type, location, salary or rate and other relevant requirements so the request can be coordinated accurately.</p></div>
   <div class="faq-item"><h3>How can I contact support?</h3><p>Email <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a> for job posting, urgent hiring requirements, platform questions and general assistance.</p></div>
@@ -658,7 +649,6 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </section>
 
 
-
 <!-- ADVANCED SEARCH -->
 <div id="advancedSearchModal" class="modal hidden">
   <div class="modalbox">
@@ -691,7 +681,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div><b>Email Support</b><span>kaammilaga.official@gmail.com</span></div>
 <a class="btn orange" href="mailto:kaammilaga.official@gmail.com?subject=KaamMilega%20Support">Email Support</a>
 </div>
-<div class="notice">For your security, KaamMilega support will never ask you to share your OTP, password or PayU secret credentials.</div>
+<div class="notice">For your security, KaamMilega support will never ask you to share your OTP, password or Razorpay secret credentials.</div>
 </div></div>
 
 <!-- MY TEAM MEMBER -->
@@ -823,17 +813,12 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <button class="btn" id="submitJob">Publish Job</button><div id="jobMsg"></div>
 </div></div>
 
-<!-- FEATURED -->
+<!-- JOB POSTING PRICING INFO -->
 <div id="featuredModal" class="modal hidden"><div class="modalbox">
-<button class="close" data-close>×</button><h2>Featured Job</h2>
-<div class="notice">Choose a promotion package. Payment will be processed through PayU.</div>
-<div class="row"><div class="formgroup"><label>Company Name</label><input id="fCompany" class="input"></div><div class="formgroup"><label>Contact Person</label><input id="fContact" class="input"></div></div>
-<div class="row"><div class="formgroup"><label>Mobile / WhatsApp</label><input id="fMobile" class="input"></div><div class="formgroup"><label>Job Title</label><input id="fTitle" class="input"></div></div>
-<div class="row"><div class="formgroup"><label>Category</label><input id="fCategory" class="input"></div><div class="formgroup"><label>City</label><input id="fCity" class="input"></div></div>
-<div class="row"><div class="formgroup"><label>Salary / Rate</label><input id="fSalary" class="input"></div><div class="formgroup"><label>Package</label><select id="fPlan"><option value="7">7 Days — ₹49</option><option value="15">15 Days — ₹89</option><option value="30">30 Days — ₹149</option></select></div></div>
-<div class="formgroup"><label>Description</label><textarea id="fDescription" rows="3"></textarea></div>
-<label><input type="checkbox" id="fConfirm"> I confirm the details are correct.</label>
-<button class="btn orange" id="payFeatured" style="margin-top:14px">Continue to PayU</button><div id="featuredMsg"></div>
+<button class="close" data-close>×</button><h2>KaamMilega Job Posting Plan</h2>
+<div class="notice">1 free job post per registered employer. After the free trial, each job post costs ₹299. The listing stays active for 30 days after owner approval.</div>
+<p class="muted">Payments are one-time per job post through Razorpay. No automatic recurring debit is taken. Payment does not guarantee applicants or hiring.</p>
+<button class="btn orange" type="button" data-open="jobModal">Post a Job</button>
 </div></div>
 
 <!-- URGENT -->
@@ -867,7 +852,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <script>
 const SUPABASE_URL = "https://cvlinhjhyxuntbbxrrxq.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2";
-const PAYMENT_FN = SUPABASE_URL + "/functions/v1/payu-payment";
+const PAYMENT_FN = SUPABASE_URL + "/functions/v1/razorpay-job-posting";
 
 function $(id){return document.getElementById(id)}
 function openModal(id){
@@ -1174,7 +1159,7 @@ $("submitJob").onclick=async()=>{
 async function loadJobs(){
   const r=await supa("jobs?select=id,title,category,city,salary,job_type,description,contact_phone,employer_id&status=eq.active&order=created_at.desc&limit=1000");
   const data=await r.json(); const box=$("jobs");
-  if(!r.ok){box.innerHTML='<div class="card"><h3>Jobs are temporarily unavailable</h3><p class="muted">Please try again shortly.</p></div>'; console.error("Jobs load error",data); return}
+  if(!r.ok){box.innerHTML='<div class="card km-jobs-unavailable" data-km-nojob="1"><h3>Job listings are temporarily unavailable</h3><p class="muted">Please check again shortly or contact KaamMilega support.</p></div>'; console.error("Jobs load error",data); return}
   if(!Array.isArray(data)||!data.length){box.innerHTML='<div class="card"><h3>No jobs yet</h3><p class="muted">New jobs will appear here.</p></div>';return}
   const ids=[...new Set(data.map(j=>j.employer_id).filter(Boolean))]; let profiles={};
   if(ids.length){const pr=await supa("public_profiles?id=in."+encodeURIComponent("("+ids.join(',')+")")+"&select=id,name,city,skills,avatar_url");const rows=await pr.json();if(Array.isArray(rows))rows.forEach(p=>profiles[p.id]=p)}
@@ -1187,7 +1172,8 @@ $("searchBtn").onclick=async()=>{
   let q="jobs?select=id,title,category,city,salary,job_type,description,contact_phone,employer_id&status=eq.active&order=created_at.desc&limit=1000";
   if(city)q+="&city=ilike."+encodeURIComponent("%"+city+"%");
   if(skill)q+="&or=(title.ilike."+encodeURIComponent("%"+skill+"%")+",category.ilike."+encodeURIComponent("%"+skill+"%")+")";
-  const r=await supa(q); const data=await r.json();
+  const r=await supa(q); const data=await r.json().catch(()=>({}));
+  if(!r.ok){$("jobs").innerHTML='<div class="card"><h3>Jobs are temporarily unavailable</h3><p class="muted">The jobs service is not configured correctly yet. Please try again later or contact KaamMilega support.</p></div>';console.error('Job search error',data);return}
   if(!Array.isArray(data)||!data.length){$("jobs").innerHTML='<div class="card">No matching jobs found.</div>';return}
   const ids=[...new Set(data.map(j=>j.employer_id).filter(Boolean))]; let profiles={};
   if(ids.length){const pr=await supa("public_profiles?id=in."+encodeURIComponent("("+ids.join(',')+")")+"&select=id,name,city,skills,avatar_url");const rows=await pr.json();if(Array.isArray(rows))rows.forEach(p=>profiles[p.id]=p)}
@@ -1240,14 +1226,14 @@ $("payFeatured").onclick=async()=>{
       throw new Error("Payment could not be started: "+detail);
     }
 
-    // payu-payment returns success=true and paymentUrl (camelCase).
+    // razorpay-job-posting returns success=true and paymentUrl (camelCase).
     if(!d || d.success!==true){
-      const detail=d?.error || d?.message || d?.msg || "The PayU payment service did not return a valid payment response.";
+      const detail=d?.error || d?.message || d?.msg || "The Razorpay payment service did not return a valid payment response.";
       throw new Error(detail);
     }
 
     if(!d.paymentUrl || !d.params || typeof d.params!=="object"){
-      throw new Error("PayU payment configuration is incomplete. Please check the payu-payment function.");
+      throw new Error("Razorpay payment configuration is incomplete. Please check the razorpay-job-posting function.");
     }
 
     const form=document.createElement("form");
@@ -1263,7 +1249,7 @@ $("payFeatured").onclick=async()=>{
     document.body.appendChild(form);
     form.submit();
   }catch(e){
-    console.error("KaamMilega PayU error:",e);
+    console.error("KaamMilega Razorpay error:",e);
     msg("featuredMsg",e?.message||"Payment could not be started. Please try again.","error");
   }
 };
@@ -2403,7 +2389,7 @@ if(document.getElementById("ownerReqSaveEdit")){
         return `<article class="card job"><div style="flex:1"><span class="tag">${esc(j.category||'Job')}</span><h3>${esc(j.title||'Job')}</h3><p class="muted">${esc(j.city||'')} · ${esc(j.salary||'Salary not specified')} · ${esc(j.job_type||'')}</p><p>${esc(j.description||'')}</p><div style="display:flex;align-items:center;gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid #edf1f6"><img class="avatar" style="width:44px;height:44px" src="${esc(avatar)}" alt="Employer profile"><div><b>${esc(p.name||'Employer')}</b><div class="muted" style="font-size:12px">${esc(p.city||j.city||'')}${skills?' · '+esc(skills):''}</div></div></div></div><div><button class="btn secondary applyBtn" data-phone="${esc(j.contact_phone||'')}">Contact</button></div></article>`;
       }).join('');
       box.querySelectorAll('.applyBtn').forEach(b=>b.onclick=()=>{const p=b.dataset.phone;if(p)location.href='https://wa.me/'+p.replace(/\D/g,'');});
-    }catch(e){box.innerHTML='<div class="card"><h3>Jobs are temporarily unavailable</h3><p class="muted">'+esc(e.message||'Please try again shortly.')+'</p></div>';}
+    }catch(e){box.innerHTML='<div class="card"><h3>Jobs are temporarily unavailable</h3><p class="muted">The jobs service is not configured correctly yet. Please try again later or contact KaamMilega support.</p></div>'; console.error('Public jobs load error:',e);}
   };
 
   /* ---------- VIDEO UPLOAD: use the actual file input directly ---------- */
@@ -2448,7 +2434,7 @@ if(document.getElementById("ownerReqSaveEdit")){
       if(!r.ok)throw new Error(raw||'Ratings are temporarily unavailable.');
       if(!Array.isArray(rows)||!rows.length){box.innerHTML='<div class="card"><p class="muted">No ratings yet. Once a user rates a job, the rating will appear here.</p></div>';return;}
       box.innerHTML=rows.map(x=>{const n=Math.max(0,Math.min(5,Number(x.rating)||0));return `<article class="card"><div class="review-stars">${'★'.repeat(n)}${'☆'.repeat(5-n)}</div><h3>${esc(x.job_title_snapshot||'Job Review')}</h3><p class="muted">${esc(x.job_category_snapshot||'Job')}${x.job_city_snapshot?' · '+esc(x.job_city_snapshot):''}</p><p>${esc(x.comment||'')}</p><div class="muted" style="font-size:12px;margin-top:8px">${new Date(x.created_at).toLocaleDateString()}</div></article>`;}).join('');
-    }catch(e){box.innerHTML='<div class="card"><p class="muted">Ratings are temporarily unavailable.</p><p style="font-size:12px">'+esc(e.message||'')+'</p></div>';}
+    }catch(e){box.innerHTML='<div class="card"><h3>Ratings are temporarily unavailable</h3><p class="muted">The ratings service is not configured correctly yet. Please try again later or contact KaamMilega support.</p></div>'; console.error('Public ratings load error:',e);}
   };
 
   async function setupRatingButton(){
@@ -3151,8 +3137,8 @@ if(document.getElementById("ownerReqSaveEdit")){
     $('ownerRequirementsList')?.addEventListener('click',async e=>{const b=e.target.closest('[data-km-req-action]');if(!b)return;const id=b.dataset.id,action=b.dataset.kmReqAction;if(action==='completed')return window.ownerCompleteRequirement(id);if(action==='active')return window.ownerReopenRequirement(id);if(action==='delete')return window.ownerDeleteRequirement(id);if(action==='edit')return window.ownerEditRequirement(id)},false);
   }
 
-  function bindPayU(){
-    const b=fresh('payFeatured');if(!b)return;b.addEventListener('click',async e=>{e.preventDefault();const token=await stableSession();if(!token){setMsg('featuredMsg','Please login first.','error');return}if(!$('fConfirm')?.checked){setMsg('featuredMsg','Please confirm the details first.','error');return}const body={company_name:$('fCompany').value.trim(),contact_person:$('fContact').value.trim(),mobile:$('fMobile').value.trim(),job_title:$('fTitle').value.trim(),category:$('fCategory').value.trim(),city:$('fCity').value.trim(),salary:$('fSalary').value.trim(),job_type:'Full Time',description:$('fDescription').value.trim(),plan_days:Number($('fPlan').value)};for(const k of ['company_name','contact_person','mobile','job_title','category','city','salary'])if(!body[k]){setMsg('featuredMsg','Please fill all required fields.','error');return}b.disabled=true;b.textContent='Connecting to PayU...';try{const send=async t=>timeoutFetch(PAYMENT_FN,{method:'POST',headers:{'Authorization':'Bearer '+t,'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(body)});let r=await send(token);if(r.status===401){const freshToken=await refreshTokenOnce();if(freshToken)r=await send(freshToken)}const {data,raw}=await parseResp(r);if(!r.ok)throw new Error('PayU server: '+errorText(data,raw,'HTTP '+r.status));if(!(data?.success===true||data?.ok===true))throw new Error(errorText(data,raw,'PayU did not return a valid response.'));const url=data.paymentUrl||data.payment_url;if(!url||!data.params)throw new Error('PayU configuration is incomplete in the payu-payment function.');const form=document.createElement('form');form.method='POST';form.action=url;Object.entries(data.params).forEach(([k,v])=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v??'';form.appendChild(i)});document.body.appendChild(form);form.submit()}catch(err){console.error(err);setMsg('featuredMsg',err.message||'PayU payment could not be started.','error')}finally{b.disabled=false;b.textContent='Continue to PayU'}},false)
+  function bindRazorpay(){
+    const b=fresh('payFeatured');if(!b)return;b.addEventListener('click',async e=>{e.preventDefault();const token=await stableSession();if(!token){setMsg('featuredMsg','Please login first.','error');return}if(!$('fConfirm')?.checked){setMsg('featuredMsg','Please confirm the details first.','error');return}const body={company_name:$('fCompany').value.trim(),contact_person:$('fContact').value.trim(),mobile:$('fMobile').value.trim(),job_title:$('fTitle').value.trim(),category:$('fCategory').value.trim(),city:$('fCity').value.trim(),salary:$('fSalary').value.trim(),job_type:'Full Time',description:$('fDescription').value.trim(),plan_days:Number($('fPlan').value)};for(const k of ['company_name','contact_person','mobile','job_title','category','city','salary'])if(!body[k]){setMsg('featuredMsg','Please fill all required fields.','error');return}b.disabled=true;b.textContent='Connecting to Razorpay...';try{const send=async t=>timeoutFetch(PAYMENT_FN,{method:'POST',headers:{'Authorization':'Bearer '+t,'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(body)});let r=await send(token);if(r.status===401){const freshToken=await refreshTokenOnce();if(freshToken)r=await send(freshToken)}const {data,raw}=await parseResp(r);if(!r.ok)throw new Error('Razorpay server: '+errorText(data,raw,'HTTP '+r.status));if(!(data?.success===true||data?.ok===true))throw new Error(errorText(data,raw,'Razorpay did not return a valid response.'));const url=data.paymentUrl||data.payment_url;if(!url||!data.params)throw new Error('Razorpay configuration is incomplete in the razorpay-job-posting function.');const form=document.createElement('form');form.method='POST';form.action=url;Object.entries(data.params).forEach(([k,v])=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v??'';form.appendChild(i)});document.body.appendChild(form);form.submit()}catch(err){console.error(err);setMsg('featuredMsg',err.message||'Razorpay payment could not be started.','error')}finally{b.disabled=false;b.textContent='Continue to Razorpay'}},false)
   }
 
   function bindUrgent(){const b=fresh('submitUrgent');if(!b)return;b.addEventListener('click',e=>{e.preventDefault();const c=$('uCompany').value.trim(),p=$('uContact').value.trim(),m=$('uMobile').value.trim(),w=$('uWorker').value.trim(),n=$('uCount').value.trim(),city=$('uCity').value.trim();if(!c||!p||!m||!w||!n||!city){setMsg('urgentMsg','Please fill the required fields.','error');return}const text=`KaamMilega Urgent Worker Requirement\nCompany: ${c}\nContact: ${p}\nMobile: ${m}\nWorker: ${w}\nNumber of workers: ${n}\nLocation: ${city}\nSalary: ${$('uSalary').value}\nJoining: ${$('uDate').value}\nDetails: ${$('uDetails').value}`;setMsg('urgentMsg','Opening WhatsApp...','success');window.location.href='https://wa.me/916206085383?text='+encodeURIComponent(text)},false)}
@@ -3164,7 +3150,7 @@ if(document.getElementById("ownerReqSaveEdit")){
   function bindReqEditSave(){const b=fresh('ownerReqSaveEdit');if(!b)return;b.addEventListener('click',async e=>{e.preventDefault();const id=$('ownerReqEditId').value;const body={company_name:$('ownerReqEditCompany').value.trim(),members_needed:Number($('ownerReqEditMembers').value),caller_role:$('ownerReqEditCallerRole').value,caller_name:$('ownerReqEditCallerName').value.trim(),worker_requirement:$('ownerReqEditWorker').value.trim(),salary:$('ownerReqEditSalary').value.trim(),location:$('ownerReqEditLocation').value.trim(),joining_date:$('ownerReqEditJoining').value||null,details:$('ownerReqEditDetails').value.trim(),status:$('ownerReqEditStatus').value};if(!body.company_name||!body.members_needed||!body.caller_name||!body.worker_requirement||!body.salary||!body.location){setMsg('ownerReqEditMsg','Please fill all required fields.','error');return}b.disabled=true;b.textContent='Saving...';try{await window.ownerRequirementsMutation('PATCH','company_requirements?id=eq.'+encodeURIComponent(id),body);$('ownerRequirementEditModal')?.classList.add('hidden');await window.loadOwnerCompanyRequirements();if(typeof loadCompanyRequirements==='function')await loadCompanyRequirements();showToast('Company requirement updated.')}catch(err){setMsg('ownerReqEditMsg',err.message,'error')}finally{b.disabled=false;b.textContent='Save Changes'}})}
 
   function init(){
-    try{bindOwnerLogin();bindOwnerNav();bindOwnerButtons();bindJobActions();bindPayU();bindUrgent();bindHiring();bindOwnerEditSave();bindReqEditSave();window.updateOwnerUI();}catch(e){console.error('KaamMilega v14 init',e)}
+    try{bindOwnerLogin();bindOwnerNav();bindOwnerButtons();bindJobActions();bindRazorpay();bindUrgent();bindHiring();bindOwnerEditSave();bindReqEditSave();window.updateOwnerUI();}catch(e){console.error('KaamMilega v14 init',e)}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
@@ -3199,7 +3185,7 @@ if(document.getElementById("ownerReqSaveEdit")){
     },false);
   }
 
-  function bindPayUFinal(){
+  function bindRazorpayFinal(){
     const old=$('payFeatured'); if(!old)return;
     const b=old.cloneNode(true); old.replaceWith(b);
     b.addEventListener('click',async e=>{
@@ -3213,19 +3199,19 @@ if(document.getElementById("ownerReqSaveEdit")){
       const required=['company_name','contact_person','mobile','job_title','category','city','salary'];
       const missing=required.filter(k=>!clean(body[k]));
       if(missing.length){msg('featuredMsg','Please fill: '+missing.join(', ')+'.','error');return;}
-      b.disabled=true;b.textContent='Connecting to PayU...';
+      b.disabled=true;b.textContent='Connecting to Razorpay...';
       try{
         const send=t=>timeout(fetch(PAYMENT_FN,{method:'POST',headers:{Authorization:'Bearer '+t,apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(body)}),15000);
         let r=await send(token); if(r.status===401&&window.refreshTokenOnce){const ft=await window.refreshTokenOnce();if(ft)r=await send(ft)}
         const raw=await r.text();let d={};try{d=raw?JSON.parse(raw):{}}catch(_){}
-        if(!r.ok)throw new Error('PayU server: '+(d.error||d.message||d.msg||raw||('HTTP '+r.status)));
-        if(!(d.success===true||d.ok===true))throw new Error(d.error||d.message||d.msg||'PayU did not return a valid response.');
-        const url=d.paymentUrl||d.payment_url;if(!url||!d.params)throw new Error('PayU configuration is incomplete in the payu-payment function.');
+        if(!r.ok)throw new Error('Razorpay server: '+(d.error||d.message||d.msg||raw||('HTTP '+r.status)));
+        if(!(d.success===true||d.ok===true))throw new Error(d.error||d.message||d.msg||'Razorpay did not return a valid response.');
+        const url=d.paymentUrl||d.payment_url;if(!url||!d.params)throw new Error('Razorpay configuration is incomplete in the razorpay-job-posting function.');
         const form=document.createElement('form');form.method='POST';form.action=url;
         Object.entries(d.params).forEach(([k,v])=>{const i=document.createElement('input');i.type='hidden';i.name=k;i.value=v??'';form.appendChild(i)});
         document.body.appendChild(form);form.submit();
-      }catch(err){console.error('PayU v15',err);msg('featuredMsg',err.message||'PayU payment could not be started.','error')}
-      finally{b.disabled=false;b.textContent='Continue to PayU'}
+      }catch(err){console.error('Razorpay v15',err);msg('featuredMsg',err.message||'Razorpay payment could not be started.','error')}
+      finally{b.disabled=false;b.textContent='Continue to Razorpay'}
     },false);
   }
 
@@ -3280,7 +3266,7 @@ if(document.getElementById("ownerReqSaveEdit")){
   }
 
   // Rebind the public requirement renderer and action buttons after legacy scripts.
-  bindUrgentFinal();bindPayUFinal();bindManagerButtons();
+  bindUrgentFinal();bindRazorpayFinal();bindManagerButtons();
   window.loadCompanyRequirements=window.loadCompanyRequirementsFinal;
   setTimeout(()=>window.loadCompanyRequirementsFinal(),0);
 })();
@@ -3330,7 +3316,7 @@ if(document.getElementById("ownerReqSaveEdit")){
   if(!fab||!panel||!msgs||!form)return;
   const endpoint=(window.KM_AI_ENDPOINT||((typeof SUPABASE_URL!=='undefined')?SUPABASE_URL+'/functions/v1/ai-assistant':'/functions/v1/ai-assistant'));
   const welcome='Namaste! 👋 Main KaamMilega AI Assistant hoon.\n\nAap job search, job posting, urgent hiring, Featured Jobs, profile/login, payments, safety ya website ke kisi bhi feature ke baare mein pooch sakte hain.';
-  const siteContext='KaamMilega is an independent employment marketplace in India. Workers can search jobs by skill and city. Employers can post jobs, use Featured Jobs, request workers urgently/company requirements, and contact support. Official website: https://kaammilaga.click/. KaamMilega is independent and is not affiliated with kaammilega.com or similarly named websites unless explicitly stated on the website. Support email: kaammilaga.official@gmail.com. KaamMilega does not guarantee employment. Users should verify employer, vacancy, salary, location and joining details. Never share OTP, password or payment PIN. Standard job posting is available; Featured Job promotion may be paid. The website has login/signup, profiles, reviews, work-result videos, owner management, PayU checkout for featured promotion, and company hiring requirements.';
+  const siteContext='KaamMilega is an independent employment marketplace in India. Workers can search jobs by skill and city. Employers can post jobs, use Featured Jobs, request workers urgently/company requirements, and contact support. Official website: https://kaammilaga.click/. KaamMilega is independent and is not affiliated with kaammilega.com or similarly named websites unless explicitly stated on the website. Support email: kaammilaga.official@gmail.com. KaamMilega does not guarantee employment. Users should verify employer, vacancy, salary, location and joining details. Never share OTP, password or payment PIN. Standard job posting is available; Featured Job promotion may be paid. The website has login/signup, profiles, reviews, work-result videos, owner management, Razorpay checkout for paid job posts, and company hiring requirements.';
   const history=[];
   function add(text,who){const d=document.createElement('div');d.className='km-ai-msg '+who;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d}
   function open(){panel.classList.add('open');if(!msgs.children.length)add(welcome,'bot');setTimeout(()=>input.focus(),80)}
@@ -3342,7 +3328,7 @@ if(document.getElementById("ownerReqSaveEdit")){
     if(/find|search|job|काम|नौकरी/.test(s)) return 'Job find karne ke liye Search Jobs mein skill/job title aur City/Location enter karke Search Jobs dabaiye. Listing kholkar salary, location, employer aur vacancy details verify karein.';
     if(/urgent|worker|workers|company requirement|staff|मजदूर/.test(s)) return 'Company ko workers urgently chahiye to Need Workers Urgently ya Company Hiring Requirements workflow use karein. Worker type, number of workers, location, salary/rate aur joining details dena useful hai.';
     if(/post.*job|job.*post|vacancy|भर्ती/.test(s)) return 'Employer Post a Job se vacancy publish kar sakta hai. Job title, category, city, salary, job type, description aur contact details bharni hoti hain.';
-    if(/feature|featured|payu|payment|पैसा|भुगतान/.test(s)) return 'Featured Jobs paid promotion service hai. Payment screen par package/details check karein. Promotion employment ya hiring guarantee nahi karta.';
+    if(/feature|featured|payment|पैसा|भुगतान/.test(s)) return 'Pehla job post free hai. Uske baad har job post ₹299 ka hai aur owner approval ke baad 30 din active rahega. Razorpay payment employment ya hiring ki guarantee nahi karta.';
     if(/support|contact|email|help|मदद/.test(s)) return 'KaamMilega support email: kaammilaga.official@gmail.com';
     if(/login|signup|profile|account|password|otp/.test(s)) return 'Login / Sign Up se email aur password ke saath account access karein. OTP, password aur payment PIN kisi ke saath share na karein.';
     if(/safe|fraud|scam|security|सुरक्षित/.test(s)) return 'Job accept karne se pehle employer, location, salary, joining details verify karein. Job ke badle advance money, OTP, password ya payment PIN maangne par savdhan rahein.';
@@ -3445,91 +3431,6 @@ if(document.getElementById("ownerReqSaveEdit")){
 })();
 </script>
 
-<section class="section km-unique-wrap" id="kaamMilegaUniqueFeatures">
-  <div class="trust-head">
-    <div>
-      <span class="eyebrow">KAAMMILEGA SMART TOOLS</span>
-      <h2>Find the Right Work Faster</h2>
-      <p class="muted">Optional tools to help workers discover relevant opportunities and help employers understand worker availability.</p>
-    </div>
-  </div>
-
-  <div class="km-unique-grid">
-    <article class="km-unique-card">
-      <span class="eyebrow">JOB MATCH</span>
-      <h3>⚡ Job Match Meter</h3>
-      <p class="muted">Example matching based on skill, location and experience. Actual match can be calculated when profile/job data is available.</p>
-      <div><span class="km-pill">MIG Welder</span><span class="km-pill">Ahmedabad</span></div>
-      <div class="km-meter" aria-label="Example 92 percent match"><i></i></div>
-      <strong>92% example match</strong>
-    </article>
-
-    <article class="km-unique-card">
-      <span class="eyebrow">SKILL PASSPORT</span>
-      <h3>🧑‍🔧 Worker Skill Passport</h3>
-      <p class="muted">A profile can present skills, experience, preferred location, expected salary and availability in one place.</p>
-      <div><span class="km-pill">Skills</span><span class="km-pill">Experience</span><span class="km-pill">Availability</span></div>
-    </article>
-
-    <article class="km-unique-card">
-      <span class="eyebrow">JOB RADAR</span>
-      <h3>📡 Job Radar</h3>
-      <p class="muted">Save a job preference and use it to check for matching listings.</p>
-      <div class="km-radar">
-        <input id="kmRadarSkill" placeholder="Skill / job title" aria-label="Skill or job title">
-        <input id="kmRadarCity" placeholder="Job city" aria-label="City">
-        <input id="kmRadarSalary" type="number" min="0" placeholder="Min salary ₹" aria-label="Minimum salary">
-        <button class="btn" type="button" id="kmRadarBtn">Save Radar</button>
-      </div>
-      <div class="km-result" id="kmRadarResult"></div>
-    </article>
-
-    <article class="km-unique-card">
-      <span class="eyebrow">VOICE SEARCH</span>
-      <h3>🎤 Speak Your Job Search</h3>
-      <p class="muted">On supported browsers, speak a request such as “MIG welder job in Ahmedabad”.</p>
-      <button class="btn secondary" type="button" id="kmVoiceBtn">🎤 Start Voice Search</button>
-      <div class="km-voice-note muted" id="kmVoiceResult">Voice input requires browser microphone permission.</div>
-    </article>
-
-    <article class="km-unique-card">
-      <span class="eyebrow">AVAILABILITY</span>
-      <h3>🟢 Available Now</h3>
-      <p class="muted">Workers can optionally show when they are available for new work.</p>
-      <select class="input" id="kmAvailability" aria-label="Availability">
-        <option>Available Today</option>
-        <option>Available This Week</option>
-        <option>Currently Working</option>
-        <option>Not Available</option>
-      </select>
-    </article>
-
-    <article class="km-unique-card">
-      <span class="eyebrow">CAREER TIMELINE</span>
-      <h3>🏆 Work History Timeline</h3>
-      <p class="muted">A simple way to present previous roles and locations on a worker profile.</p>
-      <div class="km-timeline">
-        <div class="km-step"><b>2024</b><br><span class="muted">Welder · Pune</span></div>
-        <div class="km-step"><b>2025</b><br><span class="muted">MIG Welder · Ahmedabad</span></div>
-        <div class="km-step"><b>2026</b><br><span class="muted">Available for work</span></div>
-      </div>
-    </article>
-
-    <article class="km-unique-card">
-      <span class="eyebrow">EMERGENCY HIRING</span>
-      <h3>🚨 Urgent Worker Request</h3>
-      <p class="muted">Companies can submit urgent requirements with worker type, quantity and location for the existing hiring workflow.</p>
-      <button class="btn" type="button" data-open="ownerRequirementModal">Request Workers</button>
-    </article>
-
-    <article class="km-unique-card">
-      <span class="eyebrow">SALARY CONTEXT</span>
-      <h3>💰 Salary Range Guide</h3>
-      <p class="muted">Show salary ranges from available listings only; avoid presenting them as guaranteed market rates.</p>
-      <div><span class="km-pill">Use current listings</span><span class="km-pill">Location matters</span><span class="km-pill">Experience matters</span></div>
-    </article>
-  </div>
-</section>
 
 <script id="kaammilega-unique-features-js">
 (function(){
@@ -3631,85 +3532,6 @@ if(document.getElementById("ownerReqSaveEdit")){
 </script>
 
 
-<section class="section" id="kaammilegaJobTools">
-  <div class="trust-head">
-    <div>
-      <span class="eyebrow">KAAMMILEGA JOB TOOLS</span>
-      <h2>More tools for workers</h2>
-      <p class="muted">Save jobs, create a shareable skill card, set job preferences and report a problem.</p>
-    </div>
-  </div>
-
-  <div class="km-tools-grid">
-    <article class="km-tool-card">
-      <span class="eyebrow">DIGITAL SKILL CARD</span>
-      <h3>🪪 Create Your Skill Card</h3>
-      <p class="muted">Create a simple profile card that can be shared with employers.</p>
-      <div class="km-form-grid">
-        <input class="input" id="kmCardName" placeholder="Name">
-        <input class="input" id="kmCardSkill" placeholder="Main skill">
-        <input class="input" id="kmCardExperience" placeholder="Experience (e.g. 5 years)">
-        <input class="input" id="kmCardCity" placeholder="Preferred city">
-        <input class="input" id="kmCardSalary" placeholder="Expected salary">
-        <select class="input" id="kmCardAvailability">
-          <option>Available Now</option><option>Available This Week</option><option>Currently Working</option>
-        </select>
-      </div>
-      <div class="km-job-actions">
-        <button class="btn" type="button" id="kmMakeCard">Create Card</button>
-        <button class="btn secondary" type="button" id="kmShareCard">Share Card</button>
-      </div>
-      <div id="kmSkillCardPreview"></div>
-    </article>
-
-    <article class="km-tool-card">
-      <span class="eyebrow">SAVED JOBS</span>
-      <h3>❤️ My Saved Jobs</h3>
-      <p class="muted">Save jobs on this device and quickly find them again.</p>
-      <div id="kmSavedJobs" class="km-saved-list"><div class="muted">No saved jobs yet.</div></div>
-    </article>
-
-    <article class="km-tool-card">
-      <span class="eyebrow">JOB ALERT</span>
-      <h3>🔔 Job Alert Preferences</h3>
-      <p class="muted">Save your preferred skill and city for future matching jobs.</p>
-      <div class="km-form-grid">
-        <input class="input" id="kmAlertSkill" placeholder="Skill / job title">
-        <input class="input" id="kmAlertCity" placeholder="Job city">
-      </div>
-      <div class="km-job-actions">
-        <button class="btn" type="button" id="kmSaveAlert">Save Alert</button>
-        <button class="btn secondary" type="button" id="kmClearAlert">Clear</button>
-      </div>
-      <div id="kmAlertStatus" class="km-mini muted"></div>
-    </article>
-
-    <article class="km-tool-card">
-      <span class="eyebrow">SAFETY</span>
-      <h3>🚩 Report a Job</h3>
-      <p class="muted">Report a suspicious, incorrect or outdated vacancy to KaamMilega support.</p>
-      <input class="input" id="kmReportJob" placeholder="Job title / company">
-      <textarea class="input" id="kmReportReason" rows="3" placeholder="What is wrong with this vacancy?"></textarea>
-      <button class="btn" type="button" id="kmReportBtn">Report by Email</button>
-    </article>
-
-    <article class="km-tool-card">
-      <span class="eyebrow">JOB STATUS</span>
-      <h3>⏰ Job Expiry</h3>
-      <p class="muted">Vacancies with a valid expiry date can be marked automatically when their date has passed.</p>
-      <div class="km-chip">Expired jobs should not receive new applications</div>
-      <div class="km-chip">Employer can repost when still needed</div>
-    </article>
-
-    <article class="km-tool-card">
-      <span class="eyebrow">QUICK SHARE</span>
-      <h3>📲 Share a Job</h3>
-      <p class="muted">Job cards can use the device share menu where supported, or copy their link.</p>
-      <button class="btn secondary" type="button" id="kmSharePage">Share KaamMilega</button>
-    </article>
-  </div>
-</section>
-
 <script id="kaammilega-complete-features-js">
 (function(){
   const SUPPORT='kaammilaga.official@gmail.com';
@@ -3732,7 +3554,7 @@ if(document.getElementById("ownerReqSaveEdit")){
     jobs.querySelectorAll('.card').forEach((card,idx)=>{
       if(card.dataset.kmEnhanced==='1')return;
       const text=(card.innerText||'').trim();
-      if(!text || /loading jobs/i.test(text))return;
+      if(!text || /loading jobs/i.test(text) || card.hasAttribute('data-km-nojob') || /job listings are temporarily unavailable|jobs are temporarily unavailable|no jobs yet/i.test(text))return;
       card.dataset.kmEnhanced='1';
       const title=(card.querySelector('h3,h4,h2')?.textContent||text.split('\n')[0]||'KaamMilega Job').trim();
       const actions=document.createElement('div'); actions.className='km-job-actions';
@@ -3804,86 +3626,6 @@ if(document.getElementById("ownerReqSaveEdit")){
 </script>
 
 
-<section class="section" id="kmNextLevelFeatures">
-  <div class="trust-head">
-    <div>
-      <span class="eyebrow">NEXT-LEVEL JOB TOOLS</span>
-      <h2>Worker & Employer Tools</h2>
-      <p class="muted">Practical tools for profiles, applications, CVs, location discovery and communication.</p>
-    </div>
-  </div>
-
-  <div class="km-next-grid">
-    <article class="km-next-card">
-      <span class="eyebrow">CV BUILDER</span>
-      <h3>📄 Free CV Builder</h3>
-      <p class="muted">Create a simple professional CV from your details.</p>
-      <div class="km-next-fields">
-        <input class="input" id="kmCvName" placeholder="Full name">
-        <input class="input" id="kmCvPhone" placeholder="Phone / Email">
-        <input class="input" id="kmCvSkill" placeholder="Main skill">
-        <input class="input" id="kmCvExp" placeholder="Experience (e.g. 5 years)">
-      </div>
-      <textarea class="input" id="kmCvSummary" rows="3" placeholder="Short professional summary"></textarea>
-      <button class="btn" type="button" id="kmCvCreate">Create CV</button>
-      <button class="btn secondary" type="button" id="kmCvPrint">Print / Save PDF</button>
-      <div id="kmCvPreview"></div>
-    </article>
-
-    <article class="km-next-card">
-      <span class="eyebrow">APPLICATION TRACKER</span>
-      <h3>📋 My Applications</h3>
-      <p class="muted">Track your own application progress on this device.</p>
-      <select class="input" id="kmTrackStatus">
-        <option>Applied</option><option>Shortlisted</option><option>Interview</option><option>Selected</option><option>Rejected</option>
-      </select>
-      <input class="input" id="kmTrackJob" placeholder="Job / company name">
-      <button class="btn" type="button" id="kmTrackSave">Save Status</button>
-      <div id="kmTrackList"></div>
-    </article>
-
-    <article class="km-next-card">
-      <span class="eyebrow">PROFILE</span>
-      <h3>🪪 Verified Worker Profile</h3>
-      <p class="muted">Prepare a profile with optional verification fields. Verification is only shown when the platform actually verifies the information.</p>
-      <input class="input" id="kmProfileSkill" placeholder="Skill">
-      <input class="input" id="kmProfileExp" placeholder="Experience (e.g. 5 years)">
-      <select class="input" id="kmProfileVerify">
-        <option value="unverified">Not verified</option>
-        <option value="pending">Verification requested</option>
-      </select>
-      <button class="btn" type="button" id="kmProfileSave">Save Profile</button>
-      <div id="kmProfileStatus" class="km-mini muted"></div>
-    </article>
-
-    <article class="km-next-card">
-      <span class="eyebrow">NEARBY JOBS</span>
-      <h3>📍 Nearby Jobs</h3>
-      <p class="muted">Use your browser location to help find nearby listings when location data is available.</p>
-      <button class="btn" type="button" id="kmLocationBtn">Use My Location</button>
-      <div id="kmLocationResult" class="km-mapbox km-mini">Location has not been requested.</div>
-    </article>
-
-    <article class="km-next-card">
-      <span class="eyebrow">SECURE CONTACT</span>
-      <h3>💬 Employer–Worker Chat</h3>
-      <p class="muted">A chat interface is prepared here. Real-time private messaging requires a connected backend/auth system.</p>
-      <div class="km-chat" id="kmChatBox"><div class="km-msg">Chat is ready for backend connection.</div></div>
-      <input class="input" id="kmChatMessage" placeholder="Type a message">
-      <button class="btn secondary" type="button" id="kmChatSend">Send Demo Message</button>
-    </article>
-
-    <article class="km-next-card">
-      <span class="eyebrow">SALARY INSIGHTS</span>
-      <h3>📊 Listing Salary Insights</h3>
-      <p class="muted">A future live insight can be calculated from current KaamMilega listings. It should not be presented as a guaranteed market rate.</p>
-      <div class="km-track">
-        <span>Current listings</span><span>City-based</span><span>Skill-based</span>
-      </div>
-    </article>
-  </div>
-</section>
-
 <script id="km-next-level-js">
 (function(){
   const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -3952,100 +3694,6 @@ if(document.getElementById("ownerReqSaveEdit")){
 </script>
 
 
-<section class="section" id="kmUltimateFeatures">
-  <div class="trust-head">
-    <div>
-      <span class="eyebrow">KAAMMILEGA ULTIMATE TOOLS</span>
-      <h2>Skills, Profile & Hiring Support</h2>
-      <p class="muted">Extra tools for workers and employers. Test results and badges are informational unless KaamMilega verifies them.</p>
-    </div>
-  </div>
-
-  <div class="km-ultimate-grid">
-    <article class="km-ultimate-card">
-      <span class="eyebrow">SKILL TEST</span>
-      <h3>🧠 Quick Skill Test</h3>
-      <p class="muted">Take a short sample test. This demo does not replace professional certification.</p>
-      <div id="kmQuiz">
-        <div class="km-quiz-q"><b>1. Before MIG welding, what should be checked first?</b><br>
-          <label><input type="radio" name="kmq1" value="a"> Paint only</label><br>
-          <label><input type="radio" name="kmq1" value="b"> Safety equipment and machine setup</label><br>
-          <label><input type="radio" name="kmq1" value="c"> Phone battery</label>
-        </div>
-        <div class="km-quiz-q"><b>2. Why is proper PPE important?</b><br>
-          <label><input type="radio" name="kmq2" value="a"> For safety</label><br>
-          <label><input type="radio" name="kmq2" value="b"> To increase internet speed</label><br>
-          <label><input type="radio" name="kmq2" value="c"> To change salary</label>
-        </div>
-        <button class="btn" type="button" id="kmQuizSubmit">Check Result</button>
-        <div id="kmQuizResult" class="km-mini muted"></div>
-      </div>
-    </article>
-
-    <article class="km-ultimate-card">
-      <span class="eyebrow">SKILL PASSPORT</span>
-      <h3>🏅 Skill Passport Upgrade</h3>
-      <p class="muted">Store your skill-test result and profile completion status on this device.</p>
-      <div class="km-progress"><i id="kmProfileProgress"></i></div>
-      <div id="kmProfileProgressText" class="km-mini">Profile strength: 0%</div>
-      <div class="km-badges" id="kmAchievementBadges"></div>
-    </article>
-
-    <article class="km-ultimate-card">
-      <span class="eyebrow">PROFILE STRENGTH</span>
-      <h3>📈 Complete Your Profile</h3>
-      <p class="muted">Add these details to make your worker profile more useful.</p>
-      <label><input type="checkbox" class="km-profile-check"> Skill added</label><br>
-      <label><input type="checkbox" class="km-profile-check"> Experience added</label><br>
-      <label><input type="checkbox" class="km-profile-check"> City added</label><br>
-      <label><input type="checkbox" class="km-profile-check"> Availability added</label><br>
-      <label><input type="checkbox" class="km-profile-check"> Digital Skill Card created</label>
-    </article>
-
-    <article class="km-ultimate-card">
-      <span class="eyebrow">CALLBACK</span>
-      <h3>📞 Request a Callback</h3>
-      <p class="muted">Send a callback request to KaamMilega support. This opens the user's email app.</p>
-      <div class="km-callback-grid">
-        <input class="input" id="kmCbName" placeholder="Name">
-        <input class="input" id="kmCbPhone" placeholder="Phone">
-        <select class="input" id="kmCbType"><option>Worker</option><option>Employer</option><option>Contractor</option></select>
-        <select class="input" id="kmCbTime"><option>Morning</option><option>Afternoon</option><option>Evening</option></select>
-      </div>
-      <textarea class="input" id="kmCbReason" rows="3" placeholder="Reason for callback"></textarea>
-      <button class="btn" type="button" id="kmCbSend">Request Callback</button>
-    </article>
-
-    <article class="km-ultimate-card km-emergency">
-      <span class="eyebrow">URGENT HIRING</span>
-      <h3>🚨 Emergency Job Board</h3>
-      <p class="muted">For genuine urgent requirements such as “10 welders needed tomorrow”. The existing company-requirement workflow should be used for submission and verification.</p>
-      <button class="btn" type="button" data-open="ownerRequirementModal">Submit Worker Requirement</button>
-    </article>
-
-    <article class="km-ultimate-card">
-      <span class="eyebrow">JOB GUIDES</span>
-      <h3>📚 Career Guides</h3>
-      <p class="muted">Helpful topics can be expanded into verified KaamMilega guides for different trades.</p>
-      <div class="km-badges">
-        <span class="km-badge">Welding</span><span class="km-badge">Electrician</span><span class="km-badge">Driver</span>
-        <span class="km-badge">Fitter</span><span class="km-badge">Helper</span>
-      </div>
-    </article>
-
-    <article class="km-ultimate-card">
-      <span class="eyebrow">ACHIEVEMENTS</span>
-      <h3>🏆 Worker Badges</h3>
-      <p class="muted">Badges are earned from profile actions or verified platform events—not automatically claimed as professional qualifications.</p>
-      <div class="km-badges">
-        <span class="km-badge">Profile Complete</span>
-        <span class="km-badge">Skill Test Taken</span>
-        <span class="km-badge">Skill Card Created</span>
-      </div>
-    </article>
-  </div>
-</section>
-
 <script id="km-ultimate-js">
 (function(){
   const SUPPORT='kaammilaga.official@gmail.com';
@@ -4096,13 +3744,18 @@ if(document.getElementById("ownerReqSaveEdit")){
 </script>
 
 
-
 <section class="section km-bottom-leads" id="companyRequirementsSection">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">COMPANY HIRING REQUIREMENTS</span><h2 style="margin:5px 0">Workers Required by Companies</h2><p class="muted" style="margin:0">Company requirements posted through KaamMilega. Contact the support team for current verification.</p></div><div style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn secondary" id="publicCompanyRefresh" type="button">Refresh Requirements</button><button class="btn" id="ownerRequirementBtn" data-open="ownerRequirementModal">Post Company Requirement</button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">COMPANY HIRING REQUIREMENTS</span><h2 style="margin:5px 0">Workers Required by Companies</h2><p class="muted" style="margin:0">Company requirements posted through KaamMilega. Contact the support team for current verification.</p></div><div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn secondary" id="publicCompanyRefresh" type="button">Refresh Requirements</button><button class="btn" id="ownerRequirementBtn" data-open="ownerRequirementModal">Post Company Requirement</button></div>
 <div id="companyRequirements" class="requirement-grid" style="margin-top:18px"><div class="card">Loading company requirements...</div></div>
 </section>
 
-
+<style id="km-company-requirements-layout-fix">
+  #companyRequirements{display:grid !important;grid-template-columns:minmax(0,1fr) !important;width:100%;align-items:stretch}
+  #companyRequirements>.card,#companyRequirements>article{width:100%;max-width:none;min-width:0;box-sizing:border-box}
+  #companyRequirements .requirement-card,#companyRequirements .company-requirement-card{width:100%;max-width:none;box-sizing:border-box}
+  #publicCompanyRefresh{white-space:nowrap}
+  @media(max-width:700px){#companyRequirements{grid-template-columns:minmax(0,1fr) !important}#publicCompanyRefresh{margin-top:6px}}
+</style>
 
 <script id="km-final-functionality-fix">
 (function(){
@@ -4262,34 +3915,6 @@ if(document.getElementById("ownerReqSaveEdit")){
 </script>
 
 
-<section class="km-mega-wrap" id="kmExclusiveFeatures">
-  <div class="km-mega-head"><div><span class="eyebrow">KAAMMILEGA EXCLUSIVE TOOLS</span><h2>Next-Generation Job Tools</h2><p class="muted">Smart tools for workers and employers — all in one place.</p></div><span class="km-hot">⚡ LIVE TOOLS</span></div>
-  <div class="km-tools-guide" aria-label="How KaamMilega tools work">
-    <div><b>How to use:</b> Open any tool, enter the requested details, press its blue action button, and read the result shown below the form.</div>
-    <div><b>Saved data:</b> Most of these helper records are saved in this browser/device. They are not automatically visible to other users unless a tool specifically says it is public or is connected to the KaamMilega account/database.</div>
-    <div><b>Important:</b> These tools provide estimates, checklists or previews. They do not guarantee a job, salary, interview or employer decision.</div>
-  </div>
-  <div class="km-mega-grid">
-    <article class="km-mega-card"><div class="km-mega-icon">🧠</div><h3>AI Job Match Explanation</h3><p>Enter your skill, job title and city. The tool explains the basic match signals so you can compare a job with your profile.</p><button class="btn" type="button" id="kmMatchOpen">See Match Explanation</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">💰</div><h3>Salary Negotiation Assistant</h3><p>Enter your current and expected salary. Get a simple discussion range and a ready-to-send salary message.</p><button class="btn" type="button" id="kmSalaryOpen">Get Salary Help</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">📍</div><h3>Job Travel Calculator</h3><p>Enter your one-way distance, travel cost per km and work days. See your estimated monthly travel expense before accepting a job.</p><button class="btn" type="button" id="kmTravelOpen">Calculate Travel Cost</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🛡️</div><h3>Job Scam Warning System</h3><p>Paste a job message or offer. The tool checks for common warning phrases such as fees, OTP requests or guaranteed-job claims.</p><button class="btn" type="button" id="kmScamOpen">Check for Scam Signs</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🪪</div><h3>Digital Worker ID</h3><p>Create a unique KaamMilega Worker ID. Use it as your worker profile reference and share the ID with employers.</p><button class="btn" type="button" id="kmIdOpen">Create Worker ID</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🔄</div><h3>Job Swap / Referral</h3><p>Save the job title and the worker you referred. Use this as your own referral record.</p><button class="btn" type="button" id="kmReferralOpen">Save Referral</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🧮</div><h3>Take-Home Salary Calculator</h3><p>Enter monthly salary and your travel, food and other work costs. See the estimated amount left after those declared costs.</p><button class="btn" type="button" id="kmTakeHomeOpen">Calculate Remaining Salary</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">📁</div><h3>Document Locker</h3><p>Keep a checklist of documents such as CV, ID or certificates. This version saves only the document name and status on your device.</p><button class="btn" type="button" id="kmDocsOpen">Open Document Checklist</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🎯</div><h3>Interview Practice AI</h3><p>Choose a job role, get a practice question, type your answer and save your practice record on this device.</p><button class="btn" type="button" id="kmInterviewOpen">Practice Interview</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🌐</div><h3>Hindi ↔ English Job Translator</h3><p>Paste a short job description and convert common job words between English and Hindi to make the vacancy easier to understand.</p><button class="btn" type="button" id="kmTranslateOpen">Translate Job Text</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🎙️</div><h3>AI Voice Interview</h3><p>Practice an interview answer by speaking. Chrome/browser speech recognition converts your voice to text; typing is available if voice is unavailable.</p><button class="btn" type="button" id="kmVoiceInterviewOpen">Practice by Voice</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">📦</div><h3>Job Bundle</h3><p>Enter the important job details and create one easy-to-read job summary card. Use it before contacting the employer.</p><button class="btn" type="button" id="kmBundleOpen">Create Job Summary</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🔥</div><h3>Hot Vacancy Meter</h3><p>Enter open slots and applications to get a simple vacancy signal. It is only a calculation from the numbers entered.</p><button class="btn" type="button" id="kmHotOpen">Check Vacancy Signal</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">👥</div><h3>Worker Match Circle</h3><p>Enter the required skill, city and availability to create a shortlist criteria record for employer-side matching.</p><button class="btn" type="button" id="kmCircleOpen">Create Match Criteria</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🎫</div><h3>Interview Pass</h3><p>Enter the candidate, role and interview date/time to create a simple interview reference pass.</p><button class="btn" type="button" id="kmPassOpen">Create Interview Pass</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">👤</div><h3>Worker Mini Website</h3><p>Enter worker name, skill, city and experience to create a shareable profile preview. It is a profile preview, not a separate hosted website.</p><button class="btn" type="button" id="kmMiniOpen">Create Profile Preview</button></article>
-    <article class="km-mega-card"><div class="km-mega-icon">🏢</div><h3>Company Mini Page</h3><p>Enter company name, city and open roles to create a compact hiring-page preview. It is a preview, not a separate hosted company website.</p><button class="btn" type="button" id="kmCompanyOpen">Create Company Preview</button></article>
-  </div>
-</section>
-
 <section class="section km-company-directory" id="companyDirectory">
   <div class="trust-head">
     <div>
@@ -4305,21 +3930,13 @@ if(document.getElementById("ownerReqSaveEdit")){
 
 
 <!-- KAAMMILEGA LIVE WORKER ID CARDS -->
-<section class="section" id="kmLiveWorkerCards">
-  <div class="trust-head"><div><span class="eyebrow">KAAMMILEGA VERIFIED PROFILE CARDS</span><h2>Live Worker ID Cards</h2><p class="muted">Worker profile cards published by the KaamMilega owner. Only cards marked Live are shown here.</p></div></div>
-  <div id="kmLiveWorkerCardsGrid" class="km-live-id-grid"><div class="card">No live worker ID cards yet.</div></div>
-</section>
+
 
 <style id="km-live-worker-id-style">
 .km-live-id-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.km-live-id-card{background:#0b1728;border:1px solid #334155;border-radius:18px;overflow:hidden;color:#fff}.km-live-id-head{background:#f59e0b;color:#0b1220;padding:12px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center}.km-live-id-body{display:grid;grid-template-columns:130px 1fr;gap:16px;padding:18px}.km-live-id-photo{width:130px;height:165px;border-radius:12px;object-fit:cover;background:#e2e8f0}.km-live-id-row{margin-bottom:9px}.km-live-id-label{font-size:11px;color:#94a3b8;font-weight:700}.km-live-id-value{font-size:15px;font-weight:700;overflow-wrap:anywhere}.km-live-id-foot{padding:10px 16px;background:rgba(0,0,0,.28);font-size:12px;color:#cbd5e1}.km-owner-id-row{border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:10px;background:#0b1728;color:#fff}.km-owner-id-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}@media(max-width:800px){.km-live-id-grid{grid-template-columns:1fr}.km-live-id-body{grid-template-columns:100px 1fr}.km-live-id-photo{width:100px;height:130px}}
 </style>
 
-<footer><div style="max-width:1150px;margin:0 auto 18px;padding:12px 14px;border:1px solid #334155;border-radius:10px;color:#cbd5e1"><b>KaamMilega</b> is an independent employment marketplace connecting workers and employers. It is not a government department or government agency.</div><div class="section footer-grid" style="padding:0">
-<div><div class="footer-brand">Kaam<span>Milega</span></div><p>Jobs, skills and employment opportunities in one place.</p></div>
-<div><b>Customer Support</b><p>Email: <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a></p><p>Support for employers and workers.</p></div>
-<div><b>Trust & Safety</b><p>Keep payments and account credentials secure. Never share OTPs or passwords with anyone.</p></div>
-</div>
-<div class="footer-bottom">© 2026 KaamMilega. All rights reserved. · <a href="#aboutKaamMilega">About</a> · <a href="#searchAiGuidance">Search &amp; AI</a> · <a href="#howItWorks">How It Works</a> · <a href="#officialIdentity">Official Website</a><a href="#privacyPolicy">Privacy Policy</a> · <a href="#terms">Terms</a> · <a href="#faq">FAQ</a> · <a href="#contactInfo">Contact</a> · Hiring decisions are made by employers.</div></footer>
+
 
 
 <div id="kmMegaModal" class="modal hidden"><div class="modalbox" style="max-width:700px"><button class="close" data-close>×</button><span class="eyebrow">KAAMMILEGA TOOL</span><h2 id="kmMegaTitle">Tool</h2><div id="kmMegaBody"></div></div></div>
@@ -4521,6 +4138,11 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
 })();
 </script>
 
+
+<section class="section" id="kmLiveWorkerCards">
+  <div class="trust-head"><div><span class="eyebrow">KAAMMILEGA VERIFIED PROFILE CARDS</span><h2>Live Worker ID Cards</h2><p class="muted">Worker profile cards published by the KaamMilega owner. Only cards marked Live are shown here.</p></div></div>
+  <div id="kmLiveWorkerCardsGrid" class="km-live-id-grid"><div class="card">No live worker ID cards yet.</div></div>
+</section>
 
 <!-- KaamMilega Brand Worker ID Card: isolated add-on; existing features untouched -->
 <section class="section" id="kmBrandWorkerCard">
@@ -4811,7 +4433,153 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })();
-</script>\n</body>
+</script>\n
+
+<footer><div style="max-width:1150px;margin:0 auto 18px;padding:12px 14px;border:1px solid #334155;border-radius:10px;color:#cbd5e1"><b>KaamMilega</b> is an independent employment marketplace connecting workers and employers. It is not a government department or government agency.</div><div class="section footer-grid" style="padding:0">
+<div><div class="footer-brand">Kaam<span>Milega</span></div><p>Jobs, skills and employment opportunities in one place.</p></div>
+<div><b>Customer Support</b><p>Email: <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a></p><p>Support for employers and workers.</p></div>
+<div><b>Trust & Safety</b><p>Keep payments and account credentials secure. Never share OTPs or passwords with anyone.</p></div>
+</div>
+<div class="footer-bottom">© 2026 KaamMilega. All rights reserved. · <a href="#aboutKaamMilega">About</a> · <a href="#searchAiGuidance">Search &amp; AI</a> · <a href="#howItWorks">How It Works</a> · <a href="#officialIdentity">Official Website</a><a href="#privacyPolicy">Privacy Policy</a> · <a href="#terms">Terms</a> · <a href="#faq">FAQ</a> · <a href="#contactInfo">Contact</a> · Hiring decisions are made by employers.</div></footer>
+
+<script id="km-google-gate-script">
+(function(){
+  const gate=document.getElementById('kmGoogleGate');
+  const button=document.getElementById('kmGoogleLoginBtn');
+  const message=document.getElementById('kmGoogleGateMsg');
+  const SUPA='https://cvlinhjhyxuntbbxrrxq.supabase.co';
+  const KEY='sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2';
+  function say(text){if(message)message.textContent=text||'';}
+  function acceptGoogleUser(user){
+    const providers=(user&&user.identities||[]).map(x=>x.provider);
+    return !!user && (user.app_metadata?.provider==='google'||providers.includes('google'));
+  }
+  // Supabase's implicit OAuth callback returns the session in the URL hash. Save it for the site's existing auth code.
+  async function readOAuthCallback(){
+    const hash=new URLSearchParams(location.hash.replace(/^#/, ''));
+    const access=hash.get('access_token');
+    const refresh=hash.get('refresh_token');
+    const err=hash.get('error_description')||new URLSearchParams(location.search).get('error_description');
+    if(err) say(decodeURIComponent(err.replace(/\+/g,' ')));
+    if(access){
+      localStorage.setItem('km_access_token',access);
+      if(refresh)localStorage.setItem('km_refresh_token',refresh);
+      history.replaceState(null,document.title,location.pathname+location.search);
+    }
+  }
+  async function getGoogleUser(){
+    try{
+      if(typeof window.getCurrentUser!=='function')return null;
+      return await window.getCurrentUser();
+    }catch(_){return null}
+  }
+  async function checkAccess(){
+    await readOAuthCallback();
+    const user=await getGoogleUser();
+    if(acceptGoogleUser(user)){
+      gate.style.display='none';document.body.classList.remove('km-auth-locked');
+      return true;
+    }
+    gate.style.display='flex';document.body.classList.add('km-auth-locked');
+    if(user) say('Please sign in with Google to continue. Email/password login is not accepted for website access.');
+    return false;
+  }
+  button?.addEventListener('click',function(){
+    say('Opening Google sign-in…');button.disabled=true;
+    const redirect=location.origin+location.pathname+location.search;
+    const url=SUPA+'/auth/v1/authorize?provider=google&redirect_to='+encodeURIComponent(redirect);
+    location.href=url;
+  });
+  checkAccess().finally(()=>{if(button)button.disabled=false;});
+  window.addEventListener('pageshow',()=>{checkAccess();});
+})();
+</script>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script id="kaammilega-razorpay-job-posting-v1">
+(function(){
+  const $ = id => document.getElementById(id);
+  const clean = v => String(v ?? '').trim();
+  const escape = window.escapeHtml || (v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])));
+  const endpoint = 'https://cvlinhjhyxuntbbxrrxq.supabase.co/functions/v1/razorpay-job-posting';
+  function showMsg(text, type='notice') { const el=$('jobMsg'); if(el) el.innerHTML='<div class="notice '+type+'">'+escape(text)+'</div>'; }
+  function readJob(btn) {
+    const modal = btn.closest('.modal') || document;
+    const val = id => clean(modal.querySelector('#'+id)?.value ?? $(id)?.value);
+    return {
+      title: val('jobTitle'), category: val('jobCategory'), city: val('jobCity'),
+      salary: val('jobSalary'), job_type: val('jobType') || 'Full Time',
+      contact_phone: val('jobPhone'), description: val('jobDescription')
+    };
+  }
+  async function callBackend(token, payload) {
+    const r = await fetch(endpoint, {method:'POST', headers:{'Authorization':'Bearer '+token,'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(payload)});
+    const raw = await r.text(); let d={}; try{d=raw?JSON.parse(raw):{}}catch(_){}
+    if(!r.ok) { const e=new Error(d.error || d.message || raw || ('Request failed (HTTP '+r.status+')')); e.status=r.status; e.code=d.code || ''; throw e; }
+    return d;
+  }
+  function clearJobForm(btn) {
+    const modal=btn.closest('.modal') || document;
+    ['jobTitle','jobCategory','jobCity','jobSalary','jobPhone','jobDescription'].forEach(id=>{const x=modal.querySelector('#'+id)||$(id);if(x)x.value='';});
+    const type=modal.querySelector('#jobType')||$('jobType'); if(type)type.value='Full Time';
+  }
+  async function submitJob(btn) {
+    const token = await (window.getSession ? window.getSession() : null);
+    if(!token){showMsg('Please log in first to post a job.','error');return;}
+    const job=readJob(btn);
+    if(!job.title || !job.category || !job.city){showMsg('Please select a job title and enter the city.','error');return;}
+    btn.disabled=true; const oldText=btn.textContent; btn.textContent='Checking free trial...';
+    try {
+      try {
+        const trial=await callBackend(token,{action:'trial',job});
+        showMsg(trial.message || 'Your free job post was submitted for owner review. The 30-day period starts after approval.','success');
+        clearJobForm(btn); if(window.loadJobs) await window.loadJobs();
+        return;
+      } catch(err) {
+        if(err.code!=='FREE_TRIAL_USED' && err.status!==409) throw err;
+      }
+      btn.textContent='Preparing Razorpay checkout...';
+      const order=await callBackend(token,{action:'create_order',job});
+      if(!window.Razorpay) throw new Error('Razorpay checkout did not load. Please refresh the page and try again.');
+      const user=window.getCurrentUser ? await window.getCurrentUser() : null;
+      const options={
+        key:order.key_id, amount:order.amount, currency:order.currency, name:'KaamMilega',
+        description:'₹299 · Job post for 30 days after approval', order_id:order.order_id,
+        prefill:{email:user?.email || ''}, theme:{color:'#1264c0'},
+        handler:async function(response){
+          btn.disabled=true;btn.textContent='Verifying payment...';
+          try {
+            const result=await callBackend(token,{action:'verify',razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature});
+            showMsg(result.message || 'Payment verified. Your job post was submitted for owner review; the 30-day period starts after approval.','success');
+            clearJobForm(btn); if(window.loadJobs) await window.loadJobs();
+          } catch(e) {
+            showMsg((e.message || 'Payment verification is pending.')+' If money was deducted, do not pay again; contact kaammilaga.official@gmail.com with your Razorpay payment ID.','error');
+          } finally {btn.disabled=false;btn.textContent=oldText;}
+        },
+        modal:{ondismiss:function(){btn.disabled=false;btn.textContent=oldText;showMsg('Checkout was closed. No job was posted and no payment was confirmed.','notice');}},
+      };
+      const checkout=new window.Razorpay(options);
+      checkout.on('payment.failed',function(response){showMsg(response.error?.description || 'Payment failed. No job was posted. You can try again.','error');btn.disabled=false;btn.textContent=oldText;});
+      checkout.open();
+    } catch(err) {
+      showMsg(err.message || 'Could not submit this job. Please try again.','error');
+    } finally {
+      if(btn.textContent==='Checking free trial...' || btn.textContent==='Preparing Razorpay checkout...'){btn.disabled=false;btn.textContent=oldText;}
+    }
+  }
+  function bind(){
+    const old=$('submitJob'); if(!old)return;
+    const btn=old.cloneNode(true); old.replaceWith(btn);
+    btn.textContent='Continue — Free Trial / ₹299';
+    btn.addEventListener('click',async e=>{e.preventDefault();e.stopImmediatePropagation();await submitJob(btn);},true);
+    const payCard=$('quickPaymentCard');
+    if(payCard){payCard.onclick=()=>{if(window.openModal)window.openModal('featuredModal');else $('featuredModal')?.classList.remove('hidden');};payCard.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();payCard.click();}};}
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
+</script>
+
+</body>
 </html>
 <!-- Targeted fixes: only the buttons/errors reported by the owner -->
 <script id="km-targeted-button-fixes-v6">

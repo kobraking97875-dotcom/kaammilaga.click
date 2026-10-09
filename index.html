@@ -312,6 +312,42 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 #kmGoogleLoginBtn{max-width:440px;margin:0 auto}
 #kmMemberDashboard{scroll-margin-top:90px}
 @media(max-width:600px){#kmGoogleGate{width:calc(100% - 20px)!important;padding:10px!important;margin:14px auto!important}#kmGoogleGate .km-gate-card{padding:17px!important}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr!important}}
+
+/* Full-screen responsive Google login page: edge-to-edge on phones and desktop */
+#kmGoogleGate{
+  box-sizing:border-box!important;
+  width:100vw!important;
+  max-width:none!important;
+  margin:0!important;
+  min-height:100vh!important;
+  min-height:100svh!important;
+  padding:clamp(12px,2.5vw,36px)!important;
+  border-radius:0!important;
+  align-items:stretch!important;
+  justify-content:center!important;
+}
+#kmGoogleGate .km-gate-card{
+  box-sizing:border-box!important;
+  width:100%!important;
+  max-width:none!important;
+  min-height:calc(100vh - 2 * clamp(12px,2.5vw,36px))!important;
+  min-height:calc(100svh - 2 * clamp(12px,2.5vw,36px))!important;
+  padding:clamp(18px,3vw,42px)!important;
+  border-radius:clamp(12px,1.5vw,22px)!important;
+}
+#kmGoogleGate .km-gate-info{max-width:none!important}
+#kmGoogleGate #kmLiveHiringShowcase{width:100%!important;max-width:none!important;box-sizing:border-box!important}
+#kmGoogleGate .km-live-showcase-grid{width:100%!important}
+@media(min-width:900px){
+  #kmGoogleGate .km-gate-card{padding:clamp(28px,3vw,56px)!important}
+  #kmGoogleGate h1{font-size:clamp(28px,2.8vw,44px)!important}
+  #kmGoogleGate .km-live-showcase-head h2{font-size:clamp(28px,2.3vw,38px)!important}
+}
+@media(max-width:600px){
+  #kmGoogleGate{padding:8px!important}
+  #kmGoogleGate .km-gate-card{min-height:calc(100svh - 16px)!important;padding:16px!important;border-radius:14px!important}
+}
+
 </style>
 <body>
 <div id="toast" class="toast"></div>
@@ -1035,8 +1071,12 @@ document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if
 function msg(id,text,type="notice"){const x=$(id); if(x)x.innerHTML='<div class="notice '+type+'">'+text+'</div>'}
 
 async function supa(path, options={}){
+  // Explicitly target the existing public schema. This prevents PostgREST
+  // from resolving jobs as api.jobs when the project's default schema differs.
   const headers=Object.assign({
     "apikey":SUPABASE_ANON_KEY,
+    "Accept-Profile":"public",
+    "Content-Profile":"public",
     "Content-Type":"application/json"
   },options.headers||{});
   return fetch(SUPABASE_URL+"/rest/v1/"+path,Object.assign({},options,{headers}));
@@ -3135,7 +3175,13 @@ if(document.getElementById("ownerReqSaveEdit")){
   function setMsg(id,text,type){try{if(typeof window.msg==='function')window.msg(id,text,type);else if($(id))$(id).innerHTML='<div class="notice '+(type||'')+'">'+String(text)+'</div>';}catch(_){} }
   function timeoutFetch(input,options={},ms=TIMEOUT){
     const c=new AbortController(); const t=setTimeout(()=>c.abort(),ms);
-    return fetch(input,Object.assign({},options,{signal:c.signal})).finally(()=>clearTimeout(t));
+    const url=typeof input==='string'?input:(input&&input.url)||'';
+    let opts=options;
+    if(url.includes('/rest/v1/')){
+      const headers=Object.assign({'Accept-Profile':'public','Content-Profile':'public'},options.headers||{});
+      opts=Object.assign({},options,{headers});
+    }
+    return fetch(input,Object.assign({},opts,{signal:c.signal})).finally(()=>clearTimeout(t));
   }
   async function parseResp(r){
     const raw=await r.text(); let data={}; try{data=raw?JSON.parse(raw):{}}catch(_){data={raw}}
@@ -4722,7 +4768,13 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
     };
   }
   async function callBackend(token, payload) {
-    const r = await fetch(endpoint, {method:'POST', headers:{'Authorization':'Bearer '+token,'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(payload)});
+    let r;
+    try {
+      r = await fetch(endpoint, {method:'POST', mode:'cors', headers:{'Authorization':'Bearer '+token,'apikey':SUPABASE_ANON_KEY,'Content-Type':'application/json','Accept':'application/json'}, body:JSON.stringify(payload)});
+    } catch (networkError) {
+      console.error('KaamMilega job-posting Edge Function network/CORS error:', networkError);
+      throw new Error('Could not reach the job-posting service (network/CORS). The Supabase razorpay-job-posting Edge Function must be deployed with the updated CORS headers. Check that the function is deployed and its URL is correct, then try again.');
+    }
     const raw = await r.text(); let d={}; try{d=raw?JSON.parse(raw):{}}catch(_){}
     if(!r.ok) { const e=new Error(d.error || d.message || raw || ('Request failed (HTTP '+r.status+')')); e.status=r.status; e.code=d.code || ''; throw e; }
     return d;
@@ -4807,7 +4859,7 @@ body.km-auth-locked{overflow:hidden!important}
  let loading=false,lastUserId='';
  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  async function request(path,token){
-   const headers={'apikey':KEY,'Accept':'application/json'};if(token)headers.Authorization='Bearer '+token;
+   const headers={'apikey':KEY,'Accept':'application/json','Accept-Profile':'public','Content-Profile':'public'};if(token)headers.Authorization='Bearer '+token;
    const r=await fetch(SUPA+'/rest/v1/'+path,{headers});
    let data;try{data=await r.json()}catch(_){data=[]}
    if(!r.ok)throw new Error(data?.message||data?.hint||('HTTP '+r.status));return data;
@@ -5063,7 +5115,7 @@ body.km-auth-locked{overflow:hidden!important}
         if(email && email!=='kaammilaga.official@gmail.com') throw new Error('This account is not authorized for Owner publishing.');
         const base=(window.SUPABASE_URL||SUPABASE_URL)+'/rest/v1/company_requirements';
         const api=(window.SUPABASE_ANON_KEY||SUPABASE_ANON_KEY);
-        const send=async t=>fetch(base,{method:'POST',headers:{'apikey':api,'Authorization':'Bearer '+t,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(body)});
+        const send=async t=>fetch(base,{method:'POST',headers:{'apikey':api,'Authorization':'Bearer '+t,'Accept-Profile':'public','Content-Profile':'public','Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(body)});
         let r=await send(token);
         if(r.status===401 && typeof window.getSession==='function'){
           token=await window.getSession();

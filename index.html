@@ -833,6 +833,17 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </div>
 <div class="notice" style="margin-top:18px"><b>Owner:</b> Virjul Kumar Yadav · <b>Email:</b> kaammilaga.official@gmail.com</div>
 <div id="ownerPanelMsg"></div>
+<div class="owner-control-card km-owner-publish-card" style="margin:14px 0;background:#f8fbff;border-color:#bfdbfe">
+  <span class="owner-badge">OWNER PUBLISHING</span>
+  <h3>Post New Listings</h3>
+  <p class="muted">Only the authorized owner can open and publish these company listings.</p>
+  <div class="km-owner-publish-actions">
+    <button class="btn" id="kmOwnerPostJob" type="button">Post a Job</button>
+    <button class="btn orange" id="kmOwnerPostUrgent" type="button">Post Urgent Hiring</button>
+    <button class="btn secondary" id="kmOwnerPostCompany" type="button">Post Company Hiring</button>
+  </div>
+  <div id="kmOwnerPublishMsg" aria-live="polite"></div>
+</div>
 <div class="owner-control-grid" style="margin-bottom:16px">
   <div class="owner-control-card"><span class="owner-badge">JOB POSTS</span><h3>Manage Jobs</h3><p class="muted">Confirm, activate, update, complete or delete all job posts.</p><button class="btn" id="ownerJobsManageBtn" type="button">Manage Jobs</button></div>
   <div class="owner-control-card"><span class="owner-badge">COMPANY REQUIREMENTS</span><h3>Manage Company Requirements</h3><p class="muted">Complete, update, reopen or delete company worker requirements.</p><button class="btn" id="ownerRequirementsManageBtn" type="button">Manage Company</button></div>
@@ -4480,8 +4491,9 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
   window.addEventListener('storage',function(e){if(e.key===KEY){renderPublic();renderOwner()}});
 })();
 </script>
-\n
-<!-- KAAMMILEGA-ID-CARD-FUNCTIONALITY-FINAL -->\n<script>
+
+<!-- KAAMMILEGA-ID-CARD-FUNCTIONALITY-FINAL -->
+<script>
 (function(){
   'use strict';
   const $=id=>document.getElementById(id);
@@ -4742,34 +4754,69 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
 </section>
 <script id="km-certificate-functionality">
 (()=>{const $=id=>document.getElementById(id);const fields={name:'kmCertName',dob:'kmCertDob',aadhaar:'kmCertAadhaar',address:'kmCertAddress',skill:'kmCertSkill',experience:'kmCertExperience',company:'kmCertCompany',issue:'kmCertIssue'};const esc=s=>String(s||'Not provided').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const fmt=v=>{if(!v)return 'Not provided';const d=new Date(v+'T00:00:00');return isNaN(d)?v:d.toLocaleDateString('en-IN')};function render(){for(const [k,id] of Object.entries(fields)){const el=document.querySelector('[data-cert="'+k+'"]');if(el)el.textContent=k==='dob'||k==='issue'?fmt($(id).value):($(id).value.trim()||'Not provided')}$('kmCertMsg').textContent='Certificate preview updated. Check details before downloading.'}$('kmCertIssue').value=new Date().toISOString().slice(0,10);$('kmCertCreate').addEventListener('click',render);$('kmCertDownload').addEventListener('click',async()=>{render();const node=$('kmCertificatePreview');const w=window.open('','_blank');if(!w){$('kmCertMsg').textContent='Allow pop-ups to print/save the certificate as PDF.';return}w.document.write('<html><head><title>KaamMilega Worker Certificate</title><style>body{font-family:Arial;padding:20px}#kmCertificatePreview{background:white;color:#172033;border:8px double #153477;padding:26px;min-height:520px;position:relative}h2{text-align:center;color:#153477}.km-cert-sub{text-align:center;color:#166534;font-weight:bold}.km-cert-details{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0;font-size:13px}.km-cert-details div{border-bottom:1px solid #ddd;padding:6px}.km-cert-stamp{position:absolute;right:18px;bottom:90px;width:120px;height:120px;object-fit:contain}.km-cert-sign{position:absolute;left:28px;bottom:22px;width:170px;height:72px;object-fit:contain}.km-cert-footer{position:absolute;bottom:18px;right:18px;text-align:right;font-size:11px}@media print{@page{size:A4 landscape;margin:10mm}}</style></head><body>'+node.outerHTML+'<script>window.onload=()=>window.print()<\/script>
-<script id="km-footer-bottom-layout-fix">
+<style id="km-layout-owner-fixes">
+/* Prevent mobile horizontal overflow and clipped modal/form content. */
+html,body{max-width:100%;overflow-x:hidden}
+*,*::before,*::after{box-sizing:border-box}
+img,video,canvas,iframe{max-width:100%}
+input,select,textarea{min-width:0;max-width:100%}
+.row,.cards,.footer-grid,.owner-grid,.owner-control-grid{min-width:0}
+.row>*{min-width:0}
+.modal{overflow-y:auto;overflow-x:hidden;align-items:center}
+.modalbox,.modal-card{width:min(100%,980px);max-width:calc(100vw - 24px);max-height:calc(100dvh - 24px);overflow:auto;overflow-wrap:anywhere}
+@media(max-width:640px){.modal{padding:12px;align-items:flex-start}.modalbox,.modal-card{padding:16px;max-width:100%;margin:auto}.row,.cards,.footer-grid{grid-template-columns:minmax(0,1fr)!important}.nav{flex-wrap:wrap;padding:10px 12px}.navlinks{max-width:100%;flex-wrap:wrap}.hero h1{font-size:clamp(27px,7vw,40px)}.section{padding:24px 12px}.km-owner-publish-actions{display:grid;grid-template-columns:minmax(0,1fr)}.km-owner-publish-actions .btn{width:100%}}
+.km-owner-publish-actions{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0}
+footer{clear:both;position:relative;display:block;width:100%;margin-top:0;overflow-wrap:anywhere}
+footer .section{max-width:1150px}
+</style>
+<script id="km-owner-publish-and-layout-fix">
 (function(){
-  function moveFooter(){
-    const footer=document.querySelector('body > footer');
-    const certificate=document.getElementById('kmCertificateSection');
-    if(footer && certificate && certificate.parentNode){
-      certificate.parentNode.insertBefore(footer, certificate.nextSibling);
-    }
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',moveFooter,{once:true});
-  else moveFooter();
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const OWNER='kaammilaga.official@gmail.com';
+ async function requireOwner(){
+   let user=null;
+   try{user=typeof window.getOwnerUser==='function'?await window.getOwnerUser():null;}catch(e){}
+   if(user && String(user.email||'').toLowerCase()===OWNER)return true;
+   const msg=$('kmOwnerPublishMsg');
+   if(msg){msg.className='notice error';msg.textContent='Owner login required. Please login with the authorized owner account first.';}
+   if(typeof window.openModal==='function')window.openModal('ownerLoginModal');
+   else $('ownerLoginModal')?.classList.remove('hidden');
+   return false;
+ }
+ function openOwnerForm(modalId){
+   requireOwner().then(ok=>{
+     if(!ok)return;
+     $('ownerPanelModal')?.classList.add('hidden');
+     if(typeof window.openModal==='function')window.openModal(modalId);
+     else $(modalId)?.classList.remove('hidden');
+   });
+ }
+ $('kmOwnerPostJob')?.addEventListener('click',()=>openOwnerForm('jobModal'));
+ $('kmOwnerPostUrgent')?.addEventListener('click',()=>openOwnerForm('urgentModal'));
+ $('kmOwnerPostCompany')?.addEventListener('click',()=>openOwnerForm('ownerRequirementModal'));
+ // Block direct submission of owner-only hiring forms unless owner session is valid.
+ // Existing payment and form handlers are preserved and run after this check.
+ function guardButton(id){
+   const old=$(id);if(!old)return;
+   let replay=false;
+   old.addEventListener('click',function(e){
+     if(replay){replay=false;return;}
+     e.preventDefault();e.stopImmediatePropagation();
+     requireOwner().then(ok=>{if(ok){replay=true;old.click();}});
+   },true);
+ }
+ guardButton('submitUrgent');
+ guardButton('saveRequirement');
+ // Keep the existing job/payment handler unchanged; the owner-only entry point is inside Owner Panel.
+ // Remove any literal escaped newline fragments accidentally rendered as page text.
+ document.querySelectorAll('body *').forEach(el=>{
+   if(el.children.length===0 && el.textContent && /^\\n+$/.test(el.textContent.trim()))el.remove();
+ });
 })();
-</script>
-</body></html>');w.document.close()});$('kmCertShare').addEventListener('click',async()=>{render();const text='KaamMilega Worker Certificate for '+($('kmCertName').value.trim()||'worker')+'. Please see the downloaded certificate for profile details.';if(navigator.share){try{await navigator.share({title:'KaamMilega Worker Certificate',text})}catch(e){}}else{try{await navigator.clipboard.writeText(text);$('kmCertMsg').textContent='Certificate summary copied. Download the certificate to share its file.'}catch(e){$('kmCertMsg').textContent='Use Download Certificate, then share the saved file.'}}});const ownerBtn=$('kmOwnerCertificateManage');if(ownerBtn)ownerBtn.addEventListener('click',()=>{document.getElementById('kmCertificateSection')?.scrollIntoView({behavior:'smooth'});document.getElementById('ownerPanelModal')?.classList.add('hidden')});const urgent=$('kmOwnerUrgentManage');if(urgent)urgent.addEventListener('click',()=>{const b=$('ownerRequirementsManageBtn');if(b)b.click()});})();
 </script>
 
-<script id="km-footer-bottom-layout-fix">
-(function(){
-  function moveFooter(){
-    const footer=document.querySelector('body > footer');
-    const certificate=document.getElementById('kmCertificateSection');
-    if(footer && certificate && certificate.parentNode){
-      certificate.parentNode.insertBefore(footer, certificate.nextSibling);
-    }
-  }
-  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',moveFooter,{once:true});
-  else moveFooter();
-})();
+</body></html>');w.document.close()});$('kmCertShare').addEventListener('click',async()=>{render();const text='KaamMilega Worker Certificate for '+($('kmCertName').value.trim()||'worker')+'. Please see the downloaded certificate for profile details.';if(navigator.share){try{await navigator.share({title:'KaamMilega Worker Certificate',text})}catch(e){}}else{try{await navigator.clipboard.writeText(text);$('kmCertMsg').textContent='Certificate summary copied. Download the certificate to share its file.'}catch(e){$('kmCertMsg').textContent='Use Download Certificate, then share the saved file.'}}});const ownerBtn=$('kmOwnerCertificateManage');if(ownerBtn)ownerBtn.addEventListener('click',()=>{document.getElementById('kmCertificateSection')?.scrollIntoView({behavior:'smooth'});document.getElementById('ownerPanelModal')?.classList.add('hidden')});const urgent=$('kmOwnerUrgentManage');if(urgent)urgent.addEventListener('click',()=>{const b=$('ownerRequirementsManageBtn');if(b)b.click()});})();
 </script>
 </body>
 </html>

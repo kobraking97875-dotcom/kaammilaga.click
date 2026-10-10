@@ -4777,13 +4777,38 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
     const w=window.open('','_blank');
     if(!w){if(m)m.textContent='Allow pop-ups for this website, then click Download Certificate again.';return;}
     const printHtml=`<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>KaamMilega Worker Certificate</title><style>
-      *{box-sizing:border-box}body{font-family:Arial,sans-serif;padding:18px;color:#172033;background:#fff}
-      #kmCertificatePreview{background:white;color:#172033;border:8px double #153477;padding:26px;min-height:520px;position:relative;box-shadow:none}
-      #kmCertificatePreview h2{text-align:center;color:#153477;margin:8px 0}.km-cert-sub{text-align:center;color:#166534;font-weight:bold}
-      .km-cert-details{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:20px 0;font-size:13px}.km-cert-details div{border-bottom:1px solid #ddd;padding:6px}
-      .km-cert-stamp{position:absolute;right:18px;bottom:90px;width:120px;height:120px;object-fit:contain}.km-cert-sign{position:absolute;left:28px;bottom:22px;width:170px;height:72px;object-fit:contain}.km-cert-footer{position:absolute;bottom:18px;right:18px;text-align:right;font-size:11px}
-      @page{size:A4 landscape;margin:10mm}@media print{body{padding:0}#kmCertificatePreview{min-height:180mm;break-inside:avoid}}
-    </style></head><body>${node.outerHTML}<script>window.addEventListener('load',()=>setTimeout(()=>window.print(),300));<\/script></body></html>`;
+      *{box-sizing:border-box}body{font-family:Georgia,'Times New Roman',serif;padding:0;color:#172033;background:#fff}
+      #kmCertificatePreview{background:white;color:#172033;border:7px double #153477;padding:22px 26px;min-height:265mm;position:relative;box-shadow:none;max-width:190mm;margin:0 auto}
+      #kmCertificatePreview h2{text-align:center;color:#153477;margin:7px 0;font-size:25px}.km-cert-sub{text-align:center;color:#166534;font-weight:bold;margin:6px 0 10px}
+      #kmPrintVerified{text-align:center;font-size:21px;font-weight:bold;color:#111;margin:8px 0 10px}#kmPrintIssue{text-align:center;font-size:21px;font-weight:bold;color:#153477;margin:0 0 14px}
+      .km-cert-details{display:grid;grid-template-columns:1fr 1fr;gap:5px 12px;margin:14px 0;font-size:13px}.km-cert-details div{border-bottom:1px solid #ddd;padding:6px}
+      #kmPrintPermit{text-align:center;font-size:23px;font-weight:bold;margin:18px 0 10px;color:#111}#kmPrintTerms h3,#kmPrintSafety h3{font-size:16px;margin:8px 0 3px}#kmPrintTerms,#kmPrintSafety{font-size:13px;line-height:1.25}#kmPrintTerms ol,#kmPrintSafety ul{margin:3px 0 8px;padding-left:22px}
+      #kmPrintDisclaimer{font-size:12px;line-height:1.4;margin-top:14px;padding-bottom:95px}
+      .km-cert-stamp{position:absolute;left:30px;bottom:25px;width:105px;height:105px;object-fit:contain}.km-cert-footer{position:absolute;right:30px;bottom:32px;text-align:center;font-size:12px;border-bottom:1px solid #bbb;min-width:130px;padding-bottom:5px}
+      @page{size:A4 portrait;margin:8mm}@media print{body{padding:0}#kmCertificatePreview{min-height:280mm;break-inside:avoid}}
+    </style></head><body>${node.outerHTML}<script>
+    window.addEventListener('load',()=>{const c=document.getElementById('kmCertificatePreview');if(c){const ps=c.querySelectorAll('p');if(ps[0])ps[0].remove();if(ps[0]){ps[0].insertAdjacentHTML('afterend','<div id="kmPrintIssue">worker certificate issue</div>');}
+    const sub=c.querySelector('.km-cert-sub');if(sub)sub.insertAdjacentHTML('afterend','<div id="kmPrintVerified">🟢 verified by <b>kaammilega</b></div>');
+    const details=c.querySelector('.km-cert-details');if(details)details.insertAdjacentHTML('afterend','<div id="kmPrintPermit">All India permit certificate</div><section id="kmPrintTerms"><h3>Terms &amp; Conditions</h3><ol><li>This certificate is valid across India for standard industrial and construction worksites.</li><li>Profile information is self-declared and verified by KaamMilega.</li></ol></section><section id="kmPrintSafety"><h3>Safety Guidelines</h3><ul><li>Always wear appropriate Personal Protective Equipment (PPE) at all times.</li><li>Strictly adhere to on-site safety protocols and operational guidelines.</li></ul></section>');
+    const disclaimer=c.querySelector('p[style*="font-size:12px"]');if(disclaimer){disclaimer.id='kmPrintDisclaimer';disclaimer.textContent='This is a user-provided employment profile summary. KaamMilega does not independently certify identity, experience or employment unless separately verified.';}
+    }setTimeout(()=>window.print(),350)});<\/script>
+<!-- Footer/banner placed after Worker Certificate as requested -->
+<script id="km-footer-after-certificate">
+(function(){
+  function placeFooter(){
+    const cert=document.getElementById('kmCertificateSection');
+    if(!cert) return;
+    let footer=document.querySelector('footer');
+    if(!footer){
+      footer=document.createElement('footer');
+      footer.innerHTML='<div style="max-width:1150px;margin:0 auto 18px;padding:12px 14px;border:1px solid #334155;border-radius:10px;color:#cbd5e1"><b>KaamMilega</b> is an independent employment marketplace connecting workers and employers. It is not a government department or government agency.</div><div class="section footer-grid" style="padding:0"><div><div class="footer-brand">Kaam<span>Milega</span></div><p>Jobs, skills and employment opportunities in one place.</p></div><div><b>Customer Support</b><p>Email: <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a></p><p>Support for employers and workers.</p></div><div><b>Trust &amp; Safety</b><p>Keep payments and account credentials secure. Never share OTPs or passwords with anyone.</p></div></div><div class="footer-bottom">© 2026 KaamMilega. All rights reserved. · <a href="#aboutKaamMilega">About</a> · <a href="#howItWorks">How It Works</a> · <a href="#privacyPolicy">Privacy Policy</a> · <a href="#terms">Terms</a> · <a href="#faq">FAQ</a> · <a href="#contactInfo">Contact</a> · Hiring decisions are made by employers.</div>';
+    }
+    cert.insertAdjacentElement('afterend',footer);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',placeFooter,{once:true}); else placeFooter();
+})();
+</script>
+</body></html>`;
     w.document.open();w.document.write(printHtml);w.document.close();
     if(m)m.textContent='Certificate opened for printing. In the print window choose “Save as PDF” to download it.';
   }

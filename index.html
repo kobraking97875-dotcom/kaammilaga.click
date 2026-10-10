@@ -298,6 +298,43 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 .km-mega-card:after{content:'Open to enter details → see your result';display:block;margin-top:10px;font-size:11px;opacity:.65}
 </style>
 <style id="km-jobs-unavailable-style">.km-jobs-unavailable{max-width:100%;padding:18px}.km-jobs-unavailable h3{margin-top:0}</style>
+
+<style id="km-live-rate-banner-style">
+#kmLiveRateBanner{max-width:1114px;margin:18px auto 28px;padding:0 18px;box-sizing:border-box}
+#kmLiveRateBanner .km-live-ad{position:relative;isolation:isolate;overflow:hidden;display:grid;grid-template-columns:minmax(0,1.5fr) minmax(190px,.7fr);gap:22px;align-items:center;padding:clamp(20px,3.5vw,34px);border-radius:20px;background:linear-gradient(115deg,#071b3c 0%,#0757b8 58%,#0d9488 100%);color:#fff;box-shadow:0 14px 34px #0b63ce20}
+#kmLiveRateBanner .km-live-ad:before{content:"";position:absolute;z-index:-1;width:230px;height:230px;right:13%;top:-155px;border:28px solid #ffffff14;border-radius:50%}
+#kmLiveRateBanner .km-live-ad:after{content:"";position:absolute;z-index:-1;width:145px;height:145px;right:-50px;bottom:-105px;border:25px solid #ffffff14;border-radius:50%}
+#kmLiveRateBanner .km-live-badge{display:inline-flex;align-items:center;gap:7px;margin-bottom:10px;font-size:11px;font-weight:900;letter-spacing:1.4px;color:#c9f7e8}
+#kmLiveRateBanner .km-live-dot{width:8px;height:8px;border-radius:50%;background:#4ade80;box-shadow:0 0 0 4px #4ade8025;animation:kmLivePulse 1.8s infinite}
+#kmLiveRateBanner h2{color:#fff;font-size:clamp(23px,3vw,36px);line-height:1.12;margin:0 0 10px;max-width:680px}
+#kmLiveRateBanner p{color:#e5f2ff;font-size:14px;line-height:1.6;margin:0 0 17px;max-width:650px}
+#kmLiveRateBanner .km-live-actions{display:flex;flex-wrap:wrap;gap:10px}
+#kmLiveRateBanner .km-live-actions button,#kmLiveRateBanner .km-live-actions a{display:inline-flex;align-items:center;justify-content:center;border:1px solid #ffffff55;border-radius:10px;padding:11px 15px;font-size:13px;font-weight:800;text-decoration:none;cursor:pointer}
+#kmLiveRateBanner .km-live-primary{background:#fff;color:#0b4da6!important;border-color:#fff!important}
+#kmLiveRateBanner .km-live-secondary{background:#ffffff12;color:#fff}
+#kmLiveRateBanner .km-live-stat{background:#ffffffed;color:#17345c;border-radius:15px;padding:18px;box-shadow:0 10px 24px #001c4430;transform:rotate(1deg)}
+#kmLiveRateBanner .km-live-stat-top{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px;font-size:11px;font-weight:900;color:#426080}
+#kmLiveRateBanner .km-live-stat-top span{background:#dcfce7;color:#166534;padding:5px 8px;border-radius:999px}
+#kmLiveRateBanner .km-live-stat strong{display:block;font-size:25px;line-height:1.15;margin-bottom:5px;color:#12345a}
+#kmLiveRateBanner .km-live-stat small{display:block;font-size:12px;color:#526780;line-height:1.5}
+#kmLiveRateBanner .km-live-minirow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+#kmLiveRateBanner .km-live-minirow div{background:#edf5ff;border-radius:9px;padding:10px;font-size:11px;font-weight:800;color:#28517e}
+#kmLiveRateBanner .km-live-minirow span{display:block;margin-top:4px;font-size:10px;font-weight:500;color:#64748b}
+@keyframes kmLivePulse{50%{opacity:.45;transform:scale(.88)}}
+@media(max-width:600px){#kmLiveRateBanner{padding:0 12px;margin:14px auto 22px}#kmLiveRateBanner .km-live-ad{grid-template-columns:1fr;gap:17px;padding:22px 18px;border-radius:17px}#kmLiveRateBanner .km-live-stat{transform:none;padding:15px}#kmLiveRateBanner .km-live-stat strong{font-size:23px}#kmLiveRateBanner .km-live-actions button,#kmLiveRateBanner .km-live-actions a{padding:10px 12px;font-size:12px}}
+</style>
+
+
+<style id="kaammilega-hiring-desk-full-width-fix">
+/* Expand the marked Hiring Desk area to use the full available page width. */
+#hiringDesk { width:100%; max-width:none; box-sizing:border-box; }
+#hiringDesk > .cards { display:grid !important; grid-template-columns:minmax(0,1fr) !important; width:100% !important; max-width:none !important; gap:16px !important; }
+#hiringDesk > .cards > .card { width:100% !important; max-width:none !important; min-width:0 !important; box-sizing:border-box !important; grid-column:1 / -1 !important; }
+#hiringDesk .row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; width:100%; }
+#hiringDesk .formgroup, #hiringDesk .input, #hiringDesk textarea { width:100%; min-width:0; box-sizing:border-box; }
+@media (max-width:640px) { #hiringDesk .row { grid-template-columns:minmax(0,1fr); } #hiringDesk > .cards > .card { padding:18px; } }
+</style>
+
 </head>
 
 <style id="km-google-gate-style">
@@ -523,6 +560,26 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <span class="eyebrow">JOB RATINGS & COMMENTS</span><h2 style="margin:5px 0">Worker & Employer Reviews</h2><p class="muted">Ratings and comments submitted on KaamMilega jobs appear here.</p>
 <div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn ghost" id="publicReviewsRefresh" type="button">Refresh Ratings</button></div><div id="publicReviews" class="cards"><div class="card">Loading ratings...</div></div>
 <div id="publicRatingAction" class="notice" style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap"><div><b>Want to rate your job?</b><div class="muted" id="publicRatingStatus">Login to see your posted job and the rating button.</div></div><button class="btn secondary" id="publicRateJobBtn" type="button">Rate / Comment</button></div>
+</section>
+
+<section id="kmLiveRateBanner" aria-label="KaamMilega live promotional banner">
+  <div class="km-live-ad">
+    <div>
+      <div class="km-live-badge"><span class="km-live-dot" aria-hidden="true"></span> KAAMMILEGA • LIVE PROMOTION</div>
+      <h2 id="kmLiveBannerTitle">Find work. Hire skilled people. Move forward.</h2>
+      <p id="kmLiveBannerCopy">Workers can discover opportunities by skill and city. Employers can post vacancies and connect with people who match their needs.</p>
+      <div class="km-live-actions">
+        <button class="km-live-primary" type="button" data-open="jobModal" id="kmLiveBannerPost">Post a Job ↗</button>
+        <a class="km-live-secondary" href="#jobs" id="kmLiveBannerExplore">Explore Jobs</a>
+      </div>
+    </div>
+    <div class="km-live-stat" aria-live="polite">
+      <div class="km-live-stat-top"><strong style="font-size:11px;margin:0;color:#426080">KAAMMILEGA LIVE</strong><span>● ACTIVE</span></div>
+      <strong id="kmLiveBannerViews">Connecting…</strong>
+      <small>Banner views counted across visitors after the one-time database setup.</small>
+      <div class="km-live-minirow"><div>For Workers<span>Search by skill &amp; city</span></div><div>For Employers<span>Post vacancies online</span></div></div>
+    </div>
+  </div>
 </section>
 
 <section class="info-section anchor-offset" id="aboutKaamMilega">
@@ -4628,6 +4685,43 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
     if(payCard){payCard.onclick=()=>{if(window.openModal)window.openModal('featuredModal');else $('featuredModal')?.classList.remove('hidden');};payCard.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();payCard.click();}};}
   }
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind,{once:true});else bind();
+})();
+</script>
+
+
+<script id="km-live-rate-banner-script">
+(function(){
+  const viewNode=document.getElementById('kmLiveBannerViews');
+  if(!viewNode) return;
+  const base=(window.SUPABASE_URL||'https://cvlinhjhyxuntbbxrrxq.supabase.co');
+  const key=(window.SUPABASE_ANON_KEY||'sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2');
+  const rpc=async(name)=>{
+    try{
+      const res=await fetch(base+'/rest/v1/rpc/'+name,{method:'POST',headers:{'apikey':key,'Authorization':'Bearer '+key,'Content-Type':'application/json'},body:'{}'});
+      if(!res.ok) throw new Error('RPC not ready');
+      return await res.json();
+    }catch(_){return null;}
+  };
+  rpc('increment_kaammilega_rate_banner_view').then(n=>{
+    if(typeof n==='number'&&Number.isFinite(n)) viewNode.textContent=n.toLocaleString()+' views';
+    else viewNode.textContent='Count setup pending';
+  });
+  const post=document.getElementById('kmLiveBannerPost');
+  if(post) post.addEventListener('click',()=>{rpc('increment_kaammilega_rate_banner_click');});
+  const explore=document.getElementById('kmLiveBannerExplore');
+  if(explore) explore.addEventListener('click',()=>{rpc('increment_kaammilega_rate_banner_click');});
+  // Rotate the promotional copy while keeping all existing site features intact.
+  const slides=[
+    {title:'Find work. Hire skilled people. Move forward.',copy:'Workers can discover opportunities by skill and city. Employers can post vacancies and connect with people who match their needs.'},
+    {title:'Need workers urgently? Start with KaamMilega.',copy:'Share the role, location and number of workers you need. Keep hiring details clear and confirm every offer directly with the employer.'},
+    {title:'Your next opportunity could start here.',copy:'Explore job listings, compare location and salary details, and contact employers before making a decision.'}
+  ];
+  let i=0;
+  window.setInterval(()=>{
+    i=(i+1)%slides.length;
+    const title=document.getElementById('kmLiveBannerTitle'),copy=document.getElementById('kmLiveBannerCopy');
+    if(title&&copy){title.textContent=slides[i].title;copy.textContent=slides[i].copy;}
+  },8000);
 })();
 </script>
 

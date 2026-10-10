@@ -480,7 +480,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 </section>
 
 <section class="section">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2>Latest Jobs</h2><p class="muted">Employers get one free job post. After that, each post costs ₹299 for 30 days after owner approval. KaamMilega helps connect employers and workers but cannot guarantee hiring.</p><button class="btn secondary" data-open="jobModal">Post a Job</button></div>
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px"><h2>Latest Jobs</h2><p class="muted">Every job post costs ₹10 per day. Choose the listing duration before payment; the paid period starts after owner approval. KaamMilega helps connect employers and workers but cannot guarantee hiring.</p><button class="btn secondary" data-open="jobModal">Post a Job</button></div>
 <div id="jobs" class="cards"><div class="card">Loading jobs...</div></div>
 </section>
 
@@ -497,7 +497,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <section class="section">
 <h2>For Employers</h2>
 <div class="cards" id="employeeOptions">
-<div class="card"><h3>Post a Job</h3><p class="muted">Start your job post with ₹1 verification payment. Once the payment and owner approval flow is configured, approved posts can remain active for 30 days. Monthly auto-renewal must be authorized separately and can be cancelled.</p><button class="btn" data-open="jobModal">Post a Job · ₹1</button></div>
+<div class="card"><h3>Post a Job</h3><p class="muted">Post a job for ₹10 per day. Choose the listing duration and complete one-time payment; the paid period starts after owner approval.</p><button class="btn" data-open="jobModal">Post a Job · ₹10/day</button></div>
 </div>
 <div class="cards" id="kmCompanyHiringPlans" style="margin-top:16px">
 <div class="card"><h3>Company Hiring</h3><p class="muted">Submit your company worker requirement. ₹399 one-time verification; profile intended to activate for 60 days after verification.</p><button class="btn" type="button" data-open="urgentModal">Company Hiring · ₹399</button></div>
@@ -618,14 +618,14 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 
 <section class="info-section anchor-offset" id="safety">
   <span class="eyebrow">TRUST &amp; SAFETY</span><h2>Important checks before a job or payment</h2>
-  <div class="info-grid"><article class="info-card"><h3>Verify the opportunity</h3><p>Confirm the company name, job location, role, salary and joining details directly with the employer. Public vacancy information can become outdated when a position is filled.</p></article><article class="info-card"><h3>Protect account information</h3><p>Never share your login OTP, password, payment PIN or private account credentials with another person. KaamMilega support does not need your OTP or password to provide normal assistance.</p></article><article class="info-card"><h3>Understand payments</h3><p>Job posting after the free trial costs ₹299 for a 30-day listing period after owner approval. Payment does not guarantee hiring, applications or employment.</p></article></div>
+  <div class="info-grid"><article class="info-card"><h3>Verify the opportunity</h3><p>Confirm the company name, job location, role, salary and joining details directly with the employer. Public vacancy information can become outdated when a position is filled.</p></article><article class="info-card"><h3>Protect account information</h3><p>Never share your login OTP, password, payment PIN or private account credentials with another person. KaamMilega support does not need your OTP or password to provide normal assistance.</p></article><article class="info-card"><h3>Understand payments</h3><p>Job posting costs ₹10 per day for the duration selected by the employer. The paid listing period starts after owner approval. Payment does not guarantee hiring, applications or employment.</p></article></div>
   <p>For any suspicious communication, stop the conversation and contact KaamMilega through the support email shown on this website. Do not send money merely because a person claims to represent a company or KaamMilega.</p>
 </section>
 
 <section class="info-section anchor-offset" id="faq">
   <span class="eyebrow">FREQUENTLY ASKED QUESTIONS</span><h2>KaamMilega FAQ</h2>
   <div class="faq-item"><h3>Is KaamMilega a government job website?</h3><p>No. KaamMilega is an independent employment marketplace. It is not a government department or government agency. Users should verify any government-job claim through the relevant official government source.</p></div>
-  <div class="faq-item"><h3>Can I post a job for free?</h3><p>Every registered employer gets one free job post. After that, each job post costs ₹299 and is listed for 30 days after owner approval. Razorpay payment is required before a paid post is submitted.</p></div>
+  <div class="faq-item"><h3>How much does job posting cost?</h3><p>No free trial is available. Every job post costs ₹10 per day. Select the listing duration and pay through Razorpay before the job is submitted for owner review. The paid period starts after owner approval.</p></div>
   <div class="faq-item"><h3>Does KaamMilega guarantee a job?</h3><p>No. A listing or support request does not guarantee employment. The employer decides whether to interview or hire a candidate, and the worker should confirm the final terms directly with the employer.</p></div>
   <div class="faq-item"><h3>How can a company request multiple workers?</h3><p>Use Need Workers Urgently or the Company Hiring Requirements workflow. Provide the company name, number of workers, worker type, location, salary or rate and other relevant requirements so the request can be coordinated accurately.</p></div>
   <div class="faq-item"><h3>How can I contact support?</h3><p>Email <a href="mailto:kaammilaga.official@gmail.com">kaammilaga.official@gmail.com</a> for job posting, urgent hiring requirements, platform questions and general assistance.</p></div>
@@ -932,14 +932,15 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 <div class="row"><div class="formgroup"><label>Job Title</label><select id="jobTitle" class="input"><option value="">Select Job Title</option><option>MIG Welder</option><option>TIG Welder</option><option>Arc Welder</option><option>Welder Helper</option><option>Fitter</option><option>Electrician</option><option>Plumber</option><option>Fabricator</option><option>Machine Operator</option><option>Driver</option><option>Delivery Executive</option><option>Helper</option><option>Supervisor</option><option>Security Guard</option><option>Painter</option><option>Carpenter</option><option>Other Skilled Worker</option></select></div><div class="formgroup"><label>Category</label><input id="jobCategory" class="input" placeholder="Welder" readonly></div></div>
 <div class="row"><div class="formgroup"><label>City</label><input id="jobCity" class="input" placeholder="Ahmedabad"></div><div class="formgroup"><label>Salary</label><input id="jobSalary" class="input" placeholder="₹20,000/month"></div></div>
 <div class="row"><div class="formgroup"><label>Job Type</label><select id="jobType"><option>Full Time</option><option>Part Time</option><option>Contract</option><option>Daily Wage</option></select></div><div class="formgroup"><label>Contact Phone</label><input id="jobPhone" class="input" placeholder="Mobile / WhatsApp"></div></div>
+<div class="formgroup"><label>Listing Duration</label><select id="jobDays" class="input"><option value="1">1 day — ₹10</option><option value="7">7 days — ₹70</option><option value="30">30 days — ₹300</option><option value="60">60 days — ₹600</option><option value="90">90 days — ₹900</option><option value="180">180 days — ₹1,800</option><option value="365">365 days — ₹3,650</option></select><p class="muted" id="jobPriceNote">Total: ₹10 (₹10 per day). Listing duration starts after owner approval.</p></div>
 <div class="formgroup"><label>Description</label><textarea id="jobDescription" rows="4" placeholder="Job requirements..."></textarea></div>
-<button class="btn" id="submitJob">Publish Job</button><div id="jobMsg"></div>
+<button class="btn" id="submitJob">Pay ₹10 and Submit Job</button><div id="jobMsg"></div>
 </div></div>
 
 <!-- JOB POSTING PRICING INFO -->
 <div id="featuredModal" class="modal hidden"><div class="modalbox">
 <button class="close" data-close>×</button><h2>KaamMilega Job Posting Plan</h2>
-<div class="notice">1 free job post per registered employer. After the free trial, each job post costs ₹299. The listing stays active for 30 days after owner approval.</div>
+<div class="notice">No free trial. Every job post costs ₹10 per day. Select the duration before checkout; the paid listing period starts after owner approval.</div>
 <p class="muted">Payments are one-time per job post through Razorpay. No automatic recurring debit is taken. Payment does not guarantee applicants or hiring.</p>
 <button class="btn orange" type="button" data-open="jobModal">Post a Job</button>
 </div></div>
@@ -3454,7 +3455,7 @@ if(document.getElementById("ownerReqSaveEdit")){
     if(/find|search|job|काम|नौकरी/.test(s)) return 'Job find karne ke liye Search Jobs mein skill/job title aur City/Location enter karke Search Jobs dabaiye. Listing kholkar salary, location, employer aur vacancy details verify karein.';
     if(/urgent|worker|workers|company requirement|staff|मजदूर/.test(s)) return 'Company ko workers urgently chahiye to Need Workers Urgently ya Company Hiring Requirements workflow use karein. Worker type, number of workers, location, salary/rate aur joining details dena useful hai.';
     if(/post.*job|job.*post|vacancy|भर्ती/.test(s)) return 'Employer Post a Job se vacancy publish kar sakta hai. Job title, category, city, salary, job type, description aur contact details bharni hoti hain.';
-    if(/feature|featured|payment|पैसा|भुगतान/.test(s)) return 'Pehla job post free hai. Uske baad har job post ₹299 ka hai aur owner approval ke baad 30 din active rahega. Razorpay payment employment ya hiring ki guarantee nahi karta.';
+    if(/feature|featured|payment|पैसा|भुगतान/.test(s)) return 'Har job post ₹10 per day ka hai. Checkout se pehle duration select karein. Paid duration owner approval ke baad shuru hoti hai. Razorpay payment job ya hiring ki guarantee nahi karta.';
     if(/support|contact|email|help|मदद/.test(s)) return 'KaamMilega support email: kaammilaga.official@gmail.com';
     if(/login|signup|profile|account|password|otp/.test(s)) return 'Login / Sign Up se email aur password ke saath account access karein. OTP, password aur payment PIN kisi ke saath share na karein.';
     if(/safe|fraud|scam|security|सुरक्षित/.test(s)) return 'Job accept karne se pehle employer, location, salary, joining details verify karein. Job ke badle advance money, OTP, password ya payment PIN maangne par savdhan rahein.';
@@ -4628,7 +4629,7 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
   const $ = id => document.getElementById(id);
   const clean = v => String(v ?? '').trim();
   const escape = window.escapeHtml || (v => String(v ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c])));
-  const endpoint = 'https://cvlinhjhyxuntbbxrrxq.supabase.co/functions/v1/razorpay-job-posting';
+  const endpoint = 'https://cvlinhjhyxuntbbxrrxq.supabase.co/functions/v1/kaammilega-job-posting';
   function showMsg(text, type='notice') { const el=$('jobMsg'); if(el) el.innerHTML='<div class="notice '+type+'">'+escape(text)+'</div>'; }
   function readJob(btn) {
     const modal = btn.closest('.modal') || document;
@@ -4636,7 +4637,8 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
     return {
       title: val('jobTitle'), category: val('jobCategory'), city: val('jobCity'),
       salary: val('jobSalary'), job_type: val('jobType') || 'Full Time',
-      contact_phone: val('jobPhone'), description: val('jobDescription')
+      contact_phone: val('jobPhone'), description: val('jobDescription'),
+      days: Number(val('jobDays') || 1)
     };
   }
   async function callBackend(token, payload) {
@@ -4649,56 +4651,60 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
     const modal=btn.closest('.modal') || document;
     ['jobTitle','jobCategory','jobCity','jobSalary','jobPhone','jobDescription'].forEach(id=>{const x=modal.querySelector('#'+id)||$(id);if(x)x.value='';});
     const type=modal.querySelector('#jobType')||$('jobType'); if(type)type.value='Full Time';
+    const days=modal.querySelector('#jobDays')||$('jobDays'); if(days)days.value='1';
+    updateJobPrice();
+  }
+  function updateJobPrice(){
+    const daysEl=$('jobDays'); if(!daysEl)return;
+    const days=Number(daysEl.value||1), total=days*10;
+    const note=$('jobPriceNote'); if(note)note.textContent=`Total: ₹${total.toLocaleString('en-IN')} (₹10 per day). Listing duration starts after owner approval.`;
+    const btn=$('submitJob'); if(btn&&!btn.disabled)btn.textContent=`Pay ₹${total.toLocaleString('en-IN')} and Submit Job`;
   }
   async function submitJob(btn) {
     const token = await (window.getSession ? window.getSession() : null);
     if(!token){showMsg('Please log in first to post a job.','error');return;}
     const job=readJob(btn);
     if(!job.title || !job.category || !job.city){showMsg('Please select a job title and enter the city.','error');return;}
-    btn.disabled=true; const oldText=btn.textContent; btn.textContent='Checking free trial...';
+    const days=job.days;
+    if(!Number.isInteger(days)||days<1||days>365){showMsg('Please select a valid listing duration.','error');return;}
+    delete job.days;
+    btn.disabled=true; const oldText=btn.textContent; btn.textContent='Preparing payment...';
     try {
-      try {
-        const trial=await callBackend(token,{action:'trial',job});
-        showMsg(trial.message || 'Your free job post was submitted for owner review. The 30-day period starts after approval.','success');
-        clearJobForm(btn); if(window.loadJobs) await window.loadJobs();
-        return;
-      } catch(err) {
-        if(err.code!=='FREE_TRIAL_USED' && err.status!==409) throw err;
-      }
-      btn.textContent='Preparing Razorpay checkout...';
-      const order=await callBackend(token,{action:'create_order',job});
+      const order=await callBackend(token,{action:'create_order',job,days});
       if(!window.Razorpay) throw new Error('Razorpay checkout did not load. Please refresh the page and try again.');
       const user=window.getCurrentUser ? await window.getCurrentUser() : null;
+      const total=days*10;
       const options={
         key:order.key_id, amount:order.amount, currency:order.currency, name:'KaamMilega',
-        description:'₹299 · Job post for 30 days after approval', order_id:order.order_id,
+        description:`₹${total} · Job post for ${days} day(s) after owner approval`, order_id:order.order_id,
         prefill:{email:user?.email || ''}, theme:{color:'#1264c0'},
         handler:async function(response){
           btn.disabled=true;btn.textContent='Verifying payment...';
           try {
             const result=await callBackend(token,{action:'verify',razorpay_order_id:response.razorpay_order_id,razorpay_payment_id:response.razorpay_payment_id,razorpay_signature:response.razorpay_signature});
-            showMsg(result.message || 'Payment verified. Your job post was submitted for owner review; the 30-day period starts after approval.','success');
+            showMsg(result.message || 'Payment verified. Your job post was submitted for owner review; the paid period starts after approval.','success');
             clearJobForm(btn); if(window.loadJobs) await window.loadJobs();
           } catch(e) {
             showMsg((e.message || 'Payment verification is pending.')+' If money was deducted, do not pay again; contact kaammilaga.official@gmail.com with your Razorpay payment ID.','error');
-          } finally {btn.disabled=false;btn.textContent=oldText;}
+          } finally {btn.disabled=false;updateJobPrice();}
         },
-        modal:{ondismiss:function(){btn.disabled=false;btn.textContent=oldText;showMsg('Checkout was closed. No job was posted and no payment was confirmed.','notice');}},
+        modal:{ondismiss:function(){btn.disabled=false;updateJobPrice();showMsg('Checkout was closed. No job was posted and no payment was confirmed.','notice');}},
       };
       const checkout=new window.Razorpay(options);
-      checkout.on('payment.failed',function(response){showMsg(response.error?.description || 'Payment failed. No job was posted. You can try again.','error');btn.disabled=false;btn.textContent=oldText;});
+      checkout.on('payment.failed',function(response){showMsg(response.error?.description || 'Payment failed. No job was posted. You can try again.','error');btn.disabled=false;updateJobPrice();});
       checkout.open();
     } catch(err) {
       showMsg(err.message || 'Could not submit this job. Please try again.','error');
     } finally {
-      if(btn.textContent==='Checking free trial...' || btn.textContent==='Preparing Razorpay checkout...'){btn.disabled=false;btn.textContent=oldText;}
+      if(btn.textContent==='Preparing payment...'){btn.disabled=false;updateJobPrice();}
     }
   }
   function bind(){
     const old=$('submitJob'); if(!old)return;
     const btn=old.cloneNode(true); old.replaceWith(btn);
-    btn.textContent='Continue — Free Trial / ₹299';
+    btn.textContent='Continue — ₹10/day';
     btn.addEventListener('click',async e=>{e.preventDefault();e.stopImmediatePropagation();await submitJob(btn);},true);
+    const daysSelect=$('jobDays'); if(daysSelect)daysSelect.addEventListener('change',updateJobPrice); updateJobPrice();
     const payCard=$('quickPaymentCard');
     if(payCard){payCard.onclick=()=>{if(window.openModal)window.openModal('featuredModal');else $('featuredModal')?.classList.remove('hidden');};payCard.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();payCard.click();}};}
   }

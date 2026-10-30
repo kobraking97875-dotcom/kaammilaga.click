@@ -4393,7 +4393,7 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
  try{dark.checked=localStorage.getItem('km_theme')==='dark'}catch(e){}document.body.classList.toggle('km-dark',dark.checked);
  dark.addEventListener('change',()=>{document.body.classList.toggle('km-dark',dark.checked);try{localStorage.setItem('km_theme',dark.checked?'dark':'light')}catch(e){}});
  $('kmSettingsSearch').addEventListener('click',()=>{setOpen(false);const advanced=document.getElementById('advancedSearchModal');if(advanced){advanced.classList.remove('hidden');}else{document.getElementById('jobs')?.scrollIntoView({behavior:'smooth'});}});
- $('kmSettingsNotifications').addEventListener('click',()=>{setOpen(false);const target=document.getElementById('kmAlertSkill')||document.getElementById('kmAlertCity');if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.focus();}else{window.showToast?.('Job notifications are not enabled yet. Contact support for updates.');}});
+ $('kmSettingsNotifications').addEventListener('click',()=>{setOpen(false);window.kmOpenNotificationCenter?.();});
 })();
 </script>
 
@@ -4527,6 +4527,7 @@ function welcome(user){
   const name=(user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split("@")[0]||"").trim();
   const message="Welcome to KaamMilega"+(name?", "+name:"")+"! Find jobs and manage your profile.";
   if(typeof showToast==="function")showToast(message);
+  if(typeof window.kmAddSiteNotification==="function")window.kmAddSiteNotification("Welcome to KaamMilega",message);
   const center=byId("kmWelcomeNotification");
   if(center){center.textContent=message;center.hidden=false;}
 }
@@ -4559,6 +4560,91 @@ handleRecovery();
 })();
 </script>
 <style id="km-auth-experience-style">#kmSettingsLogout[hidden],#kmWelcomeNotification[hidden]{display:none!important}</style>
+
+<style id="km-notifications-v2-css">
+#kmNotifyBackdrop[hidden],#kmNotifyDialog[hidden]{display:none!important}
+#kmNotifyBackdrop{position:fixed;inset:0;background:#020617b8;z-index:120000}
+#kmNotifyDialog{position:fixed;z-index:120001;top:clamp(65px,12vh,120px);left:50%;transform:translateX(-50%);width:min(94vw,470px);max-height:78dvh;overflow:auto;background:#17243b;color:#e5edf9;border:1px solid #475569;border-radius:16px;padding:20px;box-sizing:border-box;box-shadow:0 16px 48px #0008}
+#kmNotifyDialog h2,#kmNotifyDialog h3{color:#f8fafc!important}
+#kmNotifyDialog p,#kmNotifyDialog label,#kmNotifyDialog small{color:#d2e1f4!important}
+#kmNotifyDialog button{cursor:pointer}
+#kmNotifyDialog .km-nbtn{border:1px solid #64748b;background:#284365;color:#fff;padding:9px 12px;border-radius:9px}
+#kmNotifyDialog .km-nitem{background:#101e32;border:1px solid #354963;padding:12px;border-radius:10px;margin:9px 0}
+#kmNotifyDialog .km-nitem.unread{border-left:4px solid #60a5fa}
+#kmNotifyDialog input[type="text"],#kmNotifyDialog input[type="email"]{background:#0c192b;color:#fff;border:1px solid #60748e;padding:10px;border-radius:8px;width:100%;box-sizing:border-box}
+#kmNotifyDialog .km-nrow{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+#kmNotifyBadge{background:#ef4444;color:#fff;border-radius:999px;padding:1px 6px;font-size:11px;margin-left:4px}
+#kmNotifyBadge[hidden]{display:none!important}
+</style>
+<div id="kmNotifyBackdrop" hidden></div>
+<section id="kmNotifyDialog" role="dialog" aria-modal="true" aria-label="Notifications" hidden>
+ <div class="km-nrow"><h2 style="margin:0">🔔 Notifications</h2><button type="button" class="km-nbtn" id="kmNotifyClose" aria-label="Close notifications">✕</button></div>
+ <p style="font-size:13px;margin:10px 0">Website messages and your saved job alert preferences. Automatic email or phone push alerts require a connected notification service.</p>
+ <div class="km-nrow"><strong>Recent notifications</strong><div><button class="km-nbtn" id="kmNotifyRead" type="button">Mark all read</button> <button class="km-nbtn" id="kmNotifyClear" type="button">Clear</button></div></div>
+ <div id="kmNotifyList" aria-live="polite"></div>
+ <hr style="border:0;border-top:1px solid #475569;margin:16px 0">
+ <h3 style="margin:0 0 9px">⚙️ Job alert preferences</h3>
+ <label for="kmNotifySkill">Preferred job / skill</label><input id="kmNotifySkill" type="text" placeholder="e.g. MIG Welder">
+ <label for="kmNotifyCity" style="display:block;margin-top:10px">Preferred city</label><input id="kmNotifyCity" type="text" placeholder="e.g. Ahmedabad">
+ <label style="display:flex;gap:8px;align-items:center;margin:12px 0"><input id="kmNotifyEnabled" type="checkbox"> Save my job alert preferences on this device</label>
+ <button class="km-nbtn" id="kmNotifySave" type="button">Save preferences</button>
+ <p id="kmNotifyFeedback" role="status" style="font-size:13px"></p>
+ <div class="km-nrow" style="margin-top:12px"><button class="km-nbtn" id="kmNotifyJobs" type="button">🔎 Browse jobs</button><button class="km-nbtn" id="kmNotifySupport" type="button">💬 Contact support</button></div>
+</section>
+<script id="km-notifications-v2-js">
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const key="km_notifications_v2",prefsKey="km_notifications_preferences_v2";
+function read(){try{return JSON.parse(localStorage.getItem(key)||"[]")}catch(_){return []}}
+function write(items){try{localStorage.setItem(key,JSON.stringify(items.slice(0,30)))}catch(_){}render()}
+function add(title,message){const items=read();items.unshift({id:Date.now()+Math.random(),title,message,at:new Date().toISOString(),read:false});write(items)}
+window.kmAddSiteNotification=add;
+const trigger=$("kmSettingsNotifications");
+if(trigger){
+ const badge=document.createElement("span");badge.id="kmNotifyBadge";badge.hidden=true;trigger.appendChild(badge);
+}
+function render(){
+ const items=read(),unread=items.filter(x=>!x.read).length,badge=$("kmNotifyBadge");
+ if(badge){badge.hidden=!unread;badge.textContent=unread>9?"9+":String(unread)}
+ const list=$("kmNotifyList");if(!list)return;
+ list.replaceChildren();
+ if(!items.length){const p=document.createElement("p");p.textContent="No notifications yet.";list.appendChild(p);return}
+ items.forEach(item=>{
+  const div=document.createElement("div");div.className="km-nitem"+(item.read?"":" unread");
+  const strong=document.createElement("strong");strong.textContent=item.title;
+  const p=document.createElement("p");p.textContent=item.message;p.style.margin="5px 0";
+  const small=document.createElement("small");small.textContent=new Date(item.at).toLocaleString();
+  div.append(strong,p,small);list.appendChild(div);
+ });
+}
+function close(){$("kmNotifyDialog").hidden=true;$("kmNotifyBackdrop").hidden=true;document.body.style.removeProperty("overflow");trigger?.focus()}
+function open(){
+ $("kmNotifyDialog").hidden=false;$("kmNotifyBackdrop").hidden=false;
+ const pref=(()=>{try{return JSON.parse(localStorage.getItem(prefsKey)||"{}")}catch(_){return {}}})();
+ $("kmNotifySkill").value=pref.skill||"";$("kmNotifyCity").value=pref.city||"";$("kmNotifyEnabled").checked=!!pref.enabled;
+ $("kmNotifyFeedback").textContent="";render();$("kmNotifyClose").focus();
+}
+window.kmOpenNotificationCenter=open;
+$("kmNotifyClose").addEventListener("click",close);
+$("kmNotifyBackdrop").addEventListener("click",close);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("kmNotifyDialog").hidden)close()});
+$("kmNotifyRead").addEventListener("click",()=>write(read().map(x=>({...x,read:true}))));
+$("kmNotifyClear").addEventListener("click",()=>{if(confirm("Clear notification history on this device?"))write([])});
+$("kmNotifySave").addEventListener("click",()=>{
+ const pref={skill:$("kmNotifySkill").value.trim(),city:$("kmNotifyCity").value.trim(),enabled:$("kmNotifyEnabled").checked};
+ try{localStorage.setItem(prefsKey,JSON.stringify(pref));$("kmNotifyFeedback").textContent="Preferences saved on this device. Automatic email/push alerts are not active yet.";add("Job preferences saved","Your preferred job and city were saved on this device.")}
+ catch(_){$("kmNotifyFeedback").textContent="Browser storage unavailable. Preferences could not be saved."}
+});
+$("kmNotifyJobs").addEventListener("click",()=>{close();document.getElementById("jobs")?.scrollIntoView({behavior:"smooth"})});
+$("kmNotifySupport").addEventListener("click",()=>{close();location.hash="contact"});
+render();
+if(!localStorage.getItem("km_notify_intro_v2")){
+ try{localStorage.setItem("km_notify_intro_v2","1")}catch(_){}
+ add("Welcome to KaamMilega","Your notification center is ready. Save your preferred job and city to personalize your experience.");
+}
+})();
+</script>
 </body>
 </html>
 <!-- Targeted fixes: only the buttons/errors reported by the owner -->

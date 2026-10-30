@@ -404,6 +404,18 @@ img,video,iframe{max-width:100%}
 .km-dash-top>div{min-width:0;flex:1 1 230px}
 @media(max-width:700px){.content-nav{gap:6px!important}.content-nav a{font-size:12px!important;padding:7px 9px!important}.km-dash-top{align-items:flex-start}.km-pill-free{font-size:12px!important}.km-founder{grid-template-columns:minmax(0,1fr)!important}}
 </style>
+<script id="km-v2-handler-guard">
+/* This capture listener prevents old rating/upload handlers from sending bad IDs. */
+(function(){
+  const ids=new Set(['videoUploadBtn','publicRateJobBtn','submitReview','publicReviewsRefresh','ownerVideosManageBtn','ownerReviewsManageBtn','ownerVideosRefresh','ownerReviewsRefresh']);
+  document.addEventListener('click',function(e){
+    const b=e.target && e.target.closest ? e.target.closest('button') : null;
+    if(!b||!ids.has(b.id))return;
+    e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+    if(typeof window.kmV2HandleClick==='function')window.kmV2HandleClick(b.id);
+  },true);
+})();
+</script>
 </head>
 <style id="km-google-gate-style">
 #kmGoogleGate{position:fixed;inset:0;z-index:999999;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:22px;font-family:Arial,sans-serif;color:#fff}#kmGoogleGate .km-gate-card{width:min(100%,520px);max-height:calc(100dvh - 28px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 24px 80px #0005;text-align:center}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:hidden}
@@ -558,7 +570,9 @@ img,video,iframe{max-width:100%}
 <div class="row"><div class="formgroup"><label>Video Title</label><input class="input" id="videoTitle" placeholder="Example: I got a welding job"/></div><div class="formgroup"><label>Result</label><select class="input" id="videoResult"><option value="work_got">Kaam Mila</option><option value="work_not_got">Kaam Nahi Mila</option><option value="still_searching">Abhi Job Search Kar Raha Hoon</option></select></div></div>
 <div class="formgroup"><label>Short Note</label><textarea class="input" id="videoNote" placeholder="Tell us about your result..." rows="3"></textarea></div>
 <div class="formgroup"><label>Video File</label><input accept="video/*" class="input" id="videoFile" type="file"/><div class="muted" style="font-size:12px;margin-top:5px">Maximum 50 MB.</div></div>
-<button class="btn orange" id="videoUploadBtn" type="button">Upload Work Result Video</button><div id="videoMsg"></div>
+<button class="btn orange" id="videoUploadBtn" type="button">Upload Work Result Video</button>
+<div class="km-v2-status" id="kmV2VideoStatus" role="status" aria-live="polite"></div>
+<div id="videoMsg" hidden></div>
 </div>
 <div style="margin-top:24px"><h2>Approved Work Result Videos</h2><div class="cards" id="publicVideos"><div class="card">Loading videos...</div></div></div>
 </section>
@@ -1870,7 +1884,11 @@ if(document.getElementById("ownerReqSaveEdit")){
 </div>
 </div>
 <!-- REVIEW MODAL -->
-<div class="modal hidden" id="reviewModal"><div class="modal-card"><button class="modal-close" data-close="reviewModal">×</button><span class="eyebrow">JOB REVIEW</span><h2>Rate &amp; Comment</h2><input id="reviewJobId" type="hidden"/><div class="formgroup"><label>Rating</label><select class="input" id="reviewRating"><option value="5">★★★★★ — 5</option><option value="4">★★★★☆ — 4</option><option value="3">★★★☆☆ — 3</option><option value="2">★★☆☆☆ — 2</option><option value="1">★☆☆☆☆ — 1</option></select></div><div class="formgroup"><label>Comment</label><textarea class="input" id="reviewComment" placeholder="Write your comment..." rows="5"></textarea></div><button class="btn" id="submitReview" type="button">Submit Rating &amp; Comment</button><div id="reviewMsg"></div></div></div>
+<div class="modal hidden" id="reviewModal"><div class="modal-card"><button class="modal-close" data-close="reviewModal">×</button><span class="eyebrow">RATING &amp; FEEDBACK</span><h2>Rate KaamMilega or a Job</h2><input id="reviewJobId" type="hidden"/>
+<div class="formgroup"><label for="kmV2ReviewSubject">What are you reviewing?</label>
+<select class="input" id="kmV2ReviewSubject"><option value="platform">KaamMilega website experience</option></select>
+<p class="muted" style="font-size:12px;margin:6px 0">Rate only your genuine experience. Job reviews are available for active listings. All reviews are checked before publication.</p></div>
+<div class="formgroup"><label>Rating</label><select class="input" id="reviewRating"><option value="5">★★★★★ — 5</option><option value="4">★★★★☆ — 4</option><option value="3">★★★☆☆ — 3</option><option value="2">★★☆☆☆ — 2</option><option value="1">★☆☆☆☆ — 1</option></select></div><div class="formgroup"><label>Comment</label><textarea class="input" id="reviewComment" placeholder="Write your comment..." rows="5"></textarea></div><button class="btn" id="submitReview" type="button">Submit Rating &amp; Comment</button><div id="reviewMsg"></div></div></div>
 <div class="modal hidden" id="ownerReviewsModal"><div class="modal-card" style="max-width:980px"><button class="modal-close" data-close="ownerReviewsModal">×</button><span class="eyebrow">OWNER CONTROL</span><h2>Job Ratings &amp; Comments</h2><p class="muted">All submitted ratings and comments.</p><div id="ownerReviewsMsg"></div><div style="display:flex;justify-content:flex-end;margin:10px 0"><button class="btn ghost" id="ownerReviewsRefresh" type="button">Refresh Ratings</button></div><div class="owner-grid" id="ownerReviews"><div class="card">Loading reviews...</div></div></div></div>
 <script id="kaammilega-v7-functions">
 (function(){
@@ -4902,6 +4920,134 @@ if(!localStorage.getItem("km_notify_intro_v2")){
   if(btn){btn.click();$('kmUfUrgentStatus').textContent='Enter your urgent requirement and verify details before submitting.'}
   else{$('kmUfUrgentStatus').textContent='Please contact KaamMilega support to post an urgent requirement.'}
  });
+})();
+</script>
+<!-- KaamMilega V2: secure moderated video & rating flows. Requires accompanying SQL. -->
+<style id="km-video-review-v2-css">
+.km-v2-review-message{font-size:13px;margin-top:9px;line-height:1.5}
+.km-v2-review-message.is-error{color:#f87171!important}
+.km-v2-review-message.is-ok{color:#16a34a!important}
+body.km-dark .km-v2-review-message.is-ok{color:#86efac!important}
+.km-v2-media-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.km-v2-media-card{padding:17px;border-radius:14px;background:var(--km-surface,#f8fafc);border:1px solid #cbd5e1;overflow-wrap:anywhere}
+body.km-dark .km-v2-media-card{background:#19263c!important;border-color:#425572!important;color:#e5edf9!important}
+.km-v2-media-card h3{margin:5px 0 8px;font-size:17px}
+.km-v2-media-card p{line-height:1.55}
+.km-v2-media-card video{display:block;width:100%;max-height:330px;margin-top:9px;border-radius:10px;background:#000}
+.km-v2-row-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.km-v2-row-actions button{border:0;border-radius:9px;background:#1264c4;color:#fff;padding:9px 13px;cursor:pointer}
+.km-v2-row-actions button.km-v2-reject{background:#991b1b;color:white}
+.km-v2-pending{background:#fef3c7;color:#854d0e;padding:4px 9px;border-radius:999px;font-size:12px;font-weight:800}
+body.km-dark .km-v2-pending{background:#443421;color:#fde68a}
+.km-v2-status{margin-top:10px;font-size:13px;line-height:1.5;color:#2563eb}
+body.km-dark .km-v2-status{color:#a5c9ff}
+.km-v2-status.km-v2-error{color:#b91c1c}
+body.km-dark .km-v2-status.km-v2-error{color:#fca5a5}
+</style>
+<script id="km-video-review-v2-script">
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const VIDEOS='km_work_videos_v2',REVIEWS='km_reviews_v2',BUCKET='km-work-videos-v2';
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let busyVideo=false,busyReview=false;
+function message(id,text,error=false){const e=$(id);if(!e)return;e.textContent=text;e.classList.toggle('km-v2-error',!!error);e.classList.toggle('is-error',!!error);e.classList.toggle('is-ok',!error);}
+async function session(){const token=await getSession();if(!token)throw Error('Please log in first.');const user=await getCurrentUser();if(!user?.id)throw Error('Session expired. Log in again.');return {token,user};}
+async function api(table,opt={}){const token=opt.token||null;const headers={apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{}) ,...(opt.headers||{})};const r=await fetch(SUPABASE_URL+'/rest/v1/'+table,{method:opt.method||'GET',headers,body:opt.body?JSON.stringify(opt.body):undefined});if(!r.ok){let data={};const raw=await r.text();try{data=JSON.parse(raw)}catch(_){}throw Error(data.message||data.details||data.hint||raw||('Request failed ('+r.status+')'));}if(r.status===204)return null;const body=await r.text();if(!body)return null;try{return JSON.parse(body)}catch(_){return null}}
+async function signedUrl(path,token){
+ const clean=String(path||'').split('/').map(encodeURIComponent).join('/');
+ const r=await fetch(SUPABASE_URL+'/storage/v1/object/sign/'+BUCKET+'/'+clean,{method:'POST',headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+(token||SUPABASE_ANON_KEY),'Content-Type':'application/json'},body:JSON.stringify({expiresIn:3600})});
+ const data=await r.json().catch(()=>({}));if(!r.ok||!data.signedURL)throw Error(data.message||data.error||'Video access unavailable');
+ return new URL('/storage/v1'+data.signedURL,SUPABASE_URL).toString();
+}
+function node(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!==undefined)e.textContent=text;return e}
+async function isAdmin(token){try{const result=await api('rpc/km_is_admin_v2',{method:'POST',token,body:{}});return result===true}catch(_){return false}}
+function mount(){
+ for(const [id,newId] of [['publicVideos','kmV2Videos'],['publicReviews','kmV2Reviews']]){
+  const old=$(id);if(!old)continue;
+  old.hidden=true;old.style.display='none';
+  const newer=node('div','km-v2-media-grid');newer.id=newId;old.insertAdjacentElement('afterend',newer);
+ }
+ const s=$('publicRatingStatus');if(s){s.hidden=true;s.style.display='none';const d=node('div','muted','Sign in to rate KaamMilega or an active job you have experience with.');d.id='kmV2RatingStatus';s.insertAdjacentElement('afterend',d)}
+ const v=$('videoMsg');if(v){v.hidden=true;v.style.display='none'}
+}
+async function upload(){
+ if(busyVideo)return;
+ const btn=$('videoUploadBtn');const status='kmV2VideoStatus';
+ const title=$('videoTitle')?.value.trim()||'',result=$('videoResult')?.value||'still_searching',note=$('videoNote')?.value.trim()||'',file=$('videoFile')?.files?.[0];
+ if(!title||!file){message(status,'Enter a video title and choose a video file.',true);return}
+ if(title.length>150||note.length>2000){message(status,'Title or note is too long.',true);return}
+ const ext=(file.name.split('.').pop()||'').toLowerCase();const validExt=['mp4','webm','mov'].includes(ext);const validMime=['video/mp4','video/webm','video/quicktime',''].includes(file.type);
+ if(!validExt||!validMime){message(status,'Use MP4, WebM, or MOV video only.',true);return}
+ if(file.size>50*1024*1024){message(status,'File must be 50 MB or smaller. Try compressing the video.',true);return}
+ let uploadedPath='';busyVideo=true;btn.disabled=true;btn.textContent='Uploading video…';message(status,'Uploading securely. Keep this tab open.');
+ try{
+  const {token,user}=await session();
+  const name=(crypto.randomUUID?.()||String(Date.now())+'-'+Math.random().toString(36).slice(2))+'.'+ext;
+  uploadedPath=user.id+'/'+name;
+  const response=await fetch(SUPABASE_URL+'/storage/v1/object/'+BUCKET+'/'+uploadedPath,{method:'POST',headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+token,'Content-Type':file.type||'video/mp4','x-upsert':'false'},body:file});
+  if(!response.ok){const raw=await response.text();let d={};try{d=JSON.parse(raw)}catch(_){}throw Error(d.message||d.error||raw||'Upload failed. Check Storage bucket and RLS permissions.')}
+  await api(VIDEOS,{method:'POST',token,headers:{Prefer:'return=minimal'},body:{user_id:user.id,title,result,note,storage_path:uploadedPath,status:'pending'}});
+  $('videoTitle').value='';$('videoNote').value='';$('videoFile').value='';
+  message(status,'Video uploaded! It is private until owner approval.');
+  window.kmAddSiteNotification?.('Video uploaded','Your work-result video is waiting for owner approval.');
+ }catch(error){
+  message(status,'Upload failed: '+error.message,true);
+  if(uploadedPath){ /* Ignore cleanup errors; owner can remove orphaned objects later. */ try{const token=await getSession();await fetch(SUPABASE_URL+'/storage/v1/object/'+BUCKET+'/'+uploadedPath,{method:'DELETE',headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+token}})}catch(_){}}
+ }finally{busyVideo=false;btn.disabled=false;btn.textContent='Upload Work Result Video'}
+}
+async function renderVideos(){const box=$('kmV2Videos');if(!box)return;box.textContent='Loading approved videos…';try{
+ const rows=await api(VIDEOS+'?select=id,title,result,note,storage_path,created_at&status=eq.active&order=created_at.desc&limit=50');box.replaceChildren();
+ if(!rows?.length){box.appendChild(node('p','muted','No approved work-result videos yet.'));return}
+ for(const row of rows){const card=node('article','km-v2-media-card');card.appendChild(node('h3','',row.title));card.appendChild(node('p','',({'work_got':'Kaam Mila','work_not_got':'Kaam Nahi Mila','still_searching':'Abhi Job Search Kar Raha Hoon'})[row.result]||'Work result'));
+ if(row.note)card.appendChild(node('p','',row.note));const video=node('video');video.controls=true;video.preload='metadata';try{video.src=await signedUrl(row.storage_path,null);card.appendChild(video)}catch(_){card.appendChild(node('p','muted','Video playback is temporarily unavailable.'))}
+ card.appendChild(node('small','muted',new Date(row.created_at).toLocaleDateString()));box.appendChild(card)}
+ }catch(e){box.textContent='Could not load videos: '+e.message+' — Run the accompanying Supabase SQL first.'}}
+async function renderReviews(){const box=$('kmV2Reviews');if(!box)return;box.textContent='Loading approved ratings…';try{
+ const rows=await api(REVIEWS+'?select=id,subject_type,job_title,rating,comment,created_at&status=eq.active&order=created_at.desc&limit=100');box.replaceChildren();
+ if(!rows?.length){box.appendChild(node('p','muted','No approved ratings yet.'));return}
+ rows.forEach(r=>{const card=node('article','km-v2-media-card');card.appendChild(node('div','review-stars','★'.repeat(r.rating)+'☆'.repeat(5-r.rating)));card.appendChild(node('h3','',r.subject_type==='platform'?'KaamMilega Platform':r.job_title||'Job Review'));card.appendChild(node('p','',r.comment));card.appendChild(node('small','muted',new Date(r.created_at).toLocaleDateString()));box.appendChild(card)})
+ }catch(e){box.textContent='Could not load ratings: '+e.message+' — Run the accompanying Supabase SQL first.'}}
+async function openReview(){const status='kmV2RatingStatus';try{
+ const {token,user}=await session();const select=$('kmV2ReviewSubject');select.replaceChildren();select.appendChild(new Option('KaamMilega website experience','platform'));
+ const jobs=await api('jobs?select=id,title,city,employer_id&status=eq.active&order=created_at.desc&limit=100',{token});
+ (jobs||[]).filter(j=>String(j.employer_id||'')!==user.id).forEach(j=>select.appendChild(new Option((j.title||'Job')+(j.city?' • '+j.city:''),'job:'+String(j.id))));
+ $('reviewJobId').value='';$('reviewComment').value='';$('reviewRating').value='5';message('reviewMsg','');
+ if(typeof openModal==='function')openModal('reviewModal');else $('reviewModal')?.classList.remove('hidden');
+ }catch(e){message(status,e.message,true);if(/log in|session/i.test(e.message))openModal?.('loginModal')}}
+async function submitReview(){if(busyReview)return;const btn=$('submitReview');const val=$('kmV2ReviewSubject')?.value||'platform',rating=Number($('reviewRating')?.value),comment=$('reviewComment')?.value.trim()||'';
+ if(!Number.isInteger(rating)||rating<1||rating>5||comment.length<10||comment.length>1500){message('reviewMsg','Choose 1–5 stars and write a genuine comment (10–1500 characters).',true);return}
+ busyReview=true;btn.disabled=true;try{
+ const {token,user}=await session();const subject=val==='platform'?'platform':'job';const jobId=subject==='job'?val.slice(4):null;
+ if(subject==='job'&&!jobId)throw Error('Choose a valid job first.');const option=$('kmV2ReviewSubject')?.selectedOptions[0];
+ const body={reviewer_id:user.id,subject_type:subject,job_id:jobId,job_title:subject==='job'?option.textContent:null,rating,comment,status:'pending'};
+ await api(REVIEWS,{method:'POST',token,headers:{Prefer:'return=minimal'},body});
+ message('reviewMsg','Rating submitted successfully! It will appear after owner approval.');
+ const st=$('kmV2RatingStatus');if(st)st.textContent='Review submitted. Waiting for owner approval.';
+ window.kmAddSiteNotification?.('Review sent','Your rating is pending owner moderation.');
+ }catch(e){message('reviewMsg','Could not save rating: '+(/duplicate key/i.test(e.message)?'You already submitted a review for this item.':e.message),true)}
+ finally{busyReview=false;btn.disabled=false}}
+async function ownerOpen(kind){
+ try{const {token}=await session();if(!await isAdmin(token))throw Error('Owner access required. Sign in with the authorized owner account.');
+ const modalId=kind==='video'?'ownerVideosModal':'ownerReviewsModal';openModal(modalId);await ownerList(kind);
+ }catch(e){alert(e.message)}}
+async function ownerList(kind){const video=kind==='video',box=$(video?'ownerVideosList':'ownerReviews');if(!box)return;box.textContent='Loading moderation queue…';try{
+ const {token}=await session();if(!await isAdmin(token))throw Error('Owner account required');
+ const rows=await api((video?VIDEOS:REVIEWS)+'?select=*&order=created_at.desc&limit=100',{token});box.replaceChildren();if(!rows?.length){box.appendChild(node('p','muted','No submissions.'));return}
+ for(const r of rows){const card=node('article','km-v2-media-card');card.appendChild(node('h3','',video?r.title:(r.job_title||'KaamMilega Platform')));
+ const badge=node('span','km-v2-pending',r.status.toUpperCase());card.appendChild(badge);card.appendChild(node('p','',video?r.note:r.comment));
+ if(!video)card.appendChild(node('div','review-stars','★'.repeat(r.rating)+'☆'.repeat(5-r.rating)));
+ if(video){try{const el=node('video');el.controls=true;el.preload='metadata';el.src=await signedUrl(r.storage_path,token);card.appendChild(el)}catch(e){card.appendChild(node('p','muted','Preview unavailable: '+e.message))}}
+ const actions=node('div','km-v2-row-actions');for(const [label,value] of [['Approve','active'],['Reject','rejected']]){const b=node('button',value==='rejected'?'km-v2-reject':'',label);b.type='button';b.addEventListener('click',async()=>{b.disabled=true;try{await api((video?VIDEOS:REVIEWS)+'?id=eq.'+encodeURIComponent(r.id),{method:'PATCH',token,headers:{Prefer:'return=minimal'},body:{status:value}});await ownerList(kind);if(video)renderVideos();else renderReviews()}catch(e){alert('Could not update status: '+e.message);b.disabled=false}});actions.appendChild(b)}card.appendChild(actions);box.appendChild(card)}
+ }catch(e){box.textContent='Moderation unavailable: '+e.message}}
+window.kmV2HandleClick=function(id){switch(id){
+ case 'videoUploadBtn':upload();break;case 'publicRateJobBtn':openReview();break;case 'submitReview':submitReview();break;
+ case 'publicReviewsRefresh':renderReviews();break;case 'ownerVideosManageBtn':ownerOpen('video');break;case 'ownerReviewsManageBtn':ownerOpen('review');break;
+ case 'ownerVideosRefresh':ownerList('video');break;case 'ownerReviewsRefresh':ownerList('review');break;
+}};
+mount();
+/* Delay first render until old page startup handlers complete, then render our v2 lists. */
+setTimeout(()=>{renderVideos();renderReviews()},1900);
 })();
 </script>
 </body>

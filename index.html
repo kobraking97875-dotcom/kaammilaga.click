@@ -4654,3 +4654,41 @@ panel.addEventListener('click',e=>{const b=e.target.closest('[data-km-action]');
   });
 })();
 </script>
+
+<script id="km-settings-reliable-click-v7">
+(function(){
+ 'use strict';
+ function init(){
+  const panel=document.getElementById('kmSettingsPanel');
+  const dialog=document.getElementById('kmNewSettingsDialog');
+  if(!panel||!dialog)return;
+  const $=id=>document.getElementById(id);
+  const body=$('kmNewSettingsBody'), actions=$('kmNewSettingsActions');
+  const close=()=>{dialog.hidden=true};
+  function makeButton(label,fn){const b=document.createElement('button');b.type='button';b.textContent=label;b.addEventListener('click',fn);actions.appendChild(b);return b}
+  function show(title){$('kmNewSettingsTitle').textContent=title;body.replaceChildren();actions.replaceChildren();makeButton('Close',close);dialog.hidden=false;panel.hidden=true;$('kmSettingsBackdrop').hidden=true;$('kmSettingsTrigger').setAttribute('aria-expanded','false')}
+  function text(t){const p=document.createElement('p');p.textContent=t;body.appendChild(p)}
+  function field(label,type='text',value=''){const l=document.createElement('label');l.textContent=label;const input=document.createElement(type==='textarea'?'textarea':'input');if(type!=='textarea')input.type=type;input.value=value;body.append(l,input);return input}
+  function get(k,d){try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}}
+  function put(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true}catch(e){alert('Browser storage disabled');return false}}
+  function jump(id){panel.hidden=true;$('kmSettingsBackdrop').hidden=true;const target=$(id);if(target)target.scrollIntoView({behavior:'smooth',block:'start'});else alert('This section is unavailable on this page.')}
+  const routes={
+   language(){show('Language / भाषा');const l=document.createElement('select');[['en','English'],['hi','हिंदी'],['gu','ગુજરાતી']].forEach(([v,n])=>{const o=document.createElement('option');o.value=v;o.textContent=n;l.append(o)});l.value=get('km_language_preference_v1','en');body.append(l);text('Language preference only. Full website translation is not available yet.');makeButton('Save language',()=>{if(put('km_language_preference_v1',l.value)){document.documentElement.lang=l.value;alert('Preference saved');close()}})},
+   preferences(){show('Job Preferences');const p=get('km_user_job_preferences_v1',{});const city=field('Preferred city','text',p.city||''),skill=field('Job title / skill','text',p.skill||'');makeButton('Save preferences',()=>{if(put('km_user_job_preferences_v1',{city:city.value.trim(),skill:skill.value.trim()})){alert('Preferences saved on this device');close()}})},
+   saved(){show('Saved Jobs');const a=get('km_saved_jobs_v2',[]);if(!Array.isArray(a)||!a.length)text('No saved jobs on this device yet.');else a.forEach(j=>text((j.title||'Job')+' — '+(j.meta||'')));makeButton('Browse jobs',()=>{close();jump('jobs')})},
+   applications(){show('Application History');const a=get('km_application_tracker_v1',[]);if(!Array.isArray(a)||!a.length)text('No applications recorded on this device.');else a.forEach(j=>text((j.company||'Employer')+' — '+(j.role||'Job')+' — '+(j.stage||'')));makeButton('Open tracker',()=>{close();jump('kmCareerPlus')})},
+   email(){show('Email Alerts');const p=get('km_job_alert_v2',{}),skill=field('Job skill','text',p.skill||''),city=field('City','text',p.city||'');text('Automatic email delivery is not configured. This only saves your preferences locally.');makeButton('Save preferences',()=>{if(put('km_job_alert_v2',{skill:skill.value,city:city.value})){alert('Saved locally; emails are not active');close()}})},
+   report(){show('Report Fake Job');const job=field('Job link / title'),reason=field('Reason','textarea');makeButton('Email report',()=>{if(!reason.value.trim()){alert('Enter a reason');return}location.href='mailto:kaammilaga.official@gmail.com?subject='+encodeURIComponent('Report Fake Job')+'&body='+encodeURIComponent('Job: '+job.value+'\nReason: '+reason.value)})},
+   share(){const url='https://kaammilaga.click/';if(navigator.share)navigator.share({title:'KaamMilega',url}).catch(()=>{});else{show('Share KaamMilega');text(url);makeButton('Copy link',()=>{if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>alert('Copied')).catch(()=>prompt('Copy this link',url));else prompt('Copy this link',url)})}},
+   profile(){panel.hidden=true;$('kmSettingsBackdrop').hidden=true;const b=$('authNavBtn');if(b)b.click();else alert('Profile requires login')},
+   privacy(){jump('privacyPolicy')},help(){jump('faq')},about(){jump('aboutKaamMilega')},
+   logout(){show('Log out');text('Log out of your KaamMilega account?');makeButton('Log out',()=>{const b=$('logoutBtn');if(b)b.click();else alert('Please log in before logging out');close()})}
+  };
+  // Capture clicks before legacy listeners; prevents older code from swallowing settings actions.
+  document.addEventListener('click',function(e){const b=e.target.closest&&e.target.closest('#kmSettingsPanel [data-km-action]');if(!b)return;const fn=routes[b.dataset.kmAction];if(!fn)return;e.preventDefault();e.stopImmediatePropagation();try{fn()}catch(err){alert('Settings error: '+err.message);console.error(err)}},true);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!dialog.hidden)close()});
+  dialog.addEventListener('click',e=>{if(e.target===dialog)close()});
+ }
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+})();
+</script>

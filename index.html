@@ -3209,21 +3209,42 @@ if(document.getElementById("ownerReqSaveEdit")){
 .km-ai-form{display:flex;gap:8px;padding:11px;border-top:1px solid #e5e7eb;background:#fff}.km-ai-form input{flex:1;min-width:0;border:1px solid #d7dde8;border-radius:11px;padding:11px 12px;font:inherit;outline:none}.km-ai-form input:focus{border-color:#0b63ce;box-shadow:0 0 0 3px #0b63ce18}.km-ai-form button{border:0;border-radius:11px;background:#f97316;color:#fff;padding:0 15px;font-weight:800;cursor:pointer}.km-ai-form button:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:600px){#kmAiFab{right:14px;bottom:14px;padding:12px 15px}#kmAiPanel{right:10px;bottom:72px;width:calc(100vw - 20px);height:min(570px,calc(100vh - 95px));border-radius:17px}.km-ai-title{font-size:16px}}
 </style>
+<style id="km-ai-help-improvements">
+#kmAiPanel{isolation:isolate}
+#kmAiPanel .km-ai-msg{white-space:pre-wrap;overflow-wrap:anywhere}
+#kmAiPanel .km-ai-msg.bot{max-width:98%}
+#kmAiPanel .km-ai-msg.user{max-width:92%}
+#kmAiPanel .km-ai-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+#kmAiPanel .km-ai-action{background:#e9f2ff!important;border:1px solid #aac9ef!important;border-radius:9px!important;color:#164c91!important;cursor:pointer;font:700 12px/1.25 Arial,sans-serif;padding:8px 10px;min-height:34px;text-align:left}
+#kmAiPanel .km-ai-action:hover,#kmAiPanel .km-ai-action:focus-visible{background:#cfe6ff!important}
+body.km-dark #kmAiPanel .km-ai-msg.bot{color:#edf4ff!important;background:#263852!important;border-color:#4d6383!important}
+body.km-dark #kmAiPanel .km-ai-msg.user{color:#fff!important;background:#1756aa!important}
+body.km-dark #kmAiPanel .km-ai-action{color:#ecf4ff!important;background:#28466c!important;border-color:#7396bb!important}
+body.km-dark #kmAiPanel .km-ai-action:hover{background:#355981!important}
+body.km-dark #kmAiPanel .km-ai-quick button{color:#f3f7ff!important;background:#294366!important;border-color:#526d91!important}
+body.km-dark #kmAiPanel .km-ai-form input{color:#fff!important;background:#101c31!important;border-color:#5b7597!important}
+body.km-dark #kmAiPanel .km-ai-form input::placeholder{color:#adc3dd!important}
+#kmAiPanel .km-ai-head{flex-shrink:0}
+@media(max-width:600px){#kmAiPanel{max-height:calc(100dvh - 80px);height:min(570px,calc(100dvh - 92px))}#kmAiMessages{overscroll-behavior:contain}}
+</style>
 <!-- KaamMilega AI Assistant -->
 <div aria-label="KaamMilega AI Assistant" id="kmAiPanel">
 <div class="km-ai-head">
-<div><div class="km-ai-title">🤖 KaamMilega AI Assistant</div><div class="km-ai-sub">Ask about jobs, hiring, profiles, payments or the website</div></div>
+<div><div class="km-ai-title">🤖 KaamMilega AI Assistant</div><div class="km-ai-sub">Website guide • Jobs, hiring, profile, safety, tools & support</div></div>
 <button aria-label="Close" class="km-ai-close" id="kmAiClose">×</button>
 </div>
-<div id="kmAiMessages"></div>
+<div id="kmAiMessages" role="log" aria-live="polite" aria-label="Assistant conversation"></div>
 <div class="km-ai-quick">
-<button data-ai-q="How can I find a job?">Find a job</button>
+<button type="button" data-ai-q="KaamMilega website ke sab features batao">Website Info</button>
+<button type="button" data-ai-q="Who is founder of KaamMilega?">Founder</button>
+<button type="button" data-ai-q="How can I find a job?">Find a job</button>
 <button data-ai-q="How can a company hire workers urgently?">Urgent hiring</button>
 <button data-ai-q="How do I post a job?">Post a job</button>
-<button data-ai-q="How can I contact support?">Support</button>
+<button type="button" data-ai-q="Salary and OT calculator">Salary &amp; OT</button>
+<button type="button" data-ai-q="How can I contact support?">Support</button>
 </div>
 <form class="km-ai-form" id="kmAiForm">
-<input autocomplete="off" id="kmAiInput" placeholder="Ask me anything about KaamMilega..."/>
+<input autocomplete="off" id="kmAiInput" placeholder="Website ke baare mein poochhein..." aria-label="Ask KaamMilega website help" maxlength="500"/>
 <button id="kmAiSend" type="submit">Send</button>
 </form>
 </div>
@@ -3231,42 +3252,211 @@ if(document.getElementById("ownerReqSaveEdit")){
 <script id="kaammilega-ai-addon">
 (function(){
   'use strict';
-  const fab=document.getElementById('kmAiFab'),panel=document.getElementById('kmAiPanel'),close=document.getElementById('kmAiClose'),msgs=document.getElementById('kmAiMessages'),form=document.getElementById('kmAiForm'),input=document.getElementById('kmAiInput'),send=document.getElementById('kmAiSend');
-  if(!fab||!panel||!msgs||!form)return;
-  const endpoint=(window.KM_AI_ENDPOINT||((typeof SUPABASE_URL!=='undefined')?SUPABASE_URL+'/functions/v1/ai-assistant':'/functions/v1/ai-assistant'));
-  const welcome='Namaste! 👋 Main KaamMilega AI Assistant hoon.\n\nAap job search, job posting, urgent hiring, Featured Jobs, profile/login, payments, safety ya website ke kisi bhi feature ke baare mein pooch sakte hain.';
-  const siteContext='KaamMilega is an independent employment marketplace in India. Workers can search jobs by skill and city. Employers can post jobs, use Featured Jobs, request workers urgently/company requirements, and contact support. Official website: https://kaammilaga.click/. KaamMilega is independent and is not affiliated with kaammilega.com or similarly named websites unless explicitly stated on the website. Support email: kaammilaga.official@gmail.com. Find jobs and connect with employers. Verify vacancy, salary, location and joining details before proceeding. Never share OTP, password or payment PIN. Standard job posting is available; Featured Job promotion may be paid. The website has login/signup, profiles, reviews, work-result videos, owner management, Razorpay checkout for paid job posts, and company hiring requirements.';
-  const history=[];
-  function add(text,who){const d=document.createElement('div');d.className='km-ai-msg '+who;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d}
-  function open(){panel.classList.add('open');if(!msgs.children.length)add(welcome,'bot');setTimeout(()=>input.focus(),80)}
-  function closePanel(){panel.classList.remove('open')}
-  fab.addEventListener('click',open);close.addEventListener('click',closePanel);
-  document.querySelectorAll('[data-ai-q]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.aiQ;form.requestSubmit()}));
-  function fallback(q){
-    const s=q.toLowerCase();
-    if(/find|search|job|काम|नौकरी/.test(s)) return 'Job find karne ke liye Search Jobs mein skill/job title aur City/Location enter karke Search Jobs dabaiye. Listing kholkar salary, location, employer aur vacancy details verify karein.';
-    if(/urgent|worker|workers|company requirement|staff|मजदूर/.test(s)) return 'Company ko workers urgently chahiye to Need Workers Urgently ya Company Hiring Requirements workflow use karein. Worker type, number of workers, location, salary/rate aur joining details dena useful hai.';
-    if(/post.*job|job.*post|vacancy|भर्ती/.test(s)) return 'Employer Post a Job se vacancy publish kar sakta hai. Job title, category, city, salary, job type, description aur contact details bharni hoti hain.';
-    if(/feature|featured|payment|पैसा|भुगतान/.test(s)) return 'Pehla job post free hai. Uske baad job posting free hai. Job details owner review ke baad publish ho sakti hain.';
-    if(/support|contact|email|help|मदद/.test(s)) return 'KaamMilega support email: kaammilaga.official@gmail.com';
-    if(/login|signup|profile|account|password|otp/.test(s)) return 'Login / Sign Up se email aur password ke saath account access karein. OTP, password aur payment PIN kisi ke saath share na karein.';
-    if(/safe|fraud|scam|security|सुरक्षित/.test(s)) return 'Job accept karne se pehle employer, location, salary, joining details verify karein. Job ke badle advance money, OTP, password ya payment PIN maangne par savdhan rahein.';
-    return 'Main KaamMilega ke jobs, hiring, account, support, payments aur website features samjha sakta hoon. Aap apna sawal thoda detail mein pooch sakte hain.';
+  const get=id=>document.getElementById(id);
+  const fab=get('kmAiFab'),panel=get('kmAiPanel'),close=get('kmAiClose'),msgs=get('kmAiMessages'),form=get('kmAiForm'),input=get('kmAiInput'),send=get('kmAiSend');
+  if(!fab||!panel||!close||!msgs||!form||!input||!send)return;
+  const isWord=s=>String(s||'').trim();
+  const normalize=t=>String(t||'').toLowerCase().normalize('NFKC').replace(/[\u200b-\u200d]/g,'').replace(/[^\p{L}\p{N}\s₹@.]/gu,' ').replace(/\s+/g,' ').trim();
+  const has=(s,re)=>re.test(s);
+  const categories=[
+    {id:'overview',name:'Website overview',keys:/(kaammilega|website|web site|sab kuch|sari jankari|puri jankari|all features|about site|platform|क्या है|बारे में|पूरी जानकारी|वेबसाइट)/},
+    {id:'search',name:'Job Search',keys:/(search|find job|job dhund|kaam dhund|job chahiye|job mileg|naukri|नौकरी|काम ढूं|जॉब सर्च)/},
+    {id:'posting',name:'Post a Job',keys:/(post a job|post job|job post|vacancy post|job posting|naukri post|जॉब पोस्ट|नौकरी डाल|vacancy dal)/},
+    {id:'urgent',name:'Urgent Hiring',keys:/(urgent|need worker|hiring|labour|worker|required workers|staff|mazdoor|मजदूर|वर्कर|कर्मचारी चाहिए)/},
+    {id:'login',name:'Login & Sign Up',keys:/(login|log in|signup|sign up|account|register|रजिस्टर|लॉगिन|साइन अप)/},
+    {id:'profile',name:'My Profile',keys:/(profile|प्रोफाइल|बायोडाटा|resume|cv)/},
+    {id:'security',name:'Safety & Privacy',keys:/(safe|fraud|fake|scam|privacy|security|सुरक्ष|फ्रॉड|धोख|नकली)/},
+    {id:'support',name:'Contact Support',keys:/(help|support|contact|customer care|mail|सहायता|मदद|संपर्क)/},
+    {id:'founder',name:'Founder',keys:/(founder|ceo|owner ka naam|who founded|virjul|विरजुल|फाउंडर)/},
+    {id:'tools',name:'Free Career Tools',keys:/(career tool|tool|calculator|ot|salary|voice|skill|interview|resume)/}
+  ];
+  // Answers describe features actually present in this HTML; they do not promise a live vacancy or delivery of messages.
+  const facts={
+    overview:{
+      heading:'KaamMilega — website ki poori jankari',
+      answer:'KaamMilega (https://kaammilaga.click/) India ka independent employment marketplace hai.\n\n• Job seekers skill, city, salary aur job type se public jobs dhoondh sakte hain.\n• Employers free standard job posting aur worker requirements submit kar sakte hain; listings review ke baad public ho sakti hain.\n• Account: Login/Sign Up, Profile aur Worker ID Card.\n• Hiring: urgent workers, company requirements aur Owner management.\n• Career: Application Tracker, interview preparation aur safety checklist.\n• Tools: Salary & OT Calculator, Voice Search (browser support par), Emergency Hiring entry point.\n• Community: work-result videos aur job ratings (service available hone par).\n• Settings: dark mode, notifications aur personal preferences.\n• Founder & CEO: Virjul Kumar Yadav.\n• Support: kaammilaga.official@gmail.com.\n\nJob milna ya company verification automatic guarantee nahi hai. Kisi bhi vacancy ke employer, salary aur joining details khud verify karein. Neeche kisi category par tap karein ya specific sawal poochhein.',
+      actions:[['🔎 Jobs dhoondhein','#kmPremiumSearchPanel'],['👤 Founder','#aboutKaamMilega'],['❓ FAQ','#faq']]
+    },
+    founder:{heading:'KaamMilega Founder & CEO',answer:'KaamMilega ke Founder & CEO Virjul Kumar Yadav hain. Unki photo aur parichay website ke “About KaamMilega / Meet Our Founder” section mein diya gaya hai.',actions:[['Founder profile dekhein','#aboutKaamMilega']]},
+    search:{heading:'Job kaise search karein?',answer:'“Find Your Perfect Job” section mein job title/skill, city/location, minimum salary (optional) aur job type daal kar Search Jobs dabaiye. Sirf available public listings dikhengi; result na aaye to naye verified vacancies aane ka intezar karein. Kisi listing par contact karne se pehle employer aur conditions confirm karein.',actions:[['🔎 Search Jobs','#kmPremiumSearchPanel'],['📋 Current listings','#jobs']]},
+    listings:{heading:'Kitni jobs available hain?',answer:'Yahan live public jobs ka count website ke loaded listings se dikhaya jayega. Agar “No jobs yet” aaye to abhi active public vacancy nahi dikh rahi. Testing jobs ko asli vacancies na samjhein.',actions:[['Available jobs','#jobs']]},
+    apply:{heading:'Job par apply kaise karein?',answer:'Job Search kholkar suitable vacancy select karein. Us listing mein diye gaye apply/contact process ko follow karein. Apply karne se pehle company name, location, salary, shift, documents aur joining date verify karein. KaamMilega job dilane ki guarantee nahi deta.',actions:[['Jobs dekhein','#jobs'],['Safety tips','#safety']]},
+    posting:{heading:'Free job post kaise karein?',answer:'“Post a Job” se employer login/signup ke baad vacancy form bhar sakta hai: role/title, category, city, salary, job type, description aur valid contact number. Standard job search/posting website par free batayi gayi hai. Listing review/approval ke baad public ho sakti hai; bina company permission kisi aur ki vacancy mat post karein.',actions:[['➕ Post a Job','modal:jobModal'],['Employer guide','#forEmployers']]},
+    urgent:{heading:'Urgent hiring / workers chahiye?',answer:'Agar company ko turant staff chahiye to “Need Workers Urgently” / “Company Hiring Requirements” mein worker type, kitne log chahiye, city, salary/rate, joining date aur contact details bharein. Vacancy aur worker availability employer/team confirmation par depend karti hai. “Emergency Hiring” tool available jobs tak le jata hai; ye alag verified urgent-jobs database nahi hai.',actions:[['Urgent requirement','#hiringDesk'],['Company requirements','#companyRequirementsSection']]},
+    login:{heading:'Login / Sign Up',answer:'Header mein “Login / Sign Up” kholiye. Registered email aur password se Login karein, ya Sign Up se account banayein. Password kisi ko mat dein. Account khulne par Profile manage kar sakte hain.',actions:[['🔐 Login / Sign Up','modal:loginModal']]},
+    loginerror:{heading:'Login nahi ho raha?',answer:'Email aur password wahi use karein jo Sign Up mein diya tha. Email spelling, Caps Lock aur internet check karein. “Email not found or password incorrect” par “Forgot password?” se registered email par reset link mang sakte hain. Reset email na aaye to Spam folder aur Supabase email configuration check karna hoga. Password ya OTP chat mein share na karein.',actions:[['Open Login','modal:loginModal'],['Contact support','mailto:kaammilaga.official@gmail.com?subject=Login%20Help']]},
+    reset:{heading:'Forgot Password',answer:'Login / Sign Up → Login → “Forgot password?” par click karein. Registered email enter karke password reset link request karein. Email delivery aur redirect Supabase authentication setup par depend karte hain. Spam folder bhi check karein.',actions:[['Login kholiye','modal:loginModal']]},
+    profile:{heading:'My Profile',answer:'Login ke baad Profile mein apna naam, mobile, city, skills aur photo manage karein. Public profile mein wahi details share karein jinhe aap employer ko dikhana chahte hain. Login nahi hai to pehle Sign Up karein.',actions:[['Login / Sign Up','modal:loginModal'],['Career tools','#kmCareerPlus']]},
+    workercard:{heading:'KaamMilega Worker ID Card',answer:'KaamMilega Worker ID Card tool mein naam, experience, skill, city aur photo daalkar website-profile card bana sakte hain. Yeh sirf KaamMilega profile card hai, government ID ya employment verification nahi.',actions:[['Worker ID Card','#kmBrandWorkerCard']]},
+    application:{heading:'My Application Tracker',answer:'Free Career Tools mein application tracker se company name, job role aur application status apne browser mein save kar sakte hain. Yeh tracker manually maintained hai; employer se real-time application status apne-aap sync hone ka daava nahi karta.',actions:[['Application Tracker','#kmCareerPlus']]},
+    salary:{heading:'Salary & OT Calculator',answer:'Free Worker Tools mein daily salary, work days, OT hours, shift hours, single/double OT rate, PF%, ESI aur advance enter karein. “Calculate salary” dabane par approximate take-home salary dikhegi. Real payroll/PF/ESI company rules aur applicable law ke hisab se alag ho sakte hain.',actions:[['🧮 Calculator kholiye','#kmUniqueFeatures']]},
+    voice:{heading:'Voice Job Search',answer:'“Free Worker Tools” mein microphone permission dekar job title aur city bol sakte hain. Browser ki speech recognition support aur permission zaroori hai; unsupported browser mein manually query type karke Search Jobs karein.',actions:[['🎤 Voice Search','#kmUniqueFeatures']]},
+    interview:{heading:'Interview Preparation',answer:'Free Career Tools ke Interview Preparation card mein field chun kar interview questions ki practice karein. Answers apne experience, skills aur real job conditions ke hisab se dein.',actions:[['Interview tools','#kmCareerPlus']]},
+    saved:{heading:'Saved Jobs',answer:'Settings mein Saved Jobs ka option hai. Saved list browser/account implementation par depend kar sakti hai; agar koi job nahi dikh rahi to pehle public listings check karein. Website ki job search free hai.',actions:[['Jobs','#jobs']]},
+    setting:{heading:'Settings & Dark Mode',answer:'Header ke ⚙️ Settings mein appearance, dark mode, language preference, job preferences, Saved Jobs, application history, Help Center, privacy, report fake job aur sharing ke options hain. Kuch preferences browser mein save hoti hain; inka server-level sync/translation har feature par nahi hai.',actions:[['⚙️ Settings','click:kmSettingsTrigger']]},
+    notification:{heading:'Notifications / Job Alerts',answer:'Header ke 🔔 Notifications par click karke website messages, read/unread history aur job alert preferences dekhi ja sakti hain. Job skill/city preference browser mein save hoti hai. New job par automatic push ya email alerts ke liye alag configured backend service chahiye; filhal woh guaranteed active nahi hai.',actions:[['🔔 Notifications','click:kmSettingsNotifications'],['Job updates','#jobUpdatesSignup']]},
+    language:{heading:'Website language',answer:'Settings mein Language preference ka option hai. Iska matlab poori site ka Hindi/Gujarati translation automatically tayyar hona zaroori nahi. Site par kuch content English/Hinglish mein hai.',actions:[['Settings','click:kmSettingsTrigger']]},
+    dark:{heading:'Dark Mode kaise badlein?',answer:'Header → ⚙️ Settings → Dark mode switch se Light/Dark theme badlein. Agar koi text unreadable lage to website support ko screenshot bhejein.',actions:[['Settings','click:kmSettingsTrigger']]},
+    safety:{heading:'Fake job aur safety tips',answer:'KaamMilega ki public listing automatically employer-verified nahi hoti. Employer ka official number/website, company address, job title, salary, duty hours, accommodation, interview location aur joining details confirm karein. Kisi ko OTP, password, UPI PIN mat dein. Job dene ke naam par advance fees maange to report karein.',actions:[['Safety Center','#safetyCenter'],['Report fake job','mailto:kaammilaga.official@gmail.com?subject=Report%20Suspicious%20Job']]},
+    report:{heading:'Report Fake Job',answer:'Suspicious job report karne ke liye KaamMilega Support ko job title, listing link, company name aur problem ka description bhejein. Aadhaar/PAN, OTP, password ya banking PIN share na karein.',actions:[['🚩 Report Email','mailto:kaammilaga.official@gmail.com?subject=Report%20Suspicious%20Job'],['Safety','#safety']]},
+    support:{heading:'Customer Support',answer:'KaamMilega support email: kaammilaga.official@gmail.com. Website par Customer Support, FAQ, callback request aur feedback forms bhi hain. Response time guaranteed nahi hai. Password, OTP ya payment PIN kabhi share na karein.',actions:[['📧 Email support','mailto:kaammilaga.official@gmail.com'],['FAQ','#faq'],['Callback form','#callbackSupport']]},
+    privacy:{heading:'Privacy & Security',answer:'Privacy Policy section website par account, profile, job posting aur support forms mein users ki submitted details aur unke use ka overview deta hai. Unwanted personal data public job description mein mat dijiye.',actions:[['Privacy Policy','#privacyPolicy'],['Account safety','#trustSafety']]},
+    terms:{heading:'Terms & Policies',answer:'KaamMilega independent employment marketplace hai, government agency nahi. Users ko truthful job details post karni hain aur hiring/selection employer ki responsibility hai. Policy aur Terms section mein detailed guidelines milengi.',actions:[['Terms','#terms'],['Privacy','#privacyPolicy']]},
+    pricing:{heading:'Job posting charges / payment',answer:'KaamMilega website ke mutabik normal Job Search aur standard Job Posting FREE hain. Job paane ke liye kisi third party ko fees mat dein. Promotional/affiliate services ko job ke liye mandatory nahi bataya gaya hai. Kisi payment claim ko support se confirm karein.',actions:[['Free posting','modal:jobModal'],['Terms','#terms']]},
+    reviews:{heading:'Job ratings aur reviews',answer:'Worker & Employer Reviews section mein submitted ratings/comments dikhaye ja sakte hain. Live ratings service abhi “temporarily unavailable” dikha sakti hai. Kisi review ko bina verify kiye job quality ki guarantee mat samjhein.',actions:[['Reviews','#publicReviewsSection']]},
+    videos:{heading:'Work-result videos',answer:'“Tell Us If You Got Work” section mein users apni work-result video submit kar sakte hain. Owner review ke baad hi video public ho sakta hai. Is waqt approved videos temporarily unavailable bhi ho sakte hain.',actions:[['Work Result','#communityVideos']]},
+    owner:{heading:'Owner / Admin Panel',answer:'Owner Login sirf authorized KaamMilega administrator ke liye hai. Owner job approvals, requirements, videos aur reviews jaise management controls use kar sakta hai. Normal job seekers ko Owner credentials ki zarurat nahi hai.',actions:[['🛡️ Owner Login','modal:ownerLoginModal']]},
+    share:{heading:'KaamMilega share kaise karein?',answer:'Aap website ka official link friends, employers aur HR ko bhej sakte hain: https://kaammilaga.click/. Link share karne ke liye neeche “Copy link” dabaiye.',actions:[['🔗 Copy website link','copy:https://kaammilaga.click/']]},
+    skills:{heading:'Career resources / learning',answer:'Career Resources & Digital Skills section mein job-ready skills, CV preparation aur digital skills ke learning ideas hain. Ye informational resources hain; job apply karne ke liye kisi course/hosting plan ko kharidna zaroori nahi hai.',actions:[['Career Resources','#careerResources']]},
+    location:{heading:'India ke kis shehar mein jobs?',answer:'KaamMilega India ke liye job platform hai. Job Search mein apni city, e.g. Ahmedabad, Jaipur, Delhi, Pune, daal kar public vacancies filter karein. Har city mein active jobs hona guaranteed nahi hai.',actions:[['Job Search','#kmPremiumSearchPanel']]},
+    installation:{heading:'Mobile par app jaisa use karein',answer:'Supported browser ke menu mein “Add to Home screen” ya “Install app” option ho to KaamMilega ko phone home screen par add kar sakte hain. Isse ye zaroori nahi ki alag Android APK available ho.',actions:[['Mobile access info','#installWebsite']]},
+    feedback:{heading:'Suggest a feature / Feedback',answer:'Website ke “Suggest an improvement” section se feedback share karein, ya support ko email bhejein. Sensitive password, OTP ya card information include na karein.',actions:[['Feedback','#feedbackSection']]},
+    faq:{heading:'Frequently Asked Questions',answer:'KaamMilega FAQ mein free job posting, platform government website hai ya nahi, hiring process aur Customer Support se jude common questions hain.',actions:[['FAQ dekhein','#faq']]},
+    ai:{heading:'KaamMilega AI Help ke baare mein',answer:'Main website ka built-in help assistant hoon. Main is site ke existing features, rules, support aur navigation ko samjha sakta hoon. Main ChatGPT jaisa general AI nahi hoon, aur job availability, employer verification, payment status ya account access khud se confirm nahi kar sakta. Sawal ke hisab se main sahi page kholne mein madad karunga.',actions:[['Website overview','#aboutKaamMilega'],['Help','#faq']]}
+  };
+  const patterns=[
+    ['loginerror',/(login nahi|login nahin|login error|login fail|not found|incorrect password|cannot log|log in problem|लॉगिन नहीं|लॉगइन नहीं)/],
+    ['reset',/(forgot|forget password|reset password|password bhool|password bhul|पासवर्ड भूल|पासवर्ड रीसेट)/],
+    ['founder',/(founder|ceo|virjul|विरजुल|founder name|owner ka naam|मालिक का नाम)/],
+    ['notification',/(notification|alert|push|notify|नोटिफिकेशन|सूचना|email alert|job alert)/],
+    ['pricing',/(free|charge|fees|payment|paid|price|cost|commission|paise|paisa|रुपय|फीस|पैसा|भुगतान)/],
+    ['report',/(report fake|report job|complaint|shikayat|शिकायत|रिपोर्ट)/],
+    ['safety',/(fraud|fake|safety|safe|scam|security|verified|verification|फ्रॉड|नकली|धोखा|सेफ्टी)/],
+    ['workercard',/(id card|worker card|identity card|card banana|आईडी कार्ड)/],
+    ['application',/(application tracker|application history|applied|application status|track application|आवेदन|एप्लिकेशन ट्रैकर)/],
+    ['saved',/(saved job|bookmark|save job|सेव जॉब)/],
+    ['salary',/(salary|ot calculator|overtime|pf |esi|advance deduction|salary calculator|वेतन|सैलरी|ओवरटाइम)/],
+    ['voice',/(voice search|microphone|mic |bolkar|speech|आवाज|बोलकर|माइक)/],
+    ['interview',/(interview|इंटरव्यू)/],
+    ['reviews',/(review|rating|comment|रेटिंग|रिव्यू)/],
+    ['videos',/(video|work result|काम मिला वीडियो|वीडियो)/],
+    ['owner',/(owner login|admin|owner panel|admin panel|मालिक पैनल)/],
+    ['dark',/(dark mode|light mode|theme|डार्क मोड)/],
+    ['language',/(language|hindi|gujarati|english|भाषा|गुजराती)/],
+    ['setting',/(setting|सेटिंग)/],
+    ['share',/(share|copy link|शेयर|लिंक भेज)/],
+    ['faq',/(faq|frequently asked|common question|सवाल जवाब)/],
+    ['installation',/(install|app jaisa|home screen|apk|इंस्टॉल)/],
+    ['privacy',/(privacy|personal data|data protection|प्राइवेसी|गोपनीय)/],
+    ['terms',/(terms|policy|policies|rules|नियम|शर्त)/],
+    ['feedback',/(feedback|suggestion|improvement|sujhav|सुझाव)/],
+    ['support',/(contact|support|helpline|customer care|help desk|email|call back|callback|संपर्क|हेल्प|मदद)/],
+    ['urgent',/(urgent|emergency hiring|need worker|worker required|staff|hire|hiring|labour|mazdoor|मजदूर|भर्ती|कर्मचारी चाहिए)/],
+    ['posting',/(post a job|post job|job posting|job post|post vacancy|vacancy post|job dal|जॉब पोस्ट|नौकरी पोस्ट|जॉब डाल)/],
+    ['apply',/(apply|how to apply|apply kar|आवेदन कैसे|अप्लाई)/],
+    ['login',/(login|log in|signup|sign up|register|account|लॉगिन|साइन अप|रजिस्टर)/],
+    ['profile',/(profile|profile photo|bio data|biodata|प्रोफाइल)/],
+    ['skills',/(skill course|course|cv|resume|career resources|learn|training|कोर्स)/],
+    ['location',/(nearby|near me|city|location|shehar|शहर|आसपास)/],
+    ['listings',/(how many job|job count|available job|current job|active job|kitni job|कितनी नौकरी|कितनी जॉब)/],
+    ['search',/(job|naukri|work|employment|kaam|search|find|vacancy|नौकरी|काम|जॉब|ढूंढ)/],
+    ['ai',/(ai assistant|what can you do|tum kya|आप क्या कर|bot|assistant)/],
+    ['overview',/(kaammilega|website|all feature|sari jankari|poori jankari|puri jankari|sab kuch|web site|about|वेबसाइट|बारे में|पूरी जानकारी)/]
+  ];
+  const aliases=[
+    ['सब कुछ','overview'],['पूरी जानकारी','overview'],['सारे फीचर','overview'],['website ke bare','overview'],
+    ['kya kaam','overview'],['founder kaun','founder']
+  ];
+  const titleMap={overview:'Website overview',founder:'Founder & CEO',search:'Job Search',posting:'Job Posting',urgent:'Urgent Hiring',login:'Login / Signup',profile:'My Profile',security:'Safety',support:'Support'};
+  let lastText='';
+  function say(text,who,actions){
+    const d=document.createElement('div');d.className='km-ai-msg '+who;
+    const t=document.createElement('div');t.textContent=text;d.appendChild(t);
+    if(who==='bot'&&actions?.length){
+      const bar=document.createElement('div');bar.className='km-ai-actions';
+      actions.forEach(([label,target])=>{
+        const b=document.createElement('button');b.type='button';b.className='km-ai-action';b.textContent=label;
+        b.addEventListener('click',()=>act(target));bar.appendChild(b);
+      });d.appendChild(bar);
+    }
+    msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;
   }
-  async function ask(q){
-    const clean=q.trim();if(!clean)return;add(clean,'user');history.push({role:'user',content:clean});input.value='';send.disabled=true;
-    const typing=add('Thinking...','bot');typing.classList.add('km-ai-typing');
-    try{
-      const r=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json','apikey':(typeof SUPABASE_ANON_KEY!=='undefined'?SUPABASE_ANON_KEY:''),'Authorization':(typeof SUPABASE_ANON_KEY!=='undefined'?'Bearer '+SUPABASE_ANON_KEY:'')},body:JSON.stringify({message:clean,history:history.slice(-10),context:siteContext})});
-      const d=await r.json().catch(()=>({}));
-      if(!r.ok)throw new Error(d.error||'AI endpoint unavailable');
-      const answer=d.answer||d.output||d.message;if(!answer)throw new Error('Empty AI response');
-      typing.remove();add(String(answer),'bot');history.push({role:'assistant',content:String(answer)});
-    }catch(e){typing.remove();const answer=fallback(clean);add(answer,'bot');history.push({role:'assistant',content:answer});}
-    finally{send.disabled=false;input.focus()}
+  function act(target){
+    if(target.startsWith('topic:')){answer(target.slice(6));return;}
+    if(target.startsWith('copy:')){
+      const value=target.slice(5);
+      if(navigator.clipboard?.writeText)navigator.clipboard.writeText(value).then(()=>say('Website link copy ho gaya.','bot')).catch(()=>say('Copy nahi ho saka. Link: '+value,'bot'));
+      else say('Website link: '+value,'bot');return;
+    }
+    if(target.startsWith('mailto:')){location.href=target;return}
+    if(target.startsWith('modal:')){
+      closePanel();const id=target.slice(6);
+      const button=document.querySelector('[data-open="'+id+'"]');
+      if(button)button.click();else say('Is form ka button abhi available nahi. Site par manually '+id+' open karein.','bot');return;
+    }
+    if(target.startsWith('click:')){
+      closePanel();const el=get(target.slice(6));if(el)el.click();return;
+    }
+    const el=document.querySelector(target);
+    if(el){closePanel();el.scrollIntoView({behavior:'smooth',block:'start'});try{history.replaceState(null,'',target)}catch(_){}}
+    else say('Yeh section abhi page par nahi mila. Support email: kaammilaga.official@gmail.com','bot');
   }
-  form.addEventListener('submit',e=>{e.preventDefault();ask(input.value)});
+  function getPublicStats(){
+    const jobs=get('jobs');if(!jobs)return '';
+    const message=jobs.textContent.trim();
+    if(/loading jobs/i.test(message))return '\n\nJobs abhi load ho rahi hain. Thodi der baad refresh karke check karein.';
+    if(/no jobs yet|no active|no listings/i.test(message))return '\n\nAbhi page par koi public active job nahi dikh rahi.';
+    const stat=get('kmStatJobs')?.textContent?.trim();
+    if(stat && /^\d+$/.test(stat))return '\n\nWebsite par abhi Active Jobs count: '+stat+'.';
+    return '\n\nLive vacancies dekhne ke liye Jobs section kholiye.';
+  }
+  function matchFeatureFromPage(query){
+    const words=normalize(query).split(' ').filter(w=>w.length>3 && !/^(kaammilega|website|feature|about|what|how|where|kahan|mujhe|batao|please|jobs|job)$/.test(w));
+    if(!words.length)return null;
+    const selections=[];
+    for(const section of document.querySelectorAll('section[id]')){
+      if(section.closest('#kmAiPanel')||section.id==='kmNotifyDialog')continue;
+      const heading=section.querySelector('h2,h3');if(!heading)continue;
+      const name=heading.textContent.trim(),normal=normalize(name);
+      const score=words.filter(w=>normal.includes(w)).length;
+      if(score>=1)selections.push({score,name,id:section.id});
+    }
+    selections.sort((a,b)=>b.score-a.score);
+    return selections.length?selections.slice(0,3):null;
+  }
+  function detect(query){
+    const n=normalize(query);
+    // Action intent beats incidental mentions of pricing or other generic keywords.
+    if(/(post a job|post job|job posting|job post|post vacancy|vacancy post|job dal|जॉब पोस्ट|नौकरी पोस्ट|जॉब डाल)/.test(n) && !/(charge|fees|price|cost|paise|paisa|कितनी फीस|कितने पैसे)/.test(n))return 'posting';
+    if(/(forgot|forget password|reset password|password bhool|password bhul|पासवर्ड भूल)/.test(n))return 'reset';
+    if(/(how many job|kitni job|कितनी नौकरी|कितनी जॉब|active jobs|available jobs|jobs available)/.test(n))return 'listings';
+    if(/(applying|how to apply|apply for|apply kar|आवेदन कैसे|अप्लाई कैसे)/.test(n))return 'apply';
+    if(/(website|kaammilega).*(sab|sari|poori|puri|all|पूरी|सभी|बारे में)/.test(n) || /(sab|sari|poori|puri|all|पूरी|सभी).*(website|kaammilega)/.test(n))return 'overview';
+    for(const [word,id] of aliases)if(n.includes(word))return id;
+    for(const [id,re] of patterns)if(has(n,re))return id;
+    return null;
+  }
+  function answer(query){
+    let topic=detect(query);
+    if(!topic){
+      const sections=matchFeatureFromPage(query);
+      if(sections){say('Is sawal se related website sections mile hain. Neeche khol sakte hain:', 'bot',sections.map(x=>[x.name,'#'+x.id]));return;}
+      say('Is sawal ki verified jankari mere website help guide mein nahi hai. Main job search, posting, login, founder, settings, safety, salary calculator, worker ID, notifications aur support samjha sakta hoon.\n\nSawal thoda specific likhein, ya Help/FAQ dekhein. Main galat jankari nahi dunga.','bot',[['Website ke sab features','#aboutKaamMilega'],['FAQ','#faq'],['Support','mailto:kaammilaga.official@gmail.com']]);return;
+    }
+    if(topic==='overview' && /^(hi|hello|hey|namaste|नमस्ते)$/.test(normalize(query)))topic='ai';
+    const f=facts[topic]||facts.overview;
+    let body=f.heading+'\n\n'+f.answer;
+    if(topic==='listings'||/^(.*)(how many|kitni|कितनी)(.*)(job|नौकरी)(.*)$/.test(normalize(query)))body+=getPublicStats();
+    say(body,'bot',f.actions);
+  }
+  function openPanel(){
+    panel.classList.add('open');fab.setAttribute('aria-expanded','true');panel.setAttribute('aria-hidden','false');
+    if(!msgs.children.length){
+      say('Namaste! 👋 Main KaamMilega ka Website Help Assistant hoon.\n\nAap site ke features, Founder, job search, free job posting, login, dark mode, safety, salary calculator, notifications aur support ke baare mein Hindi, Hinglish ya English mein pooch sakte hain.\n\nMain website ki available jankari se jawab deta hoon. Live job ya backend status verify nahi kar sakta.','bot',[['📚 Website ki poori jankari','topic:overview'],['🔎 Search Jobs','#kmPremiumSearchPanel'],['👤 Founder','topic:founder']]);
+    }
+    setTimeout(()=>input.focus(),60);
+  }
+  function closePanel(){panel.classList.remove('open');fab.setAttribute('aria-expanded','false');panel.setAttribute('aria-hidden','true');}
+  fab.setAttribute('aria-expanded','false');fab.setAttribute('aria-controls','kmAiPanel');panel.setAttribute('role','dialog');panel.setAttribute('aria-modal','false');panel.setAttribute('aria-hidden','true');
+  fab.addEventListener('click',()=>panel.classList.contains('open')?closePanel():openPanel());
+  close.addEventListener('click',closePanel);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))closePanel()});
+  document.querySelectorAll('[data-ai-q]').forEach(button=>button.addEventListener('click',()=>{const q=button.dataset.aiQ||button.textContent;input.value=q;form.requestSubmit();}));
+  function submit(e){e.preventDefault();const question=isWord(input.value);if(!question)return;input.value='';say(question,'user');answer(question);input.focus();}
+  form.addEventListener('submit',submit);
+  window.kaamMilegaHelp={ask:q=>{openPanel();answer(q)},open:openPanel};
 })();
+
 </script>
 <a class="skip-link" href="#main">Skip to main content</a><span id="main" tabindex="-1"></span>
 <div class="site-status" role="status"><span aria-hidden="true" class="status-dot"></span><span>KaamMilega platform is available. Vacancy availability can change; verify details before applying.</span></div>

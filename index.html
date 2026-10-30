@@ -440,7 +440,7 @@ img,video,iframe{max-width:100%}
 <button type="button" class="km-settings-item" data-km-action="report"><span class="km-symbol">🚩</span> Report Fake Job <span class="km-right">›</span></button>
 <button type="button" class="km-settings-item" data-km-action="share"><span class="km-symbol">📤</span> Share KaamMilega <span class="km-right">›</span></button>
 <button type="button" class="km-settings-item" data-km-action="about"><span class="km-symbol">ℹ️</span> About &amp; Policies <span class="km-right">›</span></button>
-<button type="button" class="km-settings-item" data-km-action="logout"><span class="km-symbol">🚪</span> Logout <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="logout" id="kmSettingsLogout" hidden><span class="km-symbol">🚪</span> Logout <span class="km-right">›</span></button>
 <div class="km-settings-note">Notifications: browser alerts require permission and a configured push service. This menu does not enable automatic job alerts.</div>
 </aside>
 
@@ -868,6 +868,8 @@ img,video,iframe{max-width:100%}
 <div class="formgroup"><label>Email</label><input class="input" id="loginEmail" placeholder="you@example.com" type="email"/></div>
 <div class="formgroup"><label>Password</label><input class="input" id="loginPassword" placeholder="Your password" type="password"/></div>
 <button class="btn" id="loginSubmit" type="button">Login</button>
+<div style="margin-top:12px"><button type="button" id="kmForgotPassword" style="background:none;border:0;color:#93c5fd;text-decoration:underline;cursor:pointer;font:inherit;padding:5px 0">Forgot password?</button></div>
+<div id="kmPasswordResetMessage" role="status" aria-live="polite" style="margin-top:8px"></div>
 </div>
 <div id="loginMsg"></div>
 </div></div>
@@ -4448,6 +4450,115 @@ about:()=>{panel.hidden=true;$('kmSettingsBackdrop').hidden=true;jump('aboutKaam
 panel.addEventListener('click',e=>{const b=e.target.closest('[data-km-action]');if(!b)return;actionsMap[b.dataset.kmAction]?.()});
 })();
 </script>
+
+<script id="km-auth-experience-v1">
+(function(){
+"use strict";
+const byId=id=>document.getElementById(id);
+const logout=byId("kmSettingsLogout");
+function setLogoutVisibility(signedIn){
+  if(logout){logout.hidden=!signedIn;logout.style.display=signedIn?"":"none";}
+}
+async function syncAuth(){
+  try {
+    if(typeof getCurrentUser!=="function"){setLogoutVisibility(false);return null;}
+    const user=await getCurrentUser();
+    setLogoutVisibility(Boolean(user&&user.id));
+    return user;
+  }catch(_){setLogoutVisibility(false);return null;}
+}
+const reset=byId("kmForgotPassword");
+if(reset)reset.addEventListener("click",async function(){
+  const target=byId("kmPasswordResetMessage");
+  const email=(byId("loginEmail")?.value||"").trim();
+  if(!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+    if(target)target.textContent="Please enter your registered email address first.";
+    byId("loginEmail")?.focus();return;
+  }
+  reset.disabled=true;
+  if(target)target.textContent="Sending reset email...";
+  try{
+    const redirect=location.origin+location.pathname;
+    const response=await fetch(SUPABASE_URL+"/auth/v1/recover?redirect_to="+encodeURIComponent(redirect),{
+      method:"POST",
+      headers:{"apikey":SUPABASE_ANON_KEY,"Content-Type":"application/json"},
+      body:JSON.stringify({email})
+    });
+    if(!response.ok){const data=await response.json().catch(()=>({}));throw new Error(data.msg||data.error_description||data.message||"Request failed");}
+    if(target)target.textContent="If this email is registered, a password reset link will be sent. Check your inbox and spam folder.";
+  }catch(e){
+    if(target)target.textContent="Could not send reset link: "+e.message;
+  }finally{reset.disabled=false;}
+});
+/* Supabase recovery link returns an access token in the URL fragment.
+   Ask the user for a new password and update it via the authenticated endpoint. */
+async function handleRecovery(){
+  const hash=new URLSearchParams(location.hash.replace(/^#/,""));
+  if(hash.get("type")!=="recovery" || !hash.get("access_token"))return;
+  const token=hash.get("access_token");
+  history.replaceState(null,"",location.pathname+location.search);
+  const box=document.createElement("div");
+  box.id="kmRecoveryOverlay";
+  box.style.cssText="position:fixed;inset:0;z-index:999999;background:#07111fdd;display:flex;align-items:center;justify-content:center;padding:18px";
+  box.innerHTML='<form style="background:#17243b;color:#f8fafc;width:min(100%,430px);padding:25px;border-radius:16px;border:1px solid #475569"><h2 style="color:#fff;margin-top:0">Create a new password</h2><label for="kmNewPassword">New password (at least 8 characters)</label><input id="kmNewPassword" type="password" autocomplete="new-password" minlength="8" required style="display:block;width:100%;box-sizing:border-box;margin:10px 0 16px;padding:12px;border-radius:8px;border:1px solid #64748b;background:#0e192c;color:#fff"><button type="submit" style="padding:11px 18px;background:#1264bb;color:#fff;border:0;border-radius:8px">Update password</button><p id="kmRecoveryStatus" role="status"></p></form>';
+  document.body.appendChild(box);
+  box.querySelector("form").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const pw=byId("kmNewPassword").value;
+    const status=byId("kmRecoveryStatus");
+    if(pw.length<8){status.textContent="Use at least 8 characters.";return;}
+    try{
+      const r=await fetch(SUPABASE_URL+"/auth/v1/user",{
+        method:"PUT",headers:{"apikey":SUPABASE_ANON_KEY,"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+        body:JSON.stringify({password:pw})
+      });
+      const d=await r.json().catch(()=>({}));
+      if(!r.ok)throw new Error(d.msg||d.message||"Could not update password");
+      status.textContent="Password updated. You can now log in.";
+      box.querySelector("button").disabled=true;
+      setTimeout(()=>box.remove(),1800);
+    }catch(err){status.textContent=err.message;}
+  });
+}
+function welcome(user){
+  if(!user?.id)return;
+  const key="km_welcome_shown_"+user.id;
+  try{if(sessionStorage.getItem(key))return;sessionStorage.setItem(key,"1");}catch(_){}
+  const name=(user.user_metadata?.full_name||user.user_metadata?.name||user.email?.split("@")[0]||"").trim();
+  const message="Welcome to KaamMilega"+(name?", "+name:"")+"! Find jobs and manage your profile.";
+  if(typeof showToast==="function")showToast(message);
+  const center=byId("kmWelcomeNotification");
+  if(center){center.textContent=message;center.hidden=false;}
+}
+const banner=document.createElement("div");
+banner.id="kmWelcomeNotification";banner.hidden=true;
+banner.setAttribute("role","status");
+banner.style.cssText="position:fixed;top:78px;left:50%;transform:translateX(-50%);max-width:calc(100vw - 28px);width:max-content;z-index:1100;padding:13px 18px;background:#133a60;color:white;border:1px solid #60a5fa;border-radius:12px;box-shadow:0 8px 30px #0005;text-align:center";
+document.body.appendChild(banner);
+function showWelcome(user){
+  welcome(user);
+  if(!banner.hidden)setTimeout(()=>banner.hidden=true,6500);
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest("#kmSettingsTrigger,#kmSettingsPanel,[data-km-action='logout'],#logoutBtn"))syncAuth();
+},true);
+window.addEventListener("storage",e=>{if(e.key==="km_access_token"||e.key==="km_refresh_token")syncAuth();});
+/* Existing login code writes session tokens to localStorage; watch for those changes
+   without changing existing login, signup, or owner code. */
+let lastToken=null;
+setInterval(async()=>{
+  const token=localStorage.getItem("km_access_token")||"";
+  if(token!==lastToken){
+    lastToken=token;
+    const user=await syncAuth();
+    if(token&&user)showWelcome(user);
+  }
+},1800);
+syncAuth().then(user=>{lastToken=localStorage.getItem("km_access_token")||"";if(user)showWelcome(user);});
+handleRecovery();
+})();
+</script>
+<style id="km-auth-experience-style">#kmSettingsLogout[hidden],#kmWelcomeNotification[hidden]{display:none!important}</style>
 </body>
 </html>
 <!-- Targeted fixes: only the buttons/errors reported by the owner -->

@@ -1160,7 +1160,7 @@ window.addEventListener("pageshow",()=>{ updateAuthUI(); });
 
 // Login demo-safe flow: if Supabase Auth is configured for phone OTP, request OTP.
 // Otherwise user can still browse and use WhatsApp/urgent forms.
-$("sendOtp").onclick=async()=>{
+if($("sendOtp"))$("sendOtp").onclick=async()=>{
   const phone=$("loginPhone").value.trim();
   if(!phone){msg("loginMsg","Enter your mobile number.","error");return}
   try{
@@ -1175,7 +1175,7 @@ $("sendOtp").onclick=async()=>{
   }catch(e){msg("loginMsg",e.message,"error")}
 };
 
-$("verifyOtp").onclick=async()=>{
+if($("verifyOtp"))$("verifyOtp").onclick=async()=>{
   const phone=$("loginPhone").value.trim(), token=$("otp").value.trim();
   try{
     const r=await fetch(SUPABASE_URL+"/auth/v1/verify",{
@@ -1254,7 +1254,7 @@ $("searchBtn").onclick=async()=>{
   $("jobs").innerHTML=data.map(j=>{const p=profiles[j.employer_id]||{};const skills=Array.isArray(p.skills)?p.skills.join(", "):"";const avatar=p.avatar_url||avatarPlaceholder(p.name||"E");return `<div class="card"><span class="tag">${escapeHtml(j.category)}</span><h3>${escapeHtml(j.title)}</h3><p class="muted">${escapeHtml(j.city)} · ${escapeHtml(j.salary||"")}</p><p>${escapeHtml(j.description||"")}</p><div style="display:flex;align-items:center;gap:10px;margin-top:12px"><img class="avatar" style="width:40px;height:40px;font-size:15px" src="${escapeHtml(avatar)}" alt="Employer profile"><div><b>${escapeHtml(p.name||"Employer")}</b><div class="muted" style="font-size:12px">${escapeHtml(p.city||j.city||"")}${skills?" · "+escapeHtml(skills):""}</div></div></div></div>`}).join("");
 };
 
-$("payFeatured").onclick=async()=>{
+if($("payFeatured"))$("payFeatured").onclick=async()=>{
   const token=await getSession(); if(!token){msg("featuredMsg","Please login first.","error");return}
   if(!$("fConfirm").checked){msg("featuredMsg","Please confirm the details first.","error");return}
   const body={company_name:$("fCompany").value.trim(),contact_person:$("fContact").value.trim(),mobile:$("fMobile").value.trim(),job_title:$("fTitle").value.trim(),category:$("fCategory").value.trim(),city:$("fCity").value.trim(),salary:$("fSalary").value.trim(),job_type:"Full Time",description:$("fDescription").value.trim(),plan_days:Number($("fPlan").value)};
@@ -3758,6 +3758,7 @@ body.km-dark #kmAiPanel .km-ai-form input::placeholder{color:#adc3dd!important}
 
   const trackKey='km_application_tracker_v1', trackList=document.getElementById('kmTrackList');
   function renderTrack(){
+    if(!trackList)return;
     let a=[];try{a=JSON.parse(localStorage.getItem(trackKey)||'[]')}catch(e){}
     if(!a.length){trackList.innerHTML='<div class="muted km-mini">No applications saved yet.</div>';return}
     trackList.innerHTML=a.map(x=>'<div class="km-skill-card"><b>'+esc(x.job)+'</b><div class="km-track"><span class="active">'+esc(x.status)+'</span></div></div>').join('');
@@ -4552,6 +4553,7 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
   }
   async function checkAccess(){
     await readOAuthCallback();
+    if(!gate)return true; // Google gate UI no longer exists. Keep normal site login.
     const user=await getGoogleUser();
     if(acceptGoogleUser(user)){
       gate.style.display='none';document.body.classList.remove('km-auth-locked');
@@ -4677,7 +4679,7 @@ function email(){open('Email Alerts');const p=read('km_job_alert_v2',{});const s
 function share(){const url='https://kaammilaga.click/';if(navigator.share){navigator.share({title:'KaamMilega',url}).catch(()=>{})}else if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>alert('Website link copied.')).catch(()=>prompt('Copy link:',url))}else prompt('Copy link:',url)}
 function report(){open('Report Fake Job');const link=field('Job link / title');body.append(el('label',{},'Why is this job suspicious?'));const reason=el('textarea',{rows:'4',placeholder:'Explain what happened (do not share passwords or OTPs).'});body.append(reason);note('This opens your email app to send the report to KaamMilega support. It does not submit to the database automatically.');button('Send report by email',()=>{if(!reason.value.trim())return alert('Please enter the reason.');const subject='Report suspicious job — KaamMilega';const msg='Job: '+link.value.trim()+'\nReason: '+reason.value.trim();window.location.href='mailto:kaammilaga.official@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(msg)},true)}
 function logout(){open('Logout');note('Do you want to sign out of your KaamMilega account?');button('Log out',()=>{close();const b=$('logoutBtn');if(b)b.click();else alert('Logout is unavailable. Please open your account profile.')},true)}
-const actionsMap={language,preferences,saved,applications,email,share,report,logout,
+const actionsMap={language,preferences:prefs,saved,applications,email,share,report,logout,
 profile:()=>{panel.hidden=true;$('kmSettingsBackdrop').hidden=true;const b=$('authNavBtn');b?.click()},
 privacy:()=>{panel.hidden=true;$('kmSettingsBackdrop').hidden=true;jump('privacyPolicy')},
 help:()=>{panel.hidden=true;$('kmSettingsBackdrop').hidden=true;jump('faq')},

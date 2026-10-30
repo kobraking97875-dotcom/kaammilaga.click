@@ -4645,6 +4645,72 @@ if(!localStorage.getItem("km_notify_intro_v2")){
 }
 })();
 </script>
+
+<style id="km-unique-features-style">
+#kmUniqueFeatures{max-width:1180px;margin:34px auto;padding:22px 16px;color:var(--text,#e8eef7)}
+#kmUniqueFeatures .km-uf-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:16px;margin-top:18px}
+#kmUniqueFeatures .km-uf-card{background:var(--card,#18273f);color:var(--text,#e8eef7);border:1px solid #70809a55;border-radius:16px;padding:20px;min-width:0}
+#kmUniqueFeatures input,#kmUniqueFeatures select{width:100%;box-sizing:border-box;padding:11px;margin:6px 0 12px;border-radius:9px;border:1px solid #8190a6;background:#101e32;color:#fff}
+#kmUniqueFeatures label{display:block;font-weight:600;font-size:14px}
+#kmUniqueFeatures button{background:#1265bb;color:#fff;border:0;border-radius:9px;padding:11px 14px;cursor:pointer}
+#kmUniqueFeatures .km-uf-result{background:#0f2441;color:#eaf3ff;padding:12px;border-radius:9px;line-height:1.7;margin-top:12px}
+#kmUniqueFeatures .km-uf-note{font-size:13px;opacity:.85}
+#kmUniqueFeatures .km-uf-card h3{margin-top:0}
+</style>
+<section id="kmUniqueFeatures" aria-labelledby="kmUniqueTitle">
+<span class="eyebrow">FREE WORKER TOOLS</span><h2 id="kmUniqueTitle">Smart tools for jobs &amp; hiring</h2>
+<p>Salary calculation, voice search aur urgent hiring ke useful tools.</p>
+<div class="km-uf-grid">
+<article class="km-uf-card"><h3>🧮 Salary &amp; OT Calculator</h3>
+<label for="kmUfDaily">Daily salary (₹)</label><input id="kmUfDaily" type="number" min="0" step="0.01" value="650">
+<label for="kmUfDays">Days worked</label><input id="kmUfDays" type="number" min="0" step="0.5" value="23">
+<label for="kmUfHours">OT hours</label><input id="kmUfHours" type="number" min="0" step="0.5" value="43">
+<label for="kmUfShift">Regular shift hours</label><input id="kmUfShift" type="number" min="1" max="24" value="8">
+<label for="kmUfRate">OT rate</label><select id="kmUfRate"><option value="1">Single rate (1×)</option><option value="2">Double rate (2×)</option></select>
+<label for="kmUfPf">PF deduction (%)</label><input id="kmUfPf" type="number" min="0" max="100" step="0.1" value="12">
+<label for="kmUfEsi">ESI deduction (₹)</label><input id="kmUfEsi" type="number" min="0" value="200">
+<label for="kmUfAdvance">Advance / other deductions (₹)</label><input id="kmUfAdvance" type="number" min="0" value="5000">
+<button id="kmUfCalculate" type="button">Calculate salary</button><div id="kmUfSalaryResult" class="km-uf-result" role="status">Enter details and calculate.</div>
+<p class="km-uf-note">Estimate only. Actual PF/ESI and overtime eligibility depend on applicable rules and payroll basis.</p></article>
+<article class="km-uf-card"><h3>🎙️ Voice Job Search</h3><p>Bolkar job title aur city search karein (supported browsers).</p>
+<button id="kmUfVoice" type="button">🎤 Start speaking</button><p id="kmUfVoiceStatus" role="status">Example: “Welder Ahmedabad”</p>
+<label for="kmUfVoiceText">Recognized search / manual entry</label><input id="kmUfVoiceText" placeholder="Welder Ahmedabad" type="text">
+<button id="kmUfVoiceGo" type="button">Search jobs</button><p class="km-uf-note">Microphone permission required. Voice recognition may use your browser's speech service.</p></article>
+<article class="km-uf-card"><h3>🚨 Emergency Hiring</h3><p>Urgent hiring ke liye employer se job title, city aur joining date confirm karein.</p>
+<button id="kmUfUrgentBrowse" type="button">🔎 View available jobs</button>
+<p class="km-uf-note">Only real, published job listings appear in search. Urgent vacancies are not fabricated or automatically labeled.</p>
+<button id="kmUfUrgentPost" type="button">➕ Post urgent requirement</button><p id="kmUfUrgentStatus" role="status"></p>
+</article></div></section>
+<script id="km-unique-features-script">
+(()=>{
+ const $=id=>document.getElementById(id);
+ const money=n=>'₹'+n.toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});
+ $('kmUfCalculate').addEventListener('click',()=>{
+  const num=id=>Number($(id).value), daily=num('kmUfDaily'),days=num('kmUfDays'),hours=num('kmUfHours'),shift=num('kmUfShift'),rate=num('kmUfRate'),pf=num('kmUfPf'),esi=num('kmUfEsi'),advance=num('kmUfAdvance');
+  if(![daily,days,hours,shift,rate,pf,esi,advance].every(Number.isFinite)||[daily,days,hours,esi,advance].some(x=>x<0)||shift<=0||pf<0||pf>100){$('kmUfSalaryResult').textContent='Please enter valid non-negative values.';return}
+  const basic=daily*days,ot=(daily/shift)*hours*rate,pfAmt=basic*pf/100,net=basic+ot-pfAmt-esi-advance;
+  $('kmUfSalaryResult').textContent='Basic: '+money(basic)+' | OT: '+money(ot)+' | PF (estimated): '+money(pfAmt)+' | ESI: '+money(esi)+' | Advance: '+money(advance)+' | Estimated take-home: '+money(net);
+ });
+ function search(query){const q=query.trim();if(!q){$('kmUfVoiceStatus').textContent='Please enter a job title or city.';return}const skill=$('searchSkill');if(skill)skill.value=q;const btn=$('searchBtn');if(btn)btn.click();else location.hash='jobs';$('kmUfVoiceStatus').textContent='Searching for: '+q;}
+ $('kmUfVoiceGo').addEventListener('click',()=>search($('kmUfVoiceText').value));
+ $('kmUfVoice').addEventListener('click',()=>{
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(!SR){$('kmUfVoiceStatus').textContent='Voice recognition is not available in this browser. Type your search above.';return}
+  const rec=new SR();rec.lang='hi-IN';rec.interimResults=false;rec.maxAlternatives=1;
+  $('kmUfVoiceStatus').textContent='Listening...';
+  rec.onresult=e=>{const txt=e.results[0][0].transcript;$('kmUfVoiceText').value=txt;$('kmUfVoiceStatus').textContent='Heard: '+txt+' — tap Search jobs to continue.'};
+  rec.onerror=e=>{$('kmUfVoiceStatus').textContent='Microphone / speech error: '+e.error+'. You can type instead.'};
+  rec.onend=()=>{if($('kmUfVoiceStatus').textContent==='Listening...')$('kmUfVoiceStatus').textContent='No speech recognized. Try again.'};
+  try{rec.start()}catch(e){$('kmUfVoiceStatus').textContent='Unable to start microphone.'}
+ });
+ $('kmUfUrgentBrowse').addEventListener('click',()=>document.getElementById('jobs')?.scrollIntoView({behavior:'smooth',block:'start'}));
+ $('kmUfUrgentPost').addEventListener('click',()=>{
+  const btn=document.querySelector('[data-km-action="workers"]')||document.querySelector('[data-open="jobModal"]');
+  if(btn){btn.click();$('kmUfUrgentStatus').textContent='Enter your urgent requirement and verify details before submitting.'}
+  else{$('kmUfUrgentStatus').textContent='Please contact KaamMilega support to post an urgent requirement.'}
+ });
+})();
+</script>
 </body>
 </html>
 <!-- Targeted fixes: only the buttons/errors reported by the owner -->

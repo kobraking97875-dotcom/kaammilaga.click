@@ -296,6 +296,66 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 .km-settings-trigger:hover{background:#eff6ff}.km-settings-panel{position:fixed;top:75px;right:14px;width:min(360px,calc(100vw - 28px));max-height:calc(100dvh - 92px);overflow:auto;background:#111d30;color:#f8fafc;border:1px solid #475569;border-radius:17px;box-shadow:0 18px 65px #0006;z-index:1000;padding:14px}.km-settings-panel[hidden]{display:none!important}.km-settings-head{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 12px;border-bottom:1px solid #334155}.km-settings-head h2{font-size:19px;margin:0;color:white}.km-settings-close{background:transparent;border:0;color:white;font-size:26px;cursor:pointer}.km-settings-item{width:100%;display:flex;align-items:center;gap:12px;text-align:left;border:0;border-radius:11px;background:transparent;color:#f8fafc;padding:13px 11px;font:600 14px inherit;cursor:pointer;min-height:45px}.km-settings-item:hover,.km-settings-item:focus-visible{background:#273c59}.km-settings-item .km-symbol{width:25px;font-size:20px;text-align:center}.km-settings-item .km-right{margin-left:auto;color:#93c5fd}.km-settings-note{font-size:12px;color:#cbd5e1;padding:9px 12px;line-height:1.5}.km-settings-section{padding:10px 10px 4px;font-size:11px;color:#93c5fd;letter-spacing:1.1px;font-weight:800}.km-settings-toggle{margin-left:auto;accent-color:#60a5fa;width:19px;height:19px}.km-settings-backdrop{position:fixed;inset:0;z-index:999;background:#0004}.km-settings-backdrop[hidden]{display:none!important}
 body.km-dark{background:#0b1220!important;color:#e2e8f0!important;color-scheme:dark}body.km-dark header,body.km-dark .card,body.km-dark .km-dash-shell,body.km-dark .km-v2-inner,body.km-dark .km-trust-intro,body.km-dark .km-trust-steps article,body.km-dark .km-dash-panel,body.km-dark .km-stat,body.km-dark .km-v2-panel,body.km-dark .km-affiliate-shell,body.km-dark .km-affiliate-card,body.km-dark .info-card,body.km-dark .modalbox,body.km-dark .policy-box,body.km-dark .km-photo-card,body.km-dark .km-photo-tile,body.km-dark .trust-card{background:#172338!important;color:#e2e8f0!important;border-color:#334155!important}body.km-dark h1,body.km-dark h2,body.km-dark h3,body.km-dark p,body.km-dark .muted{color:inherit}body.km-dark .km-quality-banner{background:#1e293b;color:#dbeafe}body.km-dark input,body.km-dark select,body.km-dark textarea{background:#0f172a;color:#f8fafc;border-color:#475569}body.km-dark .km-settings-trigger{background:#1e293b;color:white;border-color:#475569}body.km-dark .btn.ghost{background:#263650;color:#bfdbfe}
 @media(max-width:780px){.nav{flex-wrap:nowrap!important}.navlinks{width:auto!important;overflow:visible!important;padding:0!important}.brand{font-size:20px}.km-settings-panel{top:68px}}
+
+/* Header actions: login and notifications remain visible outside Settings */
+.km-top-action {
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 12px;min-height:42px;border:1px solid #cbd5e1;
+  border-radius:11px;background:#fff;color:#164477;cursor:pointer;
+  font:700 13px/1.25 Arial,sans-serif;white-space:nowrap;
+}
+.km-top-action:hover,.km-top-action:focus-visible{background:#eff6ff;outline-offset:2px}
+.navlinks#kmTopActions{display:flex;align-items:center;justify-content:flex-end;gap:7px}
+@media(max-width:520px){
+ .nav{gap:6px;padding-left:10px!important;padding-right:10px!important}
+ .brand{font-size:17px!important;white-space:nowrap}
+ .brand-sub{font-size:8px!important}
+ .km-top-action{font-size:12px;padding:8px;min-height:40px}
+ .km-notification-action span{display:none}
+ .km-settings-trigger{font-size:12px;padding:8px;min-height:40px}
+ .km-settings-trigger span{display:none}
+}
+/* Dark mode contrast repair: remove light panels with pale text. */
+body.km-dark{background:#0b1220!important;color:#e5edf9!important}
+body.km-dark main,
+body.km-dark section:not(.hero),
+body.km-dark .section,
+body.km-dark .info-section{color:#e5edf9}
+body.km-dark :is(
+ .km-trust-steps,.km-v2-shell,.km-v2-inner,.km-v2-panel,.km-dash-shell,
+ .km-dash-panel,.km-stat,.km-trust-intro,.km-affiliate-shell,.km-affiliate-card,
+ .info-card,.card,.trust-card,.km-photo-card,.km-photo-tile,
+ .km-result-card,.km-work-result,.km-review-card,.km-ratings-card,
+ .km-panel,.km-box,.km-tool-card,.km-feature-card,.km-feature,
+ .km-quality-card,.km-steps-card,.km-metric,.km-dashboard-card,
+ .km-career-card,.km-job-card,.km-alert-card,.km-result-form,
+ .km-work-result-form,.km-work-result-box,.km-review-form
+){background-color:#172338!important;color:#e5edf9!important;border-color:#364861!important}
+body.km-dark :is(
+ .km-trust-steps,.km-v2-inner,.km-dash-shell,.km-dash-panel,.km-stat,
+ .km-affiliate-shell,.km-affiliate-card,.info-card,.card,.trust-card,
+ .km-result-card,.km-panel,.km-tool-card,.km-feature-card
+) :is(h1,h2,h3,h4,h5,p,label,small,strong,span){
+ color:inherit;
+}
+body.km-dark :is(.km-trust-steps,.km-v2-inner,.km-dash-shell,.km-dash-panel,.km-stat,.km-affiliate-shell,.km-affiliate-card,.info-card,.card,.trust-card) :is(.muted,.subtle,.help-text,small){color:#b9c9dd!important}
+body.km-dark :is(input,select,textarea){background:#101b30!important;color:#f8fafc!important;border:1px solid #52647e!important}
+body.km-dark :is(input,textarea)::placeholder{color:#a9b7cc!important;opacity:1}
+body.km-dark :is(button,.btn){color:inherit}
+body.km-dark .km-top-action{background:#1d304a;color:#f1f5f9;border-color:#52647e}
+body.km-dark .km-top-action:hover{background:#2b4260}
+body.km-dark :is(.km-settings-panel,.km-settings-panel *){color:#f8fafc}
+body.km-dark .km-settings-section{color:#93c5fd!important}
+body.km-dark .km-settings-note{color:#cbd5e1!important}
+body.km-dark .km-settings-item .km-right{color:#93c5fd!important}
+/* Light surfaces inside dark content, including the work result and ratings forms */
+body.km-dark :is(.km-result-form,.km-work-result-form,.km-work-result-box,.km-review-form,[class*="result-card"],[class*="rating-card"],[class*="work-result"],[class*="review-card"]){
+ background:#172338!important;color:#e5edf9!important;border-color:#364861!important;
+}
+body.km-dark :is(.km-result-form,.km-work-result-form,.km-work-result-box,.km-review-form,[class*="result-card"],[class*="rating-card"],[class*="work-result"],[class*="review-card"]) :is(h1,h2,h3,h4,p,label,small,span,strong){color:#e5edf9!important}
+body.km-dark a{color:#93c5fd}
+body.km-dark .km-settings-panel a{color:#f8fafc}
+
 </style></head>
 <style id="km-google-gate-style">
 #kmGoogleGate{position:fixed;inset:0;z-index:999999;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:22px;font-family:Arial,sans-serif;color:#fff}#kmGoogleGate .km-gate-card{width:min(100%,520px);max-height:calc(100dvh - 28px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 24px 80px #0005;text-align:center}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:hidden}
@@ -309,21 +369,38 @@ body.km-dark{background:#0b1220!important;color:#e2e8f0!important;color-scheme:d
 <div class="km-settings-section">APPEARANCE & TOOLS</div>
 <label class="km-settings-item"><span class="km-symbol">🌙</span> Dark mode <input type="checkbox" id="kmDarkSwitch" class="km-settings-toggle" aria-label="Dark mode"></label>
 <button class="km-settings-item" type="button" id="kmSettingsSearch"><span class="km-symbol">🔎</span> Search Jobs <span class="km-right">›</span></button>
-<button class="km-settings-item" type="button" id="kmSettingsNotifications"><span class="km-symbol">🔔</span> Notifications <span class="km-right">›</span></button>
+
+<div class="km-settings-section">PERSONAL SETTINGS</div>
+<button type="button" class="km-settings-item" data-km-action="language"><span class="km-symbol">🌐</span> Language <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="profile"><span class="km-symbol">👤</span> My Profile <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="preferences"><span class="km-symbol">🎯</span> Job Preferences <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="saved"><span class="km-symbol">🔖</span> Saved Jobs <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="applications"><span class="km-symbol">📋</span> Application History <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="email"><span class="km-symbol">✉️</span> Email Alerts <span class="km-right">›</span></button>
+
 <div class="km-settings-section">ACCOUNT & HIRING</div>
-<button class="km-settings-item" type="button" data-open="loginModal" id="authNavBtn"><span class="km-symbol">👤</span> Login / Sign Up <span class="km-right">›</span></button>
+
 <button class="km-settings-item" type="button" data-open="ownerLoginModal" id="ownerLoginBtn"><span class="km-symbol">🛡️</span> Owner Login <span class="km-right">›</span></button>
 <button class="km-settings-item" type="button" data-open="jobModal"><span class="km-symbol">➕</span> Post a Job <span class="km-right">›</span></button>
 <button class="km-settings-item" type="button" data-open="urgentModal"><span class="km-symbol">👷</span> Need Workers Urgently <span class="km-right">›</span></button>
 <div class="km-settings-section">HELP & INFORMATION</div>
 <button class="km-settings-item" type="button" data-open="supportModal"><span class="km-symbol">🎧</span> Customer Support <span class="km-right">›</span></button>
-<a class="km-settings-item" href="#privacy-policy"><span class="km-symbol">🔒</span> Privacy & Security <span class="km-right">›</span></a>
+<a class="km-settings-item" href="#privacyPolicy"><span class="km-symbol">🔒</span> Privacy & Security <span class="km-right">›</span></a>
+<div class="km-settings-section">SUPPORT & ACCOUNT</div>
+<button type="button" class="km-settings-item" data-km-action="privacy"><span class="km-symbol">🔐</span> Privacy &amp; Security <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="help"><span class="km-symbol">❓</span> Help Center <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="report"><span class="km-symbol">🚩</span> Report Fake Job <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="share"><span class="km-symbol">📤</span> Share KaamMilega <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="about"><span class="km-symbol">ℹ️</span> About &amp; Policies <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="logout"><span class="km-symbol">🚪</span> Logout <span class="km-right">›</span></button>
 <div class="km-settings-note">Notifications: browser alerts require permission and a configured push service. This menu does not enable automatic job alerts.</div>
 </aside>
 
 <header><div class="nav">
 <div class="brand">Kaam<span>Milega</span><small class="brand-sub">Jobs • Workers • Opportunities</small></div>
 <div class="navlinks" id="kmTopActions">
+<button class="km-top-action" type="button" data-open="loginModal" id="authNavBtn">👤 <span>Login / Sign Up</span></button>
+<button class="km-top-action km-notification-action" type="button" id="kmSettingsNotifications" aria-label="Notifications" title="Notifications">🔔 <span>Notifications</span></button>
 <button class="km-settings-trigger" id="kmSettingsTrigger" type="button" aria-label="Open settings" aria-expanded="false" aria-controls="kmSettingsPanel">⚙️ <span>Settings</span></button>
 </div>
 </div></header>
@@ -4266,6 +4343,61 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
  dark.addEventListener('change',()=>{document.body.classList.toggle('km-dark',dark.checked);try{localStorage.setItem('km_theme',dark.checked?'dark':'light')}catch(e){}});
  $('kmSettingsSearch').addEventListener('click',()=>{setOpen(false);const advanced=document.getElementById('advancedSearchModal');if(advanced){advanced.classList.remove('hidden');}else{document.getElementById('jobs')?.scrollIntoView({behavior:'smooth'});}});
  $('kmSettingsNotifications').addEventListener('click',()=>{setOpen(false);const target=document.getElementById('kmAlertSkill')||document.getElementById('kmAlertCity');if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.focus();}else{window.showToast?.('Job notifications are not enabled yet. Contact support for updates.');}});
+})();
+</script>
+
+<style id="km-new-settings-css">
+.km-settings-panel{max-height:min(86dvh,760px)!important;overflow-y:auto!important;overscroll-behavior:contain}
+.km-settings-panel .km-settings-item{min-height:43px}
+.km-user-dialog{position:fixed;inset:0;z-index:100002;display:flex;align-items:center;justify-content:center;padding:15px;background:#020617b8}
+.km-user-dialog[hidden]{display:none!important}
+.km-user-dialog-card{background:#fff;color:#172033;border-radius:16px;padding:20px;width:min(100%,470px);max-height:85dvh;overflow-y:auto;box-shadow:0 20px 60px #0005;font-family:Arial,sans-serif}
+.km-user-dialog-card h2{font-size:20px;margin:0 0 15px;color:#172033}
+.km-user-dialog-card label{display:block;margin:12px 0 5px;font-size:13px;font-weight:700;color:#334155}
+.km-user-dialog-card input,.km-user-dialog-card select,.km-user-dialog-card textarea{width:100%;box-sizing:border-box;padding:11px;border:1px solid #94a3b8;border-radius:8px;background:#fff;color:#172033}
+.km-user-dialog-card .km-setting-note{font-size:12px;color:#475569;line-height:1.55}
+.km-user-dialog-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px}
+.km-user-dialog-actions button{border:1px solid #94a3b8;border-radius:8px;padding:10px 14px;cursor:pointer;background:#e2e8f0;color:#172033}
+.km-user-dialog-actions .primary{background:#1766c3;color:white;border-color:#1766c3}
+.km-user-dialog-card .km-setting-entry{border-bottom:1px solid #e2e8f0;padding:10px 0;font-size:13px}
+body.km-dark .km-user-dialog-card{background:#172338;color:#f8fafc}
+body.km-dark .km-user-dialog-card :is(h2,label){color:#f8fafc}
+body.km-dark .km-user-dialog-card .km-setting-note{color:#cbd5e1}
+body.km-dark .km-user-dialog-card :is(input,select,textarea){background:#0f1b2e;color:#fff;border-color:#64748b}
+</style>
+<div id="kmNewSettingsDialog" class="km-user-dialog" hidden role="dialog" aria-modal="true" aria-labelledby="kmNewSettingsTitle">
+<div class="km-user-dialog-card"><h2 id="kmNewSettingsTitle">Settings</h2><div id="kmNewSettingsBody"></div><div class="km-user-dialog-actions" id="kmNewSettingsActions"><button type="button" id="kmNewSettingsClose">Close</button></div></div>
+</div>
+<script id="km-new-settings-js">
+(()=>{'use strict';
+const $=id=>document.getElementById(id), panel=$('kmSettingsPanel'),dialog=$('kmNewSettingsDialog'),body=$('kmNewSettingsBody'),actions=$('kmNewSettingsActions');
+const close=()=>{dialog.hidden=true;body.replaceChildren();actions.replaceChildren();};
+$('kmNewSettingsClose')?.addEventListener('click',close);
+dialog.addEventListener('click',e=>{if(e.target===dialog)close()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!dialog.hidden)close()});
+const el=(tag,attrs={},text)=>{const x=document.createElement(tag);for(const [k,v] of Object.entries(attrs)){if(k==='className')x.className=v;else x.setAttribute(k,v)}if(text!==undefined)x.textContent=text;return x};
+const read=(key,def)=>{try{return JSON.parse(localStorage.getItem(key)||'null')??def}catch(_){return def}};
+const store=(key,val)=>{try{localStorage.setItem(key,JSON.stringify(val));return true}catch(_){return false}};
+const note=t=>body.append(el('p',{className:'km-setting-note'},t));
+const button=(text,fn,primary=false)=>{const b=el('button',{type:'button',...(primary?{className:'primary'}:{})},text);b.addEventListener('click',fn);actions.append(b);return b};
+const field=(title,type='text',value='',options=[])=>{body.append(el('label',{},title));let x;if(type==='select'){x=el('select');options.forEach(([v,label])=>{const o=el('option',{value:v},label);x.append(o)});x.value=value}else{x=el('input',{type,value})}body.append(x);return x};
+function open(title){$('kmNewSettingsTitle').textContent=title;body.replaceChildren();actions.replaceChildren();button('Close',close);dialog.hidden=false;panel.hidden=true;$('kmSettingsBackdrop').hidden=true;$('kmSettingsTrigger').setAttribute('aria-expanded','false')}
+function jump(id){panel.hidden=true;$('kmSettingsBackdrop').hidden=true;$('kmSettingsTrigger').setAttribute('aria-expanded','false');$(id)?.scrollIntoView({behavior:'smooth',block:'start'})}
+function prefs(){open('Job Preferences');const p=read('km_user_job_preferences_v1',{});const city=field('Preferred city','text',p.city||'');const skill=field('Job title / skill','text',p.skill||'');const type=field('Job type','select',p.type||'any',[['any','Any'],['full-time','Full-time'],['part-time','Part-time'],['remote','Remote / Work from home'],['contract','Contract']]);note('Preferences are saved only on this device. Job type filtering depends on available listings.');button('Save preferences',()=>{if(!store('km_user_job_preferences_v1',{city:city.value.trim(),skill:skill.value.trim(),type:type.value}))return alert('Browser storage is unavailable.');const cityInput=$('searchCity');if(cityInput)cityInput.value=city.value.trim();const skillInput=$('searchSkill')||$('searchKeyword');if(skillInput)skillInput.value=skill.value.trim();alert('Preferences saved on this device.');close()},true)}
+function language(){open('Language / भाषा');const current=read('km_language_preference_v1','en');const select=field('Preferred language','select',current,[['en','English'],['hi','हिंदी'],['gu','ગુજરાતી']]);note('This preference changes the language of this Settings menu label only. Full website translation is not yet available; existing job descriptions stay in their original language.');button('Save language',()=>{store('km_language_preference_v1',select.value);document.documentElement.lang=select.value;alert('Language preference saved. Full page translation needs translated content.');close()},true)}
+function saved(){open('Saved Jobs');const list=read('km_saved_jobs_v2',[]);if(!Array.isArray(list)||!list.length){note('No saved jobs on this device yet. Browse jobs and use Save on a listing.')}else list.forEach(x=>{const row=el('div',{className:'km-setting-entry'});row.append(el('strong',{},x.title||'Job'),el('div',{},x.meta||''));body.append(row)});button('Go to jobs',()=>{close();jump('jobs')},true)}
+function applications(){open('Application History');const list=read('km_application_tracker_v1',[]);if(!Array.isArray(list)||!list.length)note('No applications saved in this browser. This tracker is manual and does not prove an application was submitted to an employer.');else list.forEach(x=>{const row=el('div',{className:'km-setting-entry'});row.append(el('strong',{},(x.company||'Employer')+' — '+(x.role||'Role')),el('div',{},x.stage||''));body.append(row)});button('Open application tracker',()=>{close();jump('kmCareerPlus')},true)}
+function email(){open('Email Alerts');const p=read('km_job_alert_v2',{});const skill=field('Job skill','text',p.skill||'');const city=field('City','text',p.city||'');note('This saves your job-alert preferences locally. Automated email delivery is NOT active. It requires an opt-in email address, secure backend, email service and unsubscribe support.');button('Save alert preferences',()=>{const val={skill:skill.value.trim(),city:city.value.trim()};store('km_job_alert_v2',val);if($('kmAlertSkill'))$('kmAlertSkill').value=val.skill;if($('kmAlertCity'))$('kmAlertCity').value=val.city;alert('Alert preferences saved locally. Emails are not enabled.');close()},true)}
+function share(){const url='https://kaammilaga.click/';if(navigator.share){navigator.share({title:'KaamMilega',url}).catch(()=>{})}else if(navigator.clipboard?.writeText){navigator.clipboard.writeText(url).then(()=>alert('Website link copied.')).catch(()=>prompt('Copy link:',url))}else prompt('Copy link:',url)}
+function report(){open('Report Fake Job');const link=field('Job link / title');body.append(el('label',{},'Why is this job suspicious?'));const reason=el('textarea',{rows:'4',placeholder:'Explain what happened (do not share passwords or OTPs).'});body.append(reason);note('This opens your email app to send the report to KaamMilega support. It does not submit to the database automatically.');button('Send report by email',()=>{if(!reason.value.trim())return alert('Please enter the reason.');const subject='Report suspicious job — KaamMilega';const msg='Job: '+link.value.trim()+'
+Reason: '+reason.value.trim();window.location.href='mailto:kaammilaga.official@gmail.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(msg)},true)}
+function logout(){open('Logout');note('Do you want to sign out of your KaamMilega account?');button('Log out',()=>{close();const b=$('logoutBtn');if(b)b.click();else alert('Logout is unavailable. Please open your account profile.')},true)}
+const actionsMap={language,preferences,saved,applications,email,share,report,logout,
+profile:()=>{panel.hidden=true;$('kmSettingsBackdrop').hidden=true;const b=$('authNavBtn');b?.click()},
+privacy:()=>{panel.hidden=true;$('kmSettingsBackdrop').hidden=true;jump('privacyPolicy')},
+help:()=>{panel.hidden=true;$('kmSettingsBackdrop').hidden=true;jump('faq')},
+about:()=>{panel.hidden=true;$('kmSettingsBackdrop').hidden=true;jump('aboutKaamMilega')}};
+panel.addEventListener('click',e=>{const b=e.target.closest('[data-km-action]');if(!b)return;actionsMap[b.dataset.kmAction]?.()});
 })();
 </script>
 </body>

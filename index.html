@@ -73,7 +73,7 @@ header{background:#fff;border-bottom:1px solid #e5e7eb;position:sticky;top:0;z-i
 .owner-login-note{font-size:12px;color:#64748b;margin-top:8px}
 .owner-hidden{display:none!important}
 
-.requirement-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.requirement-card{border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff;box-shadow:0 8px 24px rgba(15,35,63,.06)}.requirement-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.requirement-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.requirement-meta div{background:#f8fafc;border-radius:10px;padding:10px}.requirement-label{font-size:11px;text-transform:uppercase;color:#64748b;font-weight:800;letter-spacing:.4px}.requirement-value{font-weight:700;color:#10233f;margin-top:3px}.requirement-owner{font-size:12px;color:#64748b;margin-top:12px}.requirement-status{display:inline-block;padding:6px 9px;border-radius:999px;background:#ecfdf5;color:#166534;font-size:12px;font-weight:800}.
+.requirement-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}.requirement-card{border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff;box-shadow:0 8px 24px rgba(15,35,63,.06)}.requirement-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.requirement-meta{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}.requirement-meta > div{background:#f8fafc;border-radius:10px;padding:10px}.requirement-label{font-size:11px;text-transform:uppercase;color:#64748b;font-weight:800;letter-spacing:.4px}.requirement-value{font-weight:700;color:#10233f;margin-top:3px}.requirement-owner{font-size:12px;color:#64748b;margin-top:12px}.requirement-status{display:inline-block;padding:6px 9px;border-radius:999px;background:#ecfdf5;color:#166534;font-size:12px;font-weight:800}.
 
 .content-nav{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}.content-nav a{background:#eef4ff;color:#0b63ce;text-decoration:none;border-radius:999px;padding:8px 12px;font-size:13px;font-weight:800}.info-section{max-width:1150px;margin:auto;padding:42px 18px}.info-section h2{margin:0 0 10px}.info-section h3{margin:22px 0 8px}.info-section p,.info-section li{line-height:1.7;color:#475569}.info-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}.info-card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px}.info-card h3{margin-top:0}.faq-item{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:16px 18px;margin:10px 0}.faq-item h3{font-size:17px;margin:0 0 7px}.policy-box{background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:20px;margin-top:14px}.policy-box p,.policy-box li{font-size:14px}.anchor-offset{scroll-margin-top:90px}@media(max-width:800px){.info-grid{grid-template-columns:1fr}}
 </style>
@@ -5199,6 +5199,79 @@ body.km-dark #companyRequirementsSection .status-active {
  #chatgptCareerHelp{padding-left:14px;padding-right:14px;}
 }
 @media(max-width:360px){#companyRequirementsSection .requirement-meta{grid-template-columns:1fr;}}
+</style>
+
+<style id="km-requirement-text-and-background-repair-v5">
+/* Only the 6 main field boxes receive a panel background, not their labels/values. */
+#companyRequirementsSection .requirement-meta {display:grid;gap:9px;}
+#companyRequirementsSection .requirement-meta > div {
+  min-width:0;
+  border:1px solid #d6e1ef;
+  border-radius:12px;
+  padding:12px 13px;
+  background:#f5f9ff;
+  color:#15243e;
+}
+#companyRequirementsSection .requirement-meta > div > .requirement-label,
+#companyRequirementsSection .requirement-meta > div > .requirement-value {
+  display:block;
+  width:auto;
+  max-width:100%;
+  margin:0;
+  padding:0!important;
+  border:0!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  background-color:transparent!important;
+  border-radius:0!important;
+  opacity:1!important;
+  overflow-wrap:anywhere;
+}
+#companyRequirementsSection .requirement-meta > div > .requirement-label {
+  font-size:11px;
+  line-height:1.4;
+  color:#526781!important;
+  font-weight:800;
+  text-transform:uppercase;
+  letter-spacing:.35px;
+}
+#companyRequirementsSection .requirement-meta > div > .requirement-value {
+  margin-top:5px;
+  font-size:15px;
+  line-height:1.45;
+  font-weight:700;
+  color:#132943!important;
+}
+body.km-dark #companyRequirementsSection .requirement-meta {
+  background:transparent!important;
+  border:0!important;
+  padding:0!important;
+}
+body.km-dark #companyRequirementsSection .requirement-meta > div {
+  background:#253852!important;
+  background-color:#253852!important;
+  color:#edf5ff!important;
+  border:1px solid #49617f!important;
+  border-radius:12px;
+}
+body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-label {
+  background:transparent!important;
+  background-color:transparent!important;
+  color:#b9d3ee!important;
+}
+body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-value {
+  background:transparent!important;
+  background-color:transparent!important;
+  color:#ffffff!important;
+}
+@media(max-width:520px) {
+  #companyRequirementsSection .requirement-meta {grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;}
+  #companyRequirementsSection .requirement-meta > div {padding:10px!important;}
+  #companyRequirementsSection .requirement-meta > div > .requirement-value {font-size:13px;}
+}
+@media(max-width:340px) {
+  #companyRequirementsSection .requirement-meta {grid-template-columns:1fr;}
+}
 </style>
 </body>
 </html>

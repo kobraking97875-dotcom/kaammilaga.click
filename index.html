@@ -416,6 +416,7 @@ img,video,iframe{max-width:100%}
   },true);
 })();
 </script>
+<meta name="km-build" content="kaammilega-video-rating-public-2026-10-30" />
 </head>
 <style id="km-google-gate-style">
 #kmGoogleGate{position:fixed;inset:0;z-index:999999;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:22px;font-family:Arial,sans-serif;color:#fff}#kmGoogleGate .km-gate-card{width:min(100%,520px);max-height:calc(100dvh - 28px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 24px 80px #0005;text-align:center}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:hidden}
@@ -4953,7 +4954,12 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 let busyVideo=false,busyReview=false;
 function message(id,text,error=false){const e=$(id);if(!e)return;e.textContent=text;e.classList.toggle('km-v2-error',!!error);e.classList.toggle('is-error',!!error);e.classList.toggle('is-ok',!error);}
 async function session(){const token=await getSession();if(!token)throw Error('Please log in first.');const user=await getCurrentUser();if(!user?.id)throw Error('Session expired. Log in again.');return {token,user};}
-async function api(table,opt={}){const token=opt.token||null;const headers={apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json',...(token?{Authorization:'Bearer '+token}:{}) ,...(opt.headers||{})};const r=await fetch(SUPABASE_URL+'/rest/v1/'+table,{method:opt.method||'GET',headers,body:opt.body?JSON.stringify(opt.body):undefined});if(!r.ok){let data={};const raw=await r.text();try{data=JSON.parse(raw)}catch(_){}throw Error(data.message||data.details||data.hint||raw||('Request failed ('+r.status+')'));}if(r.status===204)return null;const body=await r.text();if(!body)return null;try{return JSON.parse(body)}catch(_){return null}}
+async function api(table,opt={}){const token=opt.token||null;const headers={apikey:SUPABASE_ANON_KEY,'Content-Type':'application/json','Accept-Profile':'public','Content-Profile':'public',...(token?{Authorization:'Bearer '+token}:{}) ,...(opt.headers||{})};const r=await fetch(SUPABASE_URL+'/rest/v1/'+table,{method:opt.method||'GET',headers,body:opt.body?JSON.stringify(opt.body):undefined});if(!r.ok){let data={};const raw=await r.text();try{data=JSON.parse(raw)}catch(_){}const message=data.message||data.details||data.hint||raw||('Request failed ('+r.status+')');
+ let details=message;
+ if(/PGRST205|schema cache|could not find the table/i.test(message))details+=' — In Supabase Data API Settings expose public schema and grant access to km_reviews_v2 / km_work_videos_v2. Run the accompanying GRANT SQL.';
+ else if(/PGRST106|not one of the exposed schemas|invalid schema/i.test(message))details+=' — Enable public under Exposed schemas in Supabase Data API Settings.';
+ else if(/permission denied|42501|not allowed/i.test(message))details+=' — Check grants and RLS policies for this table.';
+ throw Error(details);}if(r.status===204)return null;const body=await r.text();if(!body)return null;try{return JSON.parse(body)}catch(_){return null}}
 async function signedUrl(path,token){
  const clean=String(path||'').split('/').map(encodeURIComponent).join('/');
  const r=await fetch(SUPABASE_URL+'/storage/v1/object/sign/'+BUCKET+'/'+clean,{method:'POST',headers:{apikey:SUPABASE_ANON_KEY,Authorization:'Bearer '+(token||SUPABASE_ANON_KEY),'Content-Type':'application/json'},body:JSON.stringify({expiresIn:3600})});
@@ -4980,7 +4986,7 @@ async function upload(){
  const ext=(file.name.split('.').pop()||'').toLowerCase();const validExt=['mp4','webm','mov'].includes(ext);const validMime=['video/mp4','video/webm','video/quicktime',''].includes(file.type);
  if(!validExt||!validMime){message(status,'Use MP4, WebM, or MOV video only.',true);return}
  if(file.size>50*1024*1024){message(status,'File must be 50 MB or smaller. Try compressing the video.',true);return}
- let uploadedPath='';busyVideo=true;btn.disabled=true;btn.textContent='Uploading video…';message(status,'Uploading securely. Keep this tab open.');
+ let uploadedPath='';busyVideo=true;btn.disabled=true;btn.textContent='Uploading video…';message(status,'Uploading securely. Keep this tab open. Do not tap the upload button again.');
  try{
   const {token,user}=await session();
   const name=(crypto.randomUUID?.()||String(Date.now())+'-'+Math.random().toString(36).slice(2))+'.'+ext;
@@ -5010,9 +5016,11 @@ async function renderReviews(){const box=$('kmV2Reviews');if(!box)return;box.tex
  }catch(e){box.textContent='Could not load ratings: '+e.message+' — Run the accompanying Supabase SQL first.'}}
 async function openReview(){const status='kmV2RatingStatus';try{
  const {token,user}=await session();const select=$('kmV2ReviewSubject');select.replaceChildren();select.appendChild(new Option('KaamMilega website experience','platform'));
- const jobs=await api('jobs?select=id,title,city,employer_id&status=eq.active&order=created_at.desc&limit=100',{token});
+ let jobs=[];let jobsLoadError=null;
+ try{jobs=await api('jobs?select=id,title,city,employer_id&status=eq.active&order=created_at.desc&limit=100',{token})}
+ catch(e){jobsLoadError=e}
  (jobs||[]).filter(j=>String(j.employer_id||'')!==user.id).forEach(j=>select.appendChild(new Option((j.title||'Job')+(j.city?' • '+j.city:''),'job:'+String(j.id))));
- $('reviewJobId').value='';$('reviewComment').value='';$('reviewRating').value='5';message('reviewMsg','');
+ $('reviewJobId').value='';$('reviewComment').value='';$('reviewRating').value='5';message('reviewMsg',jobsLoadError?'Job list is currently unavailable. You can still rate KaamMilega platform.':'');
  if(typeof openModal==='function')openModal('reviewModal');else $('reviewModal')?.classList.remove('hidden');
  }catch(e){message(status,e.message,true);if(/log in|session/i.test(e.message))openModal?.('loginModal')}}
 async function submitReview(){if(busyReview)return;const btn=$('submitReview');const val=$('kmV2ReviewSubject')?.value||'platform',rating=Number($('reviewRating')?.value),comment=$('reviewComment')?.value.trim()||'';

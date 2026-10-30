@@ -356,6 +356,34 @@ body.km-dark :is(.km-result-form,.km-work-result-form,.km-work-result-box,.km-re
 body.km-dark a{color:#93c5fd}
 body.km-dark .km-settings-panel a{color:#f8fafc}
 
+
+/* KM DARK MODE ACCESSIBILITY FIX v3 — preserve existing features */
+body.km-dark{--km-surface:#19263c;--km-surface-alt:#23334c;--km-text:#eef4ff;--km-muted:#c1d0e5}
+/* All generic light surfaces and section cards */
+body.km-dark :is(.card,.notice,.support-strip,.support-contact,.trust-mini,.profile-item,.owner-job,.km-launch-panel,.km-launch-note .km-launch-panel,.km-v2-inner,.km-v2-panel,.km-dash-shell,.km-dash-panel,.km-stat,.km-affiliate-card,.km-trust-steps article,.km-photo-card,.km-photo-tile,.km-tool-card,.km-feature-card,.km-career-card,.km-job-card,.km-result-form,.km-work-result-form,.km-review-form,.km-quality-card,.km-steps-card,.km-metric,.km-dashboard-card,.info-card,.policy-box,.trust-card,.km-result-card,.km-panel,.km-box,.km-feature,.km-ratings-card,.km-review-card,.km-work-result,.km-work-result-box,.km-alert-card,.km-user-dialog-card){background:var(--km-surface)!important;border-color:#425572!important;color:var(--km-text)!important}
+/* Catch white cards introduced by other site sections without changing dialogs or badges */
+body.km-dark :is(main,section,article) :is([class*="card"],[class*="panel"],[class*="box"],[class*="tile"],[class*="form"],[class*="step"],[class*="feature"],[class*="faq"],[class*="resource"],[class*="guide"],[class*="tool"],[class*="trust"],[class*="support"],[class*="result"]):not(input):not(textarea):not(select):not(button):not(.btn):not(.km-ai-msg):not(.km-settings-panel){background-color:var(--km-surface)!important;border-color:#425572!important;color:var(--km-text)!important}
+body.km-dark :is(main,section,article) :is([class*="card"],[class*="panel"],[class*="box"],[class*="tile"],[class*="form"],[class*="step"],[class*="feature"],[class*="faq"],[class*="resource"],[class*="guide"],[class*="tool"],[class*="trust"],[class*="support"],[class*="result"]) :is(h1,h2,h3,h4,h5,h6,p,li,label,strong,b,small,summary,span):not(.btn):not(.tag):not(.badge):not(.eyebrow){color:var(--km-text)!important}
+body.km-dark :is(.muted,.subtle,.help-text,.km-dash-note,.km-settings-note){color:var(--km-muted)!important}
+body.km-dark :is(input,select,textarea){background:#101b30!important;color:#f8fafc!important;border-color:#5a6e8b!important;opacity:1}
+body.km-dark :is(input,textarea)::placeholder{color:#bac8dd!important;opacity:1}
+/* Button contrast: secondary/light buttons become dark with readable text */
+body.km-dark :is(button,.btn,input[type="button"],input[type="submit"]):not(.orange):not(.primary):not(.km-ai-send):not(.km-settings-toggle){background-color:#294264!important;color:#f5f9ff!important;border-color:#5b7494!important;opacity:1}
+body.km-dark :is(button,.btn):disabled{opacity:.55!important}
+body.km-dark :is(.btn.orange,button.orange){background:#ea7317!important;color:white!important}
+body.km-dark :is(a:not(.btn)){color:#9dcaff}
+body.km-dark .tag{background:#243b58!important;color:#c7e3ff!important}
+/* Preserve white-on-blue hero, labels, and special overlays */
+body.km-dark .hero :is(h1,h2,p,span){color:#fff!important}
+body.km-dark #kmGoogleGate .km-gate-card{background:#fff!important;color:#172033!important}
+body.km-dark #kmGoogleGate .km-gate-card :is(h1,h2,p,span,strong){color:#172033!important}
+body.km-dark #kmGoogleLoginBtn{background:#fff!important;color:#1f2937!important}
+body.km-dark #kmAiPanel{background:#172338!important;color:#f8fafc!important}
+body.km-dark #kmAiMessages{background:#101b30!important}
+body.km-dark #kmAiPanel .km-ai-msg.bot{background:#263852!important;color:#f8fafc!important}
+body.km-dark #kmAiPanel .km-ai-form,body.km-dark #kmAiPanel .km-ai-quick{background:#172338!important}
+body.km-dark #impact-site-verification{background:#172338!important;color:#cbd5e1!important}
+
 </style></head>
 <style id="km-google-gate-style">
 #kmGoogleGate{position:fixed;inset:0;z-index:999999;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:22px;font-family:Arial,sans-serif;color:#fff}#kmGoogleGate .km-gate-card{width:min(100%,520px);max-height:calc(100dvh - 28px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 24px 80px #0005;text-align:center}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:hidden}

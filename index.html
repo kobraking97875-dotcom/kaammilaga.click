@@ -4373,6 +4373,32 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
 </style>
 <section class="km-launch-note" id="kmSafetyAndTrust" aria-label="Job safety and reporting"><div class="km-launch-panel"><span class="eyebrow">SAFE & TRANSPARENT HIRING</span><h2>Check job details before you apply</h2><p>Confirm the employer's identity, work location, salary, shift and interview details directly. Never share OTP, banking PINs or passwords. A job listed on KaamMilega is not automatically employer-verified.</p><div class="km-launch-actions"><a class="btn secondary" href="mailto:kaammilaga.official@gmail.com?subject=Report%20a%20Job%20Listing&amp;body=Job%20link%3A%0AReason%20for%20report%3A%0A">Report suspicious listing</a><a class="btn ghost" href="#privacyPolicy">Privacy policy</a><a class="btn ghost" href="#terms">Platform terms</a></div></div></section>
 <script id="km-accessibility-safety-enhancements">(()=>{'use strict';document.querySelectorAll('button:not([type])').forEach(b=>b.type='button');document.querySelectorAll('a[target="_blank"]').forEach(a=>{const v=new Set((a.rel||'').split(/\s+/).filter(Boolean));v.add('noopener');v.add('noreferrer');a.rel=[...v].join(' ')});const form=document.getElementById('kmCareerForm');if(form){const exportBtn=document.createElement('button');exportBtn.type='button';exportBtn.className='btn secondary';exportBtn.textContent='Export my saved applications (CSV)';exportBtn.style.marginLeft='8px';exportBtn.addEventListener('click',()=>{let entries=[];try{entries=JSON.parse(localStorage.getItem('km_application_tracker_v1')||'[]')}catch(e){}if(!Array.isArray(entries)||!entries.length){alert('No saved applications to export.');return}const esc=x=>'"'+String(x??'').replaceAll('"','""')+'"';const csv='Company,Role,Status\r\n'+entries.map(x=>[x.company,x.role,x.stage].map(esc).join(',')).join('\r\n');const url=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='KaamMilega_My_Applications.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)});form.after(exportBtn)}})();</script>
+
+<!-- Free worker tools positioned before the site footer -->
+<section id="kmUniqueFeatures" aria-labelledby="kmUniqueTitle">
+<span class="eyebrow">FREE WORKER TOOLS</span><h2 id="kmUniqueTitle">Smart tools for jobs &amp; hiring</h2>
+<p>Salary calculation, voice search aur urgent hiring ke useful tools.</p>
+<div class="km-uf-grid">
+<article class="km-uf-card"><h3>🧮 Salary &amp; OT Calculator</h3>
+<label for="kmUfDaily">Daily salary (₹)</label><input id="kmUfDaily" type="number" min="0" step="0.01" value="650">
+<label for="kmUfDays">Days worked</label><input id="kmUfDays" type="number" min="0" step="0.5" value="23">
+<label for="kmUfHours">OT hours</label><input id="kmUfHours" type="number" min="0" step="0.5" value="43">
+<label for="kmUfShift">Regular shift hours</label><input id="kmUfShift" type="number" min="1" max="24" value="8">
+<label for="kmUfRate">OT rate</label><select id="kmUfRate"><option value="1">Single rate (1×)</option><option value="2">Double rate (2×)</option></select>
+<label for="kmUfPf">PF deduction (%)</label><input id="kmUfPf" type="number" min="0" max="100" step="0.1" value="12">
+<label for="kmUfEsi">ESI deduction (₹)</label><input id="kmUfEsi" type="number" min="0" value="200">
+<label for="kmUfAdvance">Advance / other deductions (₹)</label><input id="kmUfAdvance" type="number" min="0" value="5000">
+<button id="kmUfCalculate" type="button">Calculate salary</button><div id="kmUfSalaryResult" class="km-uf-result" role="status">Enter details and calculate.</div>
+<p class="km-uf-note">Estimate only. Actual PF/ESI and overtime eligibility depend on applicable rules and payroll basis.</p></article>
+<article class="km-uf-card"><h3>🎙️ Voice Job Search</h3><p>Bolkar job title aur city search karein (supported browsers).</p>
+<button id="kmUfVoice" type="button">🎤 Start speaking</button><p id="kmUfVoiceStatus" role="status">Example: “Welder Ahmedabad”</p>
+<label for="kmUfVoiceText">Recognized search / manual entry</label><input id="kmUfVoiceText" placeholder="Welder Ahmedabad" type="text">
+<button id="kmUfVoiceGo" type="button">Search jobs</button><p class="km-uf-note">Microphone permission required. Voice recognition may use your browser's speech service.</p></article>
+<article class="km-uf-card"><h3>🚨 Emergency Hiring</h3><p>Urgent hiring ke liye employer se job title, city aur joining date confirm karein.</p>
+<button id="kmUfUrgentBrowse" type="button">🔎 View available jobs</button>
+<p class="km-uf-note">Only real, published job listings appear in search. Urgent vacancies are not fabricated or automatically labeled.</p>
+<button id="kmUfUrgentPost" type="button">➕ Post urgent requirement</button><p id="kmUfUrgentStatus" role="status"></p>
+</article></div></section>
 <footer><div style="max-width:1150px;margin:0 auto 18px;padding:12px 14px;border:1px solid #334155;border-radius:10px;color:#cbd5e1"><b>KaamMilega</b> is an independent employment marketplace connecting workers and employers. It is not a government department or government agency.</div><div class="section footer-grid" style="padding:0">
 <div><div class="footer-brand">Kaam<span>Milega</span></div><p>Jobs, skills and employment opportunities in one place.</p></div>
 <div><b>Customer Support</b><p>Email: <a href="mailto:kaammilaga.official@gmail.com">Contact Support</a></p><p>Support for employers and workers.</p></div>
@@ -4657,30 +4683,7 @@ if(!localStorage.getItem("km_notify_intro_v2")){
 #kmUniqueFeatures .km-uf-note{font-size:13px;opacity:.85}
 #kmUniqueFeatures .km-uf-card h3{margin-top:0}
 </style>
-<section id="kmUniqueFeatures" aria-labelledby="kmUniqueTitle">
-<span class="eyebrow">FREE WORKER TOOLS</span><h2 id="kmUniqueTitle">Smart tools for jobs &amp; hiring</h2>
-<p>Salary calculation, voice search aur urgent hiring ke useful tools.</p>
-<div class="km-uf-grid">
-<article class="km-uf-card"><h3>🧮 Salary &amp; OT Calculator</h3>
-<label for="kmUfDaily">Daily salary (₹)</label><input id="kmUfDaily" type="number" min="0" step="0.01" value="650">
-<label for="kmUfDays">Days worked</label><input id="kmUfDays" type="number" min="0" step="0.5" value="23">
-<label for="kmUfHours">OT hours</label><input id="kmUfHours" type="number" min="0" step="0.5" value="43">
-<label for="kmUfShift">Regular shift hours</label><input id="kmUfShift" type="number" min="1" max="24" value="8">
-<label for="kmUfRate">OT rate</label><select id="kmUfRate"><option value="1">Single rate (1×)</option><option value="2">Double rate (2×)</option></select>
-<label for="kmUfPf">PF deduction (%)</label><input id="kmUfPf" type="number" min="0" max="100" step="0.1" value="12">
-<label for="kmUfEsi">ESI deduction (₹)</label><input id="kmUfEsi" type="number" min="0" value="200">
-<label for="kmUfAdvance">Advance / other deductions (₹)</label><input id="kmUfAdvance" type="number" min="0" value="5000">
-<button id="kmUfCalculate" type="button">Calculate salary</button><div id="kmUfSalaryResult" class="km-uf-result" role="status">Enter details and calculate.</div>
-<p class="km-uf-note">Estimate only. Actual PF/ESI and overtime eligibility depend on applicable rules and payroll basis.</p></article>
-<article class="km-uf-card"><h3>🎙️ Voice Job Search</h3><p>Bolkar job title aur city search karein (supported browsers).</p>
-<button id="kmUfVoice" type="button">🎤 Start speaking</button><p id="kmUfVoiceStatus" role="status">Example: “Welder Ahmedabad”</p>
-<label for="kmUfVoiceText">Recognized search / manual entry</label><input id="kmUfVoiceText" placeholder="Welder Ahmedabad" type="text">
-<button id="kmUfVoiceGo" type="button">Search jobs</button><p class="km-uf-note">Microphone permission required. Voice recognition may use your browser's speech service.</p></article>
-<article class="km-uf-card"><h3>🚨 Emergency Hiring</h3><p>Urgent hiring ke liye employer se job title, city aur joining date confirm karein.</p>
-<button id="kmUfUrgentBrowse" type="button">🔎 View available jobs</button>
-<p class="km-uf-note">Only real, published job listings appear in search. Urgent vacancies are not fabricated or automatically labeled.</p>
-<button id="kmUfUrgentPost" type="button">➕ Post urgent requirement</button><p id="kmUfUrgentStatus" role="status"></p>
-</article></div></section>
+
 <script id="km-unique-features-script">
 (()=>{
  const $=id=>document.getElementById(id);

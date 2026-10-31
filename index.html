@@ -528,6 +528,24 @@ body.km-dark .km-smartlink-ad{background:#172338!important;border-color:#425572!
 body.km-dark .km-smartlink-ad p,body.km-dark .km-sponsored-label{color:#c1d0e5!important}
 @media(max-width:600px){.km-smartlink-ad{padding:15px;width:calc(100% - 22px)}.km-smartlink-ad .km-smartlink-cta{width:100%}}
 </style>
+
+<style id="km-official-social-footer-css">
+/* Official social channels: self-contained footer-only styles. */
+.km-social-footer{max-width:1150px;margin:25px auto 0;padding:23px 12px 7px;text-align:center;border-top:1px solid #334155}
+.km-social-footer h2{margin:0 0 7px;font-size:20px;line-height:1.35;font-weight:800;color:#f8fafc}
+.km-social-footer p{margin:0 0 18px;font-size:13px;color:#cbd5e1;line-height:1.5}
+.km-social-links{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:13px}
+.km-social-link{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:12px 17px;min-height:50px;min-width:152px;border-radius:12px;text-decoration:none!important;font-size:14px;font-weight:800!important;color:white!important;border:1px solid #ffffff30;box-shadow:0 4px 15px #0002;transition:transform .2s ease,filter .2s ease}
+.km-social-link:hover{transform:translateY(-2px);filter:brightness(1.10)}
+.km-social-link:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}
+.km-social-link svg{width:23px;height:23px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.km-social-whatsapp{background:#168f4f!important}
+.km-social-instagram{background:linear-gradient(110deg,#6b36c9,#c13584 45%,#e65c37)!important}
+.km-social-facebook{background:#1764c4!important}
+.km-social-facebook svg{fill:currentColor;stroke:none}
+@media(max-width:500px){.km-social-footer{padding-left:10px;padding-right:10px}.km-social-links{display:grid;grid-template-columns:1fr 1fr;gap:10px}.km-social-link{min-width:0;padding:11px 7px;font-size:13px}.km-social-link:last-child{grid-column:1/-1;width:100%}}
+@media(prefers-reduced-motion:reduce){.km-social-link{transition:none}}
+</style>
 </head>
 <style id="km-google-gate-style">
 #kmGoogleGate{position:fixed;inset:0;z-index:999999;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:22px;font-family:Arial,sans-serif;color:#fff}#kmGoogleGate .km-gate-card{width:min(100%,520px);max-height:calc(100dvh - 28px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 24px 80px #0005;text-align:center}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:hidden}
@@ -4934,7 +4952,26 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
 <div><b>Customer Support</b><p>Email: <a href="mailto:kaammilaga.official@gmail.com">Contact Support</a></p><p>Support for employers and workers.</p></div>
 <div><b>Trust &amp; Safety</b><p>Keep payments and account credentials secure. Never share OTPs or passwords with anyone.</p></div>
 </div>
-<div class="footer-bottom">© 2026 KaamMilega. All rights reserved. · <a href="#aboutKaamMilega">About</a> · <a href="#searchAiGuidance">Search &amp; AI</a> · <a href="#howItWorks">How It Works</a> · <a href="#officialIdentity">Official Website</a> · <a href="#careerResources">Career Resources</a> · <a href="#privacyPolicy">Privacy Policy</a> · <a href="#terms">Terms</a> · <a href="#faq">FAQ</a> · <a href="#contactInfo">Contact</a> · Hiring decisions are made by employers.</div></footer>
+<div class="footer-bottom">© 2026 KaamMilega. All rights reserved. · <a href="#aboutKaamMilega">About</a> · <a href="#searchAiGuidance">Search &amp; AI</a> · <a href="#howItWorks">How It Works</a> · <a href="#officialIdentity">Official Website</a> · <a href="#careerResources">Career Resources</a> · <a href="#privacyPolicy">Privacy Policy</a> · <a href="#terms">Terms</a> · <a href="#faq">FAQ</a> · <a href="#contactInfo">Contact</a> · Hiring decisions are made by employers.</div>
+<nav id="kmOfficialSocialChannels" class="km-social-footer" aria-label="KaamMilega official social media channels">
+  <h2>Follow KaamMilega</h2>
+  <p>Latest job updates ke liye hamare official social channels se judein.</p>
+  <div class="km-social-links">
+    <a class="km-social-link km-social-whatsapp" href="https://whatsapp.com/channel/0029VbDbVMNDuMRcvNTvxm0k" target="_blank" rel="noopener noreferrer" aria-label="Follow KaamMilega on WhatsApp Channel">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20.4 11.6a8.4 8.4 0 0 1-12.9 7.1L3.2 20l1.3-4.3a8.4 8.4 0 1 1 15.9-4.1Z"/><path d="M8.1 7.9c-.3.5-.5 1-.3 1.6.5 1.8 2.9 4.6 5.3 5.6.7.3 1.5.2 2-.2l1.1-1.2-2.2-1.1-.9.9c-1.3-.5-2.4-1.5-3-2.9l.9-.9-1.3-2.3-1.6.5Z"/></svg>
+      <span>WhatsApp</span>
+    </a>
+    <a class="km-social-link km-social-instagram" href="https://www.instagram.com/kaammelagaofficial?psln=Zm9zdXFyb2U1M2R6" target="_blank" rel="noopener noreferrer" aria-label="Follow KaamMilega on Instagram">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.8" r=".8" fill="currentColor" stroke="none"/></svg>
+      <span>Instagram</span>
+    </a>
+    <a class="km-social-link km-social-facebook" href="https://www.facebook.com/share/19qv5YTASx/" target="_blank" rel="noopener noreferrer" aria-label="Follow KaamMilega on Facebook">
+      <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14.5 8V6.5c0-1 .3-1.4 1.5-1.4H18V2h-2.8c-3.1 0-4.7 1.7-4.7 4.5V8H8v3.5h2.5V22H14V11.5h3.4L18 8h-3.5Z"/></svg>
+      <span>Facebook</span>
+    </a>
+  </div>
+</nav>
+</footer>
 <script id="km-career-plus-js">(()=>{'use strict';const $=id=>document.getElementById(id);const key='km_application_tracker_v1';let items=[];try{items=JSON.parse(localStorage.getItem(key)||'[]');if(!Array.isArray(items))items=[]}catch(e){items=[]}function save(){try{localStorage.setItem(key,JSON.stringify(items));$('kmCareerMsg').textContent='Saved on this device.'}catch(e){$('kmCareerMsg').textContent='Browser storage unavailable; changes may not persist.'}}function render(){const el=$('kmCareerSaved');el.replaceChildren();items.forEach((x,i)=>{const row=document.createElement('div');row.className='km-career-entry';const info=document.createElement('div'),strong=document.createElement('strong'),small=document.createElement('small');strong.textContent=x.company+' — '+x.role;small.textContent=x.stage;info.append(strong,small);const del=document.createElement('button');del.type='button';del.className='btn secondary';del.textContent='Remove';del.addEventListener('click',()=>{items.splice(i,1);save();render()});row.append(info,del);el.append(row)});if(!items.length)el.textContent='No saved applications yet.'}$('kmCareerForm').addEventListener('submit',e=>{e.preventDefault();const company=$('kmCareerCompany').value.trim(),role=$('kmCareerRole').value.trim();if(!company||!role)return;items.unshift({company,role,stage:$('kmCareerStage').value});items=items.slice(0,50);save();render();e.target.reset()});render();const checks=[...document.querySelectorAll('.km-safety-check')];checks.forEach(c=>c.addEventListener('change',()=>{$('kmSafetyStatus').textContent=checks.filter(x=>x.checked).length+' of 4 checks completed'}));const questions={factory:['Aapko kaun si machine ya tool chalana aata hai?','Safety equipment kaise use karte hain?','Shift aur overtime ke liye availability kya hai?'],delivery:['Valid driving licence aur experience kya hai?','Route aur delivery app kaise handle karte hain?','Customer se delivery issue kaise resolve karenge?'],office:['Excel ya computer ka kitna experience hai?','Daily reports kaise manage karenge?','Team aur customer se communication kaise karte hain?']};$('kmInterviewShow').addEventListener('click',()=>{const out=$('kmInterviewQuestions');out.replaceChildren();const ol=document.createElement('ol');questions[$('kmInterviewRole').value].forEach(q=>{const li=document.createElement('li');li.textContent=q;ol.append(li)});out.append(ol)})})();</script>
 <!-- Impact.com website ownership verification -->
 <div id="impact-site-verification" style="text-align:center;font-size:12px;color:#64748b;padding:10px 16px;background:#f8fafc;overflow-wrap:anywhere">Impact-Site-Verification: 7f030c3e-e576-48b8-b695-20bc64241fe4</div>

@@ -5693,6 +5693,7 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
 
 
 
+<!-- Partnership Owner diagnostic version: km-owner-uuid-diagnostic-1 -->
 <script id="km-partnership-secure-owner-panel">
 (function(){
   'use strict';
@@ -5735,7 +5736,7 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
           <p><strong>Age:</strong> ${esc(a.age)} · <strong>Qualification:</strong> ${esc(a.qualification)} · <strong>Experience:</strong> ${esc(a.experience)}</p>
           <p><strong>Partnership:</strong> ${esc(a.partnership_type)}<br><strong>Business:</strong> ${esc(a.company||'Not provided')}<br><strong>Proposal:</strong> ${esc(a.proposal)}</p>
           ${emailInfo}<div class="owner-actions" style="margin:13px 0">${showFile('Photo',paths.photo)}${showFile('Masked Aadhaar',paths.aadhaar)}${showFile('PAN',paths.pan)}${showFile('Qualification',paths.qualification)}${showFile('Other proof',paths.extra)}</div>
-          <div class="owner-actions">${buttons}<a class="btn ghost" href="mailto:${encodeURIComponent(a.email)}?subject=${encodeURIComponent('KaamMilega Partnership Application '+a.id)}">✉️ Contact Applicant</a></div></article>`;
+          <div class="owner-actions">${buttons}<button type="button" class="btn ghost" data-kmp-diagnose="${id}">🔎 Check Connection</button><a class="btn ghost" href="mailto:${encodeURIComponent(a.email)}?subject=${encodeURIComponent('KaamMilega Partnership Application '+a.id)}">✉️ Contact Applicant</a></div></article>`;
       }).join('');
     }catch(error){target.innerHTML='<div class="notice error">'+esc(error.message)+'</div>';}
   }
@@ -5745,7 +5746,7 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
     action=String(action??'').trim().toLowerCase();
     if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))
       throw Error('Invalid application Tracking ID. Reload applications before retrying.');
-    if(!['approved','rejected','needs_information'].includes(action))
+    if(!['approved','rejected','needs_information','diagnose'].includes(action))
       throw Error('Invalid Owner action: '+action);
     const {token}=await ownerSession();
     const controller=new AbortController();
@@ -5755,7 +5756,7 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
       response=await fetch(SB_URL+'/functions/v1/partnership-review',{
         method:'POST',
         headers:{apikey:SB_KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},
-        body:JSON.stringify({id,action}),
+        body:JSON.stringify({id,application_id:id,action,client_version:'km-owner-uuid-diagnostic-1'}),
         signal:controller.signal
       });
     }catch(error){
@@ -5768,8 +5769,9 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
     try{data=raw?JSON.parse(raw):null}catch(_){data=null}
     if(!response.ok){
       const detail=data?.error||data?.message||raw.slice(0,240)||`HTTP ${response.status}`;
+      const diagnostic=data?.diagnostic;
       const hint=(data?.code==='INVALID_APPLICATION_ID'||data?.code==='INVALID_REVIEW_ACTION')
-        ? ' Your Owner Panel and Edge Function may be on different versions.': '';
+        ? ` Sent valid UUID: true; ID length: ${id.length}; action: ${action}. Backend received: ${diagnostic?JSON.stringify(diagnostic):'no diagnostic; check function deployment'}.`: '';
       throw Error(`Review failed (HTTP ${response.status}): ${detail}${hint}`);
     }
     return data;
@@ -5789,6 +5791,22 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
         if(url.hostname!==new URL(SB_URL).hostname||!url.pathname.startsWith('/storage/v1/object/sign/'))throw Error('Unsafe document URL.');
         if(tab)tab.location.href=url.href;else alert('Allow pop-ups for private proof preview.');
       }catch(err){tab?.close();alert('Could not open private document: '+err.message)}
+      return;
+    }
+    const diagnosticButton=e.target.closest?.('[data-kmp-diagnose]');
+    if(diagnosticButton){
+      const appId=String(diagnosticButton.dataset.kmpDiagnose||'').trim();
+      diagnosticButton.disabled=true;
+      const old=diagnosticButton.textContent;
+      diagnosticButton.textContent='Checking…';
+      try{
+        const outcome=await review(appId,'diagnose');
+        alert(outcome.ok&&outcome.found
+          ? '✅ Connection OK. Owner Panel and Edge Function received the same application UUID. No application was changed.'
+          : 'The application was not found. No data was changed.');
+      }catch(error){
+        alert('Connection check: '+error.message+'\nNo application was modified by the diagnostic action.');
+      }finally{diagnosticButton.disabled=false;diagnosticButton.textContent=old;}
       return;
     }
     const b=e.target.closest?.('[data-kmp-status]');if(!b)return;

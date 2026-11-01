@@ -52,18 +52,31 @@ Deno.serve(async req=>{
     needs_information:'needs_information',request_info:'needs_information',
     needs_info:'needs_information',request_information:'needs_information'
   };
-  const action=actionAliases[rawAction] || '';
+  const action=rawAction==='diagnose'?'diagnose':(actionAliases[rawAction] || '');
+  const trace=crypto.randomUUID();
+  // Safe diagnostics: never log the applicant UUID, documents, JWT, or email.
+  const diagnostic={
+    trace,
+    received_keys:Object.keys(details).filter(k=>
+      ['id','application_id','applicationId','tracking_id','trackingId','action','status','client_version'].includes(k)
+    ).slice(0,10),
+    id_length:id.length,
+    uuid_valid:uuid.test(id),
+    client_version:String(details.client_version||'not_provided').slice(0,64)
+  };
   if(!uuid.test(id)){
-    console.warn('Review request rejected: application UUID missing or invalid.');
-    return reply({error:'Invalid application ID. Expected the full tracking/application UUID. Update owner.html and partnership-review together.',code:'INVALID_APPLICATION_ID'},400);
+    console.warn('Review request rejected: application UUID missing or invalid.',diagnostic);
+    return reply({error:'Invalid application ID. Expected the full tracking/application UUID.',code:'INVALID_APPLICATION_ID',diagnostic},400);
   }
   if(!action){
     console.warn('Review request rejected: unsupported action',rawAction.slice(0,45));
-    return reply({error:'Invalid review action. Accepted actions: approved, rejected, needs_information. Update owner.html and partnership-review together.',code:'INVALID_REVIEW_ACTION'},400);
+    return reply({error:'Invalid review action. Accepted actions: approved, rejected, needs_information.',code:'INVALID_REVIEW_ACTION',diagnostic},400);
   }
   const {data:application,error:fetchError}=await admin.from('partnership_applications').select('*').eq('id',id).maybeSingle();
   if(fetchError)return reply({error:'Could not load application: '+fetchError.message},500);
-  if(!application)return reply({error:'Application not found or already deleted'},404);
+  if(!application)return reply({error:'Application not found or already deleted',code:'APPLICATION_NOT_FOUND',diagnostic},404);
+  // Read-only connectivity check. It must never approve, reject or delete files.
+  if(action==='diagnose')return reply({ok:true,found:true,diagnostic});
   if(action==='needs_information'){
     const {error}=await admin.from('partnership_applications').update({status:'needs_information',reviewed_at:new Date().toISOString(),reviewed_by:ud.user.id}).eq('id',id);
     if(error)return reply({error:error.message},500);

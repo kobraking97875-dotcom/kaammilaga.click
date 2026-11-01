@@ -546,6 +546,24 @@ body.km-dark .km-smartlink-ad p,body.km-dark .km-sponsored-label{color:#c1d0e5!i
 @media(max-width:500px){.km-social-footer{padding-left:10px;padding-right:10px}.km-social-links{display:grid;grid-template-columns:1fr 1fr;gap:10px}.km-social-link{min-width:0;padding:11px 7px;font-size:13px}.km-social-link:last-child{grid-column:1/-1;width:100%}}
 @media(prefers-reduced-motion:reduce){.km-social-link{transition:none}}
 </style>
+<style id="km-partnership-navigation-v2">
+/* Partnership shortcut lives OUTSIDE of the Settings drawer. */
+.km-partnership-topbar{position:relative;z-index:10;background:#eff6ff;border-bottom:1px solid #d5e3f6}
+.km-partnership-topbar-inner{max-width:1280px;margin:0 auto;padding:9px 18px;display:flex;justify-content:flex-end}
+#kmPartnershipNav{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border-radius:12px;background:#0b63ce;color:#fff!important;font-family:Inter,Arial,sans-serif;font-weight:800;font-size:14px;text-decoration:none!important;padding:11px 19px;box-shadow:0 4px 14px rgba(11,99,206,.17);transition:background .15s ease}
+#kmPartnershipNav:hover{background:#0a53ab;color:#fff!important}
+#kmPartnershipNav:focus-visible{outline:3px solid #f97316;outline-offset:3px}
+#kmPartnershipNav .km-partnership-arrow{font-size:17px;font-weight:900}
+body.km-dark .km-partnership-topbar{background:#12233c;border-bottom-color:#344660}
+body.km-dark #kmPartnershipNav{background:#0b63ce!important;color:#fff!important}
+/* Owner Login was deliberately removed from public Settings; preserve its original modal and JS for future relocation. */
+#ownerLoginBtn{display:none!important}
+@media(max-width:600px){
+ .km-partnership-topbar-inner{padding:9px 12px;justify-content:stretch}
+ #kmPartnershipNav{width:100%;min-height:46px}
+}
+@media(prefers-reduced-motion:reduce){#kmPartnershipNav{transition:none}}
+</style>
 </head>
 <style id="km-google-gate-style">
 #kmGoogleGate{position:fixed;inset:0;z-index:999999;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:22px;font-family:Arial,sans-serif;color:#fff}#kmGoogleGate .km-gate-card{width:min(100%,520px);max-height:calc(100dvh - 28px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 24px 80px #0005;text-align:center}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:hidden}
@@ -570,7 +588,9 @@ body.km-dark .km-smartlink-ad p,body.km-dark .km-sponsored-label{color:#c1d0e5!i
 
 <div class="km-settings-section">ACCOUNT & HIRING</div>
 
-<button class="km-settings-item" type="button" data-open="ownerLoginModal" id="ownerLoginBtn"><span class="km-symbol">🛡️</span> Owner Login <span class="km-right">›</span></button>
+<!-- Partnership: dedicated second HTML page. Owner Panel menu control is hidden but its original code and auth logic are preserved for future relocation. -->
+<!-- Partnership moved to a visible navigation bar outside Settings. -->
+<button class="km-settings-item" type="button" data-open="ownerLoginModal" id="ownerLoginBtn" hidden aria-hidden="true" tabindex="-1" style="display:none!important"><span class="km-symbol">🛡️</span> Owner Login <span class="km-right">›</span></button>
 <button class="km-settings-item" type="button" data-open="jobModal"><span class="km-symbol">➕</span> Post a Job <span class="km-right">›</span></button>
 <button class="km-settings-item" type="button" data-open="urgentModal"><span class="km-symbol">👷</span> Need Workers Urgently <span class="km-right">›</span></button>
 <div class="km-settings-section">HELP & INFORMATION</div>
@@ -594,6 +614,13 @@ body.km-dark .km-smartlink-ad p,body.km-dark .km-sponsored-label{color:#c1d0e5!i
 <button class="km-settings-trigger" id="kmSettingsTrigger" type="button" aria-label="Open settings" aria-expanded="false" aria-controls="kmSettingsPanel">⚙️ <span>Settings</span></button>
 </div>
 </div></header>
+<nav class="km-partnership-topbar" aria-label="Partnership link">
+  <div class="km-partnership-topbar-inner">
+    <a id="kmPartnershipNav" href="partnership.html" aria-label="Open Partnership page">
+      <span aria-hidden="true">🤝</span> <span>Partnership</span> <span aria-hidden="true" class="km-partnership-arrow">↗</span>
+    </a>
+  </div>
+</nav>
 <div class="km-quality-banner"><strong>KaamMilega:</strong> Job search and standard job posting are free. Verify employer details before sharing documents or accepting offers.</div><section class="hero"><div class="hero-inner">
 <h1>Real Opportunities. Clear Details. A Better Way to Find Work.</h1>
 <p>Find jobs by skill and city, compare salary and work conditions, and connect with employers. Every listing should give you the details you need to make an informed decision.</p>

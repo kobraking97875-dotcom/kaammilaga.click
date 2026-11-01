@@ -1,0 +1,42 @@
+
+name: Unblock queued Pages run
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: write
+
+jobs:
+  cancel-stuck-run:
+    name: Try force-cancel Pages run 136
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Check and force-cancel stuck deployment
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          RUN_ID=41287782602
+
+          echo "Checking GitHub Pages run: ${RUN_ID}"
+
+          STATUS="$(gh api "repos/${REPO}/actions/runs/${RUN_ID}" --jq '.status')"
+
+          echo "Current status: ${STATUS}"
+
+          if [ "${STATUS}" = "completed" ]; then
+            echo "Run already completed."
+            exit 0
+          fi
+
+          echo "Requesting force cancellation..."
+
+          gh api --method POST "repos/${REPO}/actions/runs/${RUN_ID}/force-cancel"
+
+          echo "Force-cancel request submitted."

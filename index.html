@@ -5642,6 +5642,21 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
 </script>
 <!-- Ad code 1/7: Adsterra Social Bar for kaammilaga.click -->
 <script id="kmAdsterraSocialBar2026" src="https://pl31582226.profitableratecpmnetwork.com/8c/56/61/8c566170f1e58ddce062524bee53ef1a.js"></script>
+
+<!-- Partnership settings owner entry: retain all existing protected owner login and management code. -->
+<script id="km-partnership-owner-entry">
+(function(){
+  if(new URLSearchParams(window.location.search).get('openOwner') !== '1') return;
+  function showOwner(){
+    var dialog=document.getElementById('ownerLoginModal');
+    if(!dialog) return;
+    dialog.classList.remove('hidden');
+    dialog.style.display='flex';
+    try { history.replaceState(null,'',location.pathname+location.hash); } catch(e) {}
+  }
+  window.addEventListener('load',function(){setTimeout(showOwner,350)},{once:true});
+})();
+</script>
 </body>
 </html>
 <!-- Targeted fixes: only the buttons/errors reported by the owner -->

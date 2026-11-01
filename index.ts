@@ -48,9 +48,6 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = requiredEnv("SUPABASE_URL");
     const anonKey = requiredEnv("SUPABASE_ANON_KEY");
-    const serviceKey = requiredEnv("SUPABASE_SERVICE_ROLE_KEY");
-    const razorpayKeyId = requiredEnv("RAZORPAY_KEY_ID");
-    const razorpaySecret = requiredEnv("RAZORPAY_KEY_SECRET");
     const authHeader = req.headers.get("Authorization") || "";
     const token = authHeader.replace(/^Bearer\s+/i, "");
     if (!token) return json({ error: "Please login first." }, 401);
@@ -59,12 +56,32 @@ Deno.serve(async (req) => {
     const { data: userData, error: userError } = await userClient.auth.getUser(token);
     if (userError || !userData.user) return json({ error: "Your login session expired. Please login again." }, 401);
     const userId = userData.user.id;
-    const body = await req.json();
+    // Parse the action BEFORE validating any job details.
+    // Razorpay checkout verification does not send a job payload, so validating
+    // job fields globally would incorrectly reject legitimate paid checkouts.
+    let body: Record<string, unknown>;
+    try {
+      const parsed: unknown = await req.json();
+      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
+        return json({ error: "Invalid request body." }, 400);
+      }
+      body = parsed as Record<string, unknown>;
+    } catch {
+      return json({ error: "Invalid JSON body." }, 400);
+    }
     const action = clean(body.action, 30);
-    const job = normalizeJob((body.job || {}) as Record<string, unknown>);
+    if (!["trial", "create_order", "verify", "owner_delete_job"].includes(action)) {
+      return json({ error: "Unknown action." }, 400);
+    }
+
+    // Only trial/create_order need a complete job, never verify/delete.
+    const job = (action === "trial" || action === "create_order")
+      ? normalizeJob((body.job && typeof body.job === "object" && !Array.isArray(body.job)
+          ? body.job : {}) as Record<string, unknown>)
+      : null;
 
     if (action === "trial") {
-      const { data, error } = await userClient.rpc("publish_free_trial_job", { p_job: job });
+      const { data, error } = await userClient.rpc("publish_free_trial_job", { p_job: job! });
       if (error) {
         const message = error.message || "Could not use free trial.";
         if (/FREE_TRIAL_ALREADY_USED|duplicate key/i.test(message)) {
@@ -77,6 +94,10 @@ Deno.serve(async (req) => {
     }
 
     if (action === "create_order") {
+      // Paid-flow secrets are not required just to use the free trial.
+      const serviceKey = requiredEnv("SUPABASE_SERVICE_ROLE_KEY");
+      const razorpayKeyId = requiredEnv("RAZORPAY_KEY_ID");
+      const razorpaySecret = requiredEnv("RAZORPAY_KEY_SECRET");
       const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
       const { data: trialRow, error: trialError } = await admin
         .from("job_posting_trials").select("user_id").eq("user_id", userId).maybeSingle();
@@ -105,7 +126,7 @@ Deno.serve(async (req) => {
         amount_paise: 29900,
         currency: "INR",
         status: "created",
-        job_payload: job,
+        job_payload: job!,
       });
       if (insertError) return json({ error: "Payment order was created but could not be saved. Please contact support before retrying." }, 500);
       return json({ key_id: razorpayKeyId, order_id: order.id, amount: 29900, currency: "INR", name: "KaamMilega", description: "Job post active for 30 days after approval" });
@@ -116,6 +137,9 @@ Deno.serve(async (req) => {
       const paymentId = clean(body.razorpay_payment_id, 100);
       const signature = clean(body.razorpay_signature, 200);
       if (!orderId || !paymentId || !signature) return json({ error: "Payment verification details are incomplete." }, 400);
+      const serviceKey = requiredEnv("SUPABASE_SERVICE_ROLE_KEY");
+      const razorpayKeyId = requiredEnv("RAZORPAY_KEY_ID");
+      const razorpaySecret = requiredEnv("RAZORPAY_KEY_SECRET");
       const expected = await hmacHex(razorpaySecret, `${orderId}|${paymentId}`);
       if (!safeEqual(expected, signature.toLowerCase())) return json({ error: "Payment signature could not be verified." }, 400);
 
@@ -141,7 +165,9 @@ Deno.serve(async (req) => {
           body: JSON.stringify({ amount: 29900, currency: "INR" }),
         });
         const captured = await captureResponse.json();
-        if (!captureResponse.ok || captured.status !== "captured") return json({ error: "Payment was authorized but could not be captured. Please contact support before paying again." }, 502);
+        if (!captureResponse.ok || captured.status !== "captured" || captured.order_id !== orderId || captured.amount !== 29900 || captured.currency !== "INR") {
+          return json({ error: "Payment capture could not be confirmed. Please contact support before paying again." }, 502);
+        }
       }
 
       const { data: result, error: finalizeError } = await admin.rpc("finalize_paid_job_post", {
@@ -149,6 +175,27 @@ Deno.serve(async (req) => {
       });
       if (finalizeError) return json({ error: finalizeError.message || "Payment was received but the job could not be submitted. Contact support with payment ID " + paymentId }, 500);
       return json(result || { success: true, message: "Payment verified and job submitted for owner review." });
+    }
+
+    if (action === "owner_delete_job") {
+      // Optional server-side owner deletion for job posts. No owner can be
+      // impersonated using an email supplied in the request body.
+      const jobId = clean(body.job_id, 80);
+      if (!/^(\d{1,18}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i.test(jobId)) {
+        return json({ error: "Invalid job ID." }, 400);
+      }
+      const { data: isOwner, error: ownerError } = await userClient.rpc("km_is_partnership_owner");
+      if (ownerError || isOwner !== true) {
+        return json({ error: "Only the authorized Owner can delete job posts." }, 403);
+      }
+      const admin = createClient(supabaseUrl, requiredEnv("SUPABASE_SERVICE_ROLE_KEY"), { auth: { persistSession: false } });
+      const { data: removed, error: removeError } = await admin.from("jobs")
+        .delete().eq("id", jobId).select("id");
+      if (removeError) return json({ error: "Could not delete job: " + removeError.message }, 500);
+      if (!Array.isArray(removed) || removed.length !== 1) {
+        return json({ error: "Job was not found or has already been deleted." }, 404);
+      }
+      return json({ success: true, deleted: true, job_id: jobId });
     }
 
     return json({ error: "Unknown action." }, 400);

@@ -5695,85 +5695,104 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
 
 <script id="km-partnership-secure-owner-panel">
 (function(){
- 'use strict';
- const SB_URL='https://cvlinhjhyxuntbbxrrxq.supabase.co';
- const SB_KEY='sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2';
- const BUCKET='partnership-proofs';
- const $=id=>document.getElementById(id);
- const escapeHTML=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
- async function ownerSession(){
-   const user=await window.getOwnerUser?.();
-   if(!user) throw new Error('Owner login required. Open the owner panel and sign in as authorized founder.');
-   const token=await (window.getSession?.()??localStorage.getItem('km_access_token'));
-   if(!token)throw new Error('Owner session expired. Please sign in again.');
-   return {token,user};
- }
- async function api(path,opt={}){
-   const {token}=await ownerSession();
-   const resp=await fetch(SB_URL+path,{...opt,headers:{'apikey':SB_KEY,'Authorization':'Bearer '+token,...(opt.body?{'Content-Type':'application/json'}:{}),...(opt.headers||{})}});
-   if(!resp.ok){let obj;try{obj=await resp.json()}catch(e){}throw new Error(obj?.message||obj?.error||('Verification API '+resp.status+'. Run partnership_setup.sql in Supabase first.'));}
-   if(resp.status===204)return null;return resp.json();
- }
- function statusText(s){return ({pending_verification:'Pending verification',approved:'Approved',rejected:'Rejected',needs_information:'Need information'})[s]||s;}
- function documentButton(label,path){if(!path)return '';return `<button type="button" class="btn ghost" data-kmp-open="${escapeHTML(path)}">📄 ${escapeHTML(label)}</button>`;}
- async function renderQueue(){
-   const target=$('ownerPartnershipApplications');if(!target)return;
-   target.textContent='Loading private verification queue…';
-   try{
+  'use strict';
+  const SB_URL='https://cvlinhjhyxuntbbxrrxq.supabase.co';
+  const SB_KEY='sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2';
+  const BUCKET='partnership-proofs';
+  const $=id=>document.getElementById(id);
+  const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+  const pretty={pending_verification:'Pending verification',approved:'Approved',rejected:'Rejected – cleanup needed',needs_information:'Needs information'};
+  async function ownerSession(){
+    const user=await window.getOwnerUser?.();
+    if(!user)throw Error('Please sign in using your authorized Owner account.');
+    const token=await window.getSession?.();
+    if(!token)throw Error('Owner session expired. Sign in again.');
+    return {token,user};
+  }
+  async function api(path,opt={}){
+    const {token}=await ownerSession();
+    const response=await fetch(SB_URL+path,{...opt,headers:{apikey:SB_KEY,Authorization:'Bearer '+token,...(opt.body?{'Content-Type':'application/json'}:{}),...(opt.headers||{})}});
+    const body=response.status===204?null:await response.json().catch(()=>null);
+    if(!response.ok)throw Error(body?.message||body?.error||`Server error ${response.status}`);
+    return body;
+  }
+  const showFile=(name,path)=>path?`<button type="button" class="btn ghost" data-kmp-open="${esc(path)}">📄 ${esc(name)}</button>`:'';
+  async function renderQueue(){
+    const target=$('ownerPartnershipApplications');if(!target)return;
+    target.textContent='Loading partnership applications…';
+    try{
       const list=await api('/rest/v1/partnership_applications?select=*&order=created_at.desc&limit=100');
-      if(!Array.isArray(list)||list.length===0){target.innerHTML='<div class="card"><h3>No partnership applications yet</h3><p class="muted">When applicants upload all required proofs and submit, they will appear here from any device.</p></div>';return;}
+      if(!Array.isArray(list)||!list.length){target.innerHTML='<div class="card"><h3>No pending partnership applications</h3><p class="muted">Approved records stay here. Rejected records and their proofs disappear after successful cleanup; limited tracking status stays available.</p></div>';return;}
       target.innerHTML=list.map(a=>{
-         const proofs=a.proof_paths||{};const name=escapeHTML(a.full_name),id=escapeHTML(a.id);
-         return `<article class="owner-job" style="margin-bottom:16px"><div class="owner-job-head"><div><span class="tag">PARTNERSHIP APPLICATION</span><h3 style="margin:8px 0">${name}</h3><div class="owner-small">${escapeHTML(a.email)} · ${escapeHTML(a.city)} · ${escapeHTML(a.state)}</div><div class="owner-small">${escapeHTML(new Date(a.created_at).toLocaleString())} · ID: ${id}</div></div><span class="tag">${escapeHTML(statusText(a.status))}</span></div>
-         <p><strong>Age:</strong> ${escapeHTML(a.age)} · <strong>Qualification:</strong> ${escapeHTML(a.qualification)} · <strong>Experience:</strong> ${escapeHTML(a.experience)}</p>
-         <p><strong>Partnership:</strong> ${escapeHTML(a.partnership_type)}<br><strong>Business:</strong> ${escapeHTML(a.company||'Not provided')}<br><strong>Proposal:</strong> ${escapeHTML(a.proposal)}</p>
-         <div class="owner-actions" style="margin:13px 0">${documentButton('Photo',proofs.photo)}${documentButton('Masked Aadhaar',proofs.aadhaar)}${documentButton('PAN',proofs.pan)}${documentButton('Qualification',proofs.qualification)}${documentButton('Other proof',proofs.extra)}</div>
-         <div class="owner-actions"><button type="button" class="btn" data-kmp-status="approved" data-kmp-id="${id}">Approve</button><button type="button" class="btn secondary" data-kmp-status="needs_information" data-kmp-id="${id}">Request info</button><button type="button" class="btn danger" data-kmp-status="rejected" data-kmp-id="${id}">Reject</button><a class="btn ghost" href="mailto:${encodeURIComponent(a.email)}?subject=${encodeURIComponent('KaamMilega Partnership Application '+a.id)}">✉️ Email Applicant</a></div></article>`;
+        const paths=a.proof_paths||{},name=esc(a.full_name),id=esc(a.id),st=a.status||'pending_verification';
+        const buttons=st==='rejected'?`<button type="button" class="btn danger" data-kmp-status="rejected" data-kmp-id="${id}">🧹 Retry proof cleanup</button>`:
+          `<button type="button" class="btn" data-kmp-status="approved" data-kmp-id="${id}">${st==='approved'&&!a.approval_email_sent_at?'Send approval email':'Approve'}</button>
+           <button type="button" class="btn secondary" data-kmp-status="needs_information" data-kmp-id="${id}">Request info</button>
+           <button type="button" class="btn danger" data-kmp-status="rejected" data-kmp-id="${id}">Reject &amp; Remove</button>`;
+        const emailInfo=st==='approved'?(a.approval_email_sent_at?'<p class="notice success">✅ Approval email sent.</p>':'<p class="notice">⚠️ Approval email not yet confirmed. Use Send approval email to retry after configuring email service.</p>'):'';
+        return `<article class="owner-job" style="margin-bottom:16px" data-kmp-record="${id}">
+          <div class="owner-job-head"><div><span class="tag">PARTNERSHIP APPLICATION</span><h3 style="margin:8px 0">${name}</h3><div class="owner-small">${esc(a.email)} · ${esc(a.city)} · ${esc(a.state)}</div><div class="owner-small">${esc(new Date(a.created_at).toLocaleString('en-IN'))} · Tracking ID: ${id}</div></div><span class="tag">${esc(pretty[st]||st)}</span></div>
+          <p><strong>Age:</strong> ${esc(a.age)} · <strong>Qualification:</strong> ${esc(a.qualification)} · <strong>Experience:</strong> ${esc(a.experience)}</p>
+          <p><strong>Partnership:</strong> ${esc(a.partnership_type)}<br><strong>Business:</strong> ${esc(a.company||'Not provided')}<br><strong>Proposal:</strong> ${esc(a.proposal)}</p>
+          ${emailInfo}<div class="owner-actions" style="margin:13px 0">${showFile('Photo',paths.photo)}${showFile('Masked Aadhaar',paths.aadhaar)}${showFile('PAN',paths.pan)}${showFile('Qualification',paths.qualification)}${showFile('Other proof',paths.extra)}</div>
+          <div class="owner-actions">${buttons}<a class="btn ghost" href="mailto:${encodeURIComponent(a.email)}?subject=${encodeURIComponent('KaamMilega Partnership Application '+a.id)}">✉️ Contact Applicant</a></div></article>`;
       }).join('');
-   }catch(e){target.innerHTML='<div class="notice error">'+escapeHTML(e.message)+'</div>';}
- }
- document.addEventListener('click',async e=>{
-   const file=e.target.closest?.('[data-kmp-open]');
-   if(file){
-     const path=file.dataset.kmpOpen;if(!/^([a-f0-9-]{36})\/(photo|aadhaar|pan|qualification|extra)\.(jpg|jpeg|png|webp|pdf)$/i.test(path))return alert('Invalid proof path');
-     const tab=window.open('about:blank','_blank');
-     try{
-       const segments=path.split('/').map(encodeURIComponent).join('/');
-       const out=await api('/storage/v1/object/sign/'+BUCKET+'/'+segments,{method:'POST',body:JSON.stringify({expiresIn:120})});
-       const raw=out.signedURL||out.signedUrl;if(!raw)throw new Error('No signed document link returned');
-       const absolute=raw.startsWith('http')?raw:SB_URL+(raw.startsWith('/storage/v1/')?raw:'/storage/v1'+(raw.startsWith('/')?'':'/')+raw);
-       const url=new URL(absolute);
-       if(url.hostname!==new URL(SB_URL).hostname || !url.pathname.startsWith('/storage/v1/object/sign/'))throw new Error('Unsafe document URL');
-       if(tab)tab.location.href=url.href;else alert('Allow popups to open private proof.');
-     }catch(err){tab?.close();alert('Could not open private document: '+err.message)}
-     return;
-   }
-   const b=e.target.closest?.('[data-kmp-status]');if(!b)return;
-   const id=b.dataset.kmpId,status=b.dataset.kmpStatus;
-   if(!/^[0-9a-f-]{36}$/i.test(id)||!['approved','rejected','needs_information'].includes(status))return;
-   if(!confirm('Mark this partnership application as '+statusText(status)+'?'))return;
-   b.disabled=true;try{
-     const {user}=await ownerSession();
-     await api('/rest/v1/partnership_applications?id=eq.'+encodeURIComponent(id),{method:'PATCH',body:JSON.stringify({status,reviewed_at:new Date().toISOString(),reviewed_by:user.id})});
-     await renderQueue();
-   }catch(err){alert('Update failed: '+err.message);b.disabled=false;}
- });
- function init(){
-   const refresh=$('ownerPartnershipsRefresh');if(refresh)refresh.addEventListener('click',renderQueue);
-   const clear=$('ownerPartnershipsClear');if(clear){clear.style.display='none';clear.disabled=true;}
-   window.kmRefreshPartnerships=renderQueue;
-   const open=$('kmOwnerEnter');if(open)open.addEventListener('click',async()=>{
+    }catch(error){target.innerHTML='<div class="notice error">'+esc(error.message)+'</div>';}
+  }
+  async function review(id,action){
+    const {token}=await ownerSession();
+    const r=await fetch(SB_URL+'/functions/v1/partnership-review',{
+      method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},
+      body:JSON.stringify({id,action})
+    });
+    const data=await r.json().catch(()=>null);
+    if(!r.ok)throw Error(data?.error||data?.message||`Review function error ${r.status}. Deploy the partnership-review Edge Function.`);
+    return data;
+  }
+  document.addEventListener('click',async e=>{
+    const file=e.target.closest?.('[data-kmp-open]');
+    if(file){
+      const path=file.dataset.kmpOpen;
+      if(!/^([a-f0-9-]{36})\/(photo|aadhaar|pan|qualification|extra)\.(jpg|jpeg|png|webp|pdf)$/i.test(path))return alert('Invalid proof path.');
+      const tab=window.open('about:blank','_blank');
+      try{
+        const segments=path.split('/').map(encodeURIComponent).join('/');
+        const out=await api('/storage/v1/object/sign/'+BUCKET+'/'+segments,{method:'POST',body:JSON.stringify({expiresIn:120})});
+        const raw=out.signedURL||out.signedUrl;if(!raw)throw Error('No signed document URL returned.');
+        const absolute=raw.startsWith('http')?raw:SB_URL+(raw.startsWith('/storage/v1/')?raw:'/storage/v1'+(raw.startsWith('/')?'':'/')+raw);
+        const url=new URL(absolute);
+        if(url.hostname!==new URL(SB_URL).hostname||!url.pathname.startsWith('/storage/v1/object/sign/'))throw Error('Unsafe document URL.');
+        if(tab)tab.location.href=url.href;else alert('Allow pop-ups for private proof preview.');
+      }catch(err){tab?.close();alert('Could not open private document: '+err.message)}
+      return;
+    }
+    const b=e.target.closest?.('[data-kmp-status]');if(!b)return;
+    const id=b.dataset.kmpId,action=b.dataset.kmpStatus;
+    if(!/^[0-9a-f-]{36}$/i.test(id)||!['approved','rejected','needs_information'].includes(action))return;
+    const prompt=action==='rejected'?'Reject application and permanently remove its submitted proofs/profile? Tracking status (Rejected) will remain.':action==='approved'?'Approve and email applicant? Our team should contact them within 24–48 hours.':'Request more information from this applicant?';
+    if(!confirm(prompt))return;
+    b.disabled=true;const old=b.textContent;b.textContent='Working…';
+    try{
+      const data=await review(id,action);
+      await renderQueue();
+      if(action==='approved')alert(data.email_sent?'Approved. Confirmation email sent to applicant.':'Approved, but email was NOT sent. Check email provider settings and retry.');
+      else if(action==='rejected')alert('Rejected. Application and its uploaded proof files were removed; tracking status retained.');
+    }catch(error){alert('Could not complete review: '+error.message);b.disabled=false;b.textContent=old;await renderQueue();}
+  });
+  function init(){
+    $('ownerPartnershipsRefresh')?.addEventListener('click',renderQueue);
+    const clear=$('ownerPartnershipsClear');if(clear){clear.style.display='none';clear.disabled=true;}
+    window.kmRefreshPartnerships=renderQueue;
+    $('kmOwnerEnter')?.addEventListener('click',async()=>{
       const label=$('kmOwnerPortalStatus');
-      try{const u=await window.getOwnerUser?.();if(u){window.openModal?.('ownerPanelModal');await Promise.allSettled([window.loadOwnerJobs?.(),window.loadOwnerCompanyRequirements?.(),renderQueue()]);if(label)label.textContent='Signed in as authorized owner.';}else{window.openModal?.('ownerLoginModal');if(label)label.textContent='Enter the authorized owner account password.';}}
-      catch(e){if(label)label.textContent=e.message;window.openModal?.('ownerLoginModal');}
-   });
-   document.getElementById('ownerLoginSubmit')?.addEventListener('click',()=>setTimeout(async()=>{
-     if(await window.getOwnerUser?.()){await renderQueue();window.openModal?.('ownerPanelModal');}
-   },1400));
-   // Older owner panel's refresh button should also refresh partnership queue.
-   document.getElementById('ownerRefresh')?.addEventListener('click',()=>setTimeout(renderQueue,80));
- }
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
+      try{const u=await window.getOwnerUser?.();if(u){window.openModal?.('ownerPanelModal');await Promise.allSettled([window.loadOwnerJobs?.(),window.loadOwnerCompanyRequirements?.(),renderQueue()]);if(label)label.textContent='Signed in as authorized owner.';}
+      else{window.openModal?.('ownerLoginModal');if(label)label.textContent='Sign in with your authorized owner account.';}}
+      catch(error){if(label)label.textContent=error.message;window.openModal?.('ownerLoginModal');}
+    });
+    $('ownerLoginSubmit')?.addEventListener('click',()=>setTimeout(async()=>{if(await window.getOwnerUser?.()){await renderQueue();window.openModal?.('ownerPanelModal');}},1400));
+    $('ownerRefresh')?.addEventListener('click',()=>setTimeout(renderQueue,80));
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 })();
 </script>
 
@@ -5813,6 +5832,52 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
       }
     }finally{btn.disabled=false;}
   });
+})();
+</script>
+
+<script id="km-owner-jobs-verified-delete">
+(function(){
+  'use strict';
+  async function verifiedDeleteJob(id,kind){
+    const label=kind==='reject'?'Reject and permanently delete this job post?':'Permanently delete this job post?';
+    if(!confirm(label+' This cannot be undone.'))return;
+    try{
+      const owner=await window.getOwnerUser?.();if(!owner)throw Error('Owner session required.');
+      const token=await window.getSession?.();if(!token)throw Error('Sign in again.');
+      // Server verifies the logged-in Owner; service-role secret stays on Supabase.
+      const response=await fetch('https://cvlinhjhyxuntbbxrrxq.supabase.co/functions/v1/razorpay-job-posting',{
+        method:'POST',headers:{apikey:'sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2',Authorization:'Bearer '+token,'Content-Type':'application/json'},
+        body:JSON.stringify({action:'owner_delete_job',job_id:String(id)})
+      });
+      const result=await response.json().catch(()=>null);
+      if(!response.ok||result?.deleted!==true)throw Error(result?.error||result?.message||`Owner delete failed (HTTP ${response.status}). Deploy the updated razorpay-job-posting Edge Function.`);
+      await window.loadOwnerJobs?.();
+      try{await window.loadJobs?.();}catch(_){/* Public jobs refresh is not required for saved deletion. */}
+      if(typeof window.showToast==='function')window.showToast('Job removed from database.');
+      else alert('Job deleted successfully.');
+    }catch(error){alert('Job deletion failed: '+error.message)}
+  }
+  window.ownerDeleteJob=verifiedDeleteJob;
+  // Add Reject & Delete to pending posts without changing original job manager features.
+  function addRejectButtons(){
+    const list=document.getElementById('ownerJobs');if(!list)return;
+    list.querySelectorAll('.owner-job').forEach(card=>{
+      if(!/PENDING OWNER/.test(card.textContent||''))return;
+      const del=card.querySelector('[data-km-job-action="delete"]');
+      if(!del||card.querySelector('[data-km-job-action="reject"]'))return;
+      const reject=document.createElement('button');reject.type='button';reject.className='btn danger';reject.textContent='Reject & Delete';reject.dataset.kmJobAction='reject';reject.dataset.id=del.dataset.id;
+      del.before(reject);
+    });
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',wire);else wire();
+  function wire(){
+    const list=document.getElementById('ownerJobs');if(!list)return;
+    new MutationObserver(addRejectButtons).observe(list,{childList:true});addRejectButtons();
+    list.addEventListener('click',e=>{
+      const btn=e.target.closest('[data-km-job-action="reject"]');if(!btn)return;
+      e.stopImmediatePropagation();e.preventDefault();verifiedDeleteJob(btn.dataset.id,'reject');
+    },true);
+  }
 })();
 </script>
 </body>

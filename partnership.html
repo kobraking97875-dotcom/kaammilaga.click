@@ -34,13 +34,29 @@ body[data-theme='orange']{--blue:#bc530e;--navy:#572b18;--orange:#ed7720;--bg:#f
  <a class="menu-item" href="index.html"><span>🏠 KaamMilega Home</span>›</a>
 </aside>
 <main>
-<section class="hero"><div class="wrap"><div class="eyebrow">KAAMMILEGA · BUSINESS COLLABORATIONS</div><h1>Grow with KaamMilega.<br>Apply for a Partnership.</h1><p>Recruitment agencies, business owners, contractors aur hiring partners ke liye partnership enquiry portal. Required details aur proofs upload karke apni application owner verification ke liye submit karein.</p><div class="hero-buttons"><a class="btn orange" href="#apply">🤝 Apply for Partnership</a><a class="btn" style="background:#ffffff1f;border-color:#ffffff70;color:white" href="#process">How it works</a></div><div class="trust"><span>✓ Application review</span><span>✓ Founder-led approval</span><span>✓ Written terms before joining</span></div></div></section>
+<section class="hero"><div class="wrap"><div class="eyebrow">KAAMMILEGA · BUSINESS COLLABORATIONS</div><h1>Grow with KaamMilega.<br>Apply for a Partnership.</h1><p>Recruitment agencies, business owners, contractors aur hiring partners ke liye partnership enquiry portal. Required details aur proofs upload karke apni application owner verification ke liye submit karein.</p><div class="hero-buttons"><a class="btn orange" href="#apply">🤝 Apply for Partnership</a><a class="btn" style="background:#ffffff1f;border-color:#ffffff70;color:white" href="#track">🔎 Track Status</a><a class="btn" style="background:#ffffff1f;border-color:#ffffff70;color:white" href="#process">How it works</a></div><div class="trust"><span>✓ Application review</span><span>✓ Founder-led approval</span><span>✓ Written terms before joining</span></div></div></section>
 <section class="section wrap" id="types"><h2>Who can apply?</h2><p class="lead">Yeh ek enquiry hai, automatic appointment, franchise allotment ya legal partnership nahi.</p><div class="grid3">
  <article class="card"><div class="symbol">🏢</div><h3>Business & Company Partners</h3><p>Employers, businesses aur regional recruitment collaborators ke liye.</p></article>
  <article class="card"><div class="symbol">👷</div><h3>Recruitment & Hiring Partners</h3><p>Authorized contractors, hiring coordinators aur experienced placement professionals.</p></article>
  <article class="card"><div class="symbol">📍</div><h3>Local & Regional Partners</h3><p>City/district level outreach aur legitimate business development collaborations.</p></article>
  </div></section>
 <section class="section wrap" id="process"><h2>Simple, documented process</h2><p class="lead">Kisi bhi partnership ka final status written agreement aur applicable verification ke baad hi hoga.</p><div class="steps"><div class="step"><b>01</b><h3>Fill application</h3><p>Contact, qualification aur role details dein.</p></div><div class="step"><b>02</b><h3>Owner review</h3><p>Application owner panel mein verification queue mein jayegi.</p></div><div class="step"><b>03</b><h3>Document verification</h3><p>Required profile aur proof details review hongi.</p></div><div class="step"><b>04</b><h3>Written agreement</h3><p>Scope, fees, refund terms aur obligations sign hone par.</p></div></div></section>
+
+<section class="section wrap" id="track" aria-labelledby="kmTrackTitle">
+  <div class="formpanel" style="max-width:770px;margin:0 auto">
+    <span class="mini-tag">🔎 Private application tracking</span>
+    <h2 id="kmTrackTitle" style="margin-top:12px">Check Partnership Status</h2>
+    <p class="lead">Form submit hone ke baad mili Tracking ID aur wahi email ID dal kar apna status check karein. Kisi applicant ke proof ya personal details yahan nahi dikhengi.</p>
+    <form id="kmTrackingForm" class="formgrid" style="margin-top:18px">
+      <div class="field"><label for="kmTrackingId">Application / Tracking ID <span class="required">*</span></label><input id="kmTrackingId" type="text" required autocomplete="off" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx" pattern="[0-9a-fA-F-]{36}" maxlength="36"></div>
+      <div class="field"><label for="kmTrackingEmail">Applicant Email ID <span class="required">*</span></label><input id="kmTrackingEmail" type="email" required autocomplete="email" maxlength="120" placeholder="name@example.com"></div>
+      <div class="field full"><button class="btn primary" id="kmTrackingSubmit" type="submit">Check My Status →</button></div>
+    </form>
+    <div id="kmTrackingResult" class="notice" aria-live="polite" role="status" hidden></div>
+    <p class="small muted">Status: Pending Verification / Need Information / Approved / Rejected. ID + email dono match hona zaroori hai. Status record reh sakta hai jabki rejected application ke sensitive documents hata diye jayen.</p>
+  </div>
+</section>
+
 <section class="section wrap" id="apply"><h2>Partnership Application</h2><p class="lead">Sahi details aur required proofs upload karein. Form submit hone ke baad application owner verification queue mein chali jayegi.</p>
  <div class="apply-wrap"><div class="formpanel">
   <div class="form-top"><h3 style="margin:0">Applicant Profile</h3><span class="mini-tag">Verification application</span></div>
@@ -162,13 +178,38 @@ body[data-theme='orange']{--blue:#bc530e;--navy:#572b18;--orange:#ed7720;--bg:#f
      const done=document.createElement('div');done.className='notice good';done.setAttribute('role','status');
      const title=document.createElement('h3');title.textContent='✅ Application sent for Owner verification';
      const body=document.createElement('p');body.textContent='All 5 proof files were uploaded to private storage. Your application is pending owner review. The founder may contact you using your submitted email address.';
-     const code=document.createElement('p');code.textContent='Application ID: '+receipt;
-     done.append(title,body,code);form.parentNode.insertBefore(done,form.nextSibling);
+     const code=document.createElement('p');code.textContent='Application / Tracking ID: '+receipt; const link=document.createElement('a');link.href='#track';link.className='btn primary';link.textContent='🔎 Track My Application';document.getElementById('kmTrackingId').value=receipt;document.getElementById('kmTrackingEmail').value=preparedRecord.email;
+     done.append(title,body,code,link);form.parentNode.insertBefore(done,form.nextSibling);
      $('formMsg').textContent='';done.scrollIntoView({behavior:'smooth',block:'start'});
    }catch(err){
      $('formMsg').style.color='#b91c1c';$('formMsg').textContent=err.message+' If some proof files uploaded but the application did not submit, please contact support and quote this application ID: '+preparedRecord.id;
      submit.disabled=false;edit.disabled=false;submitting=false;
    }
+ });
+
+ // Tracking lookup returns only status and date — no application details.
+ const trackForm=$('kmTrackingForm');
+ trackForm.addEventListener('submit',async e=>{
+   e.preventDefault();
+   const id=$('kmTrackingId').value.trim().toLowerCase(),email=$('kmTrackingEmail').value.trim().toLowerCase();
+   const out=$('kmTrackingResult'),button=$('kmTrackingSubmit');
+   out.hidden=false;out.textContent='Checking status…';
+   if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/.test(id)||!email.includes('@')){out.textContent='Valid Tracking ID aur email ID dalein.';return;}
+   button.disabled=true;
+   try{
+     const r=await fetch(supaUrl+'/rest/v1/rpc/km_track_partnership',{
+       method:'POST',headers:{apikey:supaKey,'Content-Type':'application/json','Accept':'application/json'},
+       body:JSON.stringify({p_tracking_id:id,p_email:email})
+     });
+     const data=await r.json().catch(()=>null);
+     if(!r.ok)throw Error(data?.message||'Tracking service unavailable. Run the tracking SQL setup.');
+     const row=Array.isArray(data)?data[0]:null;
+     if(!row){out.textContent='No matching application found. Tracking ID aur same email check karein.';return;}
+     const labels={pending_verification:'⏳ Pending Verification',needs_information:'📩 More Information Needed',approved:'✅ Approved',rejected:'❌ Rejected'};
+     const date=row.updated_at?new Date(row.updated_at).toLocaleString('en-IN'):'';
+     out.textContent=(labels[row.status]||'Status: '+row.status)+(date?' • Last updated: '+date:'')+(row.status==='approved'?' • Hamari team aapse 24–48 hours mein email par contact karegi.':'');
+   }catch(error){out.textContent='Status check failed: '+error.message}
+   finally{button.disabled=false}
  });
 })();
 </script>

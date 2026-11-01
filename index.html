@@ -547,22 +547,39 @@ body.km-dark .km-smartlink-ad p,body.km-dark .km-sponsored-label{color:#c1d0e5!i
 @media(prefers-reduced-motion:reduce){.km-social-link{transition:none}}
 </style>
 <style id="km-partnership-navigation-v2">
-/* Partnership shortcut lives OUTSIDE of the Settings drawer. */
-.km-partnership-topbar{position:relative;z-index:10;background:#eff6ff;border-bottom:1px solid #d5e3f6}
-.km-partnership-topbar-inner{max-width:1280px;margin:0 auto;padding:9px 18px;display:flex;justify-content:flex-end}
+/* Partnership shortcut in the top action area. */
 #kmPartnershipNav{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-height:44px;border-radius:12px;background:#0b63ce;color:#fff!important;font-family:Inter,Arial,sans-serif;font-weight:800;font-size:14px;text-decoration:none!important;padding:11px 19px;box-shadow:0 4px 14px rgba(11,99,206,.17);transition:background .15s ease}
 #kmPartnershipNav:hover{background:#0a53ab;color:#fff!important}
 #kmPartnershipNav:focus-visible{outline:3px solid #f97316;outline-offset:3px}
 #kmPartnershipNav .km-partnership-arrow{font-size:17px;font-weight:900}
-body.km-dark .km-partnership-topbar{background:#12233c;border-bottom-color:#344660}
 body.km-dark #kmPartnershipNav{background:#0b63ce!important;color:#fff!important}
 /* Owner Login was deliberately removed from public Settings; preserve its original modal and JS for future relocation. */
 #ownerLoginBtn{display:none!important}
 @media(max-width:600px){
- .km-partnership-topbar-inner{padding:9px 12px;justify-content:stretch}
- #kmPartnershipNav{width:100%;min-height:46px}
+ #kmPartnershipNav{min-height:42px;padding:10px 12px;font-size:13px}
+ #kmPartnershipNav .km-partnership-arrow{display:none}
 }
 @media(prefers-reduced-motion:reduce){#kmPartnershipNav{transition:none}}
+</style>
+
+<style id="km-topnav-partnership-inline-2026">
+/* Important: Partnership stays inside the white header, never below it. */
+header .nav{display:flex!important;flex-wrap:nowrap!important;align-items:center!important;min-height:64px;gap:8px!important;}
+header .nav .brand{flex:0 1 auto;min-width:0;}
+header .nav #kmTopActions{flex:1 1 auto!important;width:auto!important;min-width:0;display:flex!important;flex-wrap:nowrap!important;align-items:center!important;justify-content:flex-end!important;gap:6px!important;overflow:visible!important;}
+#kmPartnershipNav{order:-1;flex:0 0 auto;white-space:nowrap;padding:9px 11px!important;min-height:40px!important;}
+@media(max-width:640px){
+ header .nav{padding:10px 8px!important;gap:6px!important;}
+ header .brand{font-size:16px!important;}
+ header .brand-sub{display:none!important;}
+ #kmPartnershipNav{font-size:11px!important;gap:3px!important;padding:9px 8px!important;}
+ header #authNavBtn{padding:7px!important;min-height:38px!important;font-size:0!important;}
+ header #authNavBtn::first-letter{font-size:17px!important;}
+ header #kmSettingsNotifications{padding:7px!important;min-height:38px!important;}
+ header #kmSettingsTrigger{padding:7px!important;min-height:38px!important;}
+ header #kmTopActions{gap:3px!important;}
+}
+@media(max-width:390px){header .brand{font-size:14px!important}#kmPartnershipNav span:not(:first-child){display:none!important}#kmPartnershipNav{font-size:19px!important;padding:7px!important;min-height:38px!important;} }
 </style>
 </head>
 <style id="km-google-gate-style">
@@ -602,6 +619,7 @@ body.km-dark #kmPartnershipNav{background:#0b63ce!important;color:#fff!important
 <button type="button" class="km-settings-item" data-km-action="report"><span class="km-symbol">🚩</span> Report Fake Job <span class="km-right">›</span></button>
 <button type="button" class="km-settings-item" data-km-action="share"><span class="km-symbol">📤</span> Share KaamMilega <span class="km-right">›</span></button>
 <button type="button" class="km-settings-item" data-km-action="about"><span class="km-symbol">ℹ️</span> About &amp; Policies <span class="km-right">›</span></button>
+<button type="button" class="km-settings-item" data-km-action="owner" hidden style="display:none!important"><span class="km-symbol">🛡️</span> Owner Panel <span class="km-right">›</span></button>
 <button type="button" class="km-settings-item" data-km-action="logout" id="kmSettingsLogout" hidden><span class="km-symbol">🚪</span> Logout <span class="km-right">›</span></button>
 <div class="km-settings-note">Notifications: browser alerts require permission and a configured push service. This menu does not enable automatic job alerts.</div>
 </aside>
@@ -611,16 +629,10 @@ body.km-dark #kmPartnershipNav{background:#0b63ce!important;color:#fff!important
 <div class="navlinks" id="kmTopActions">
 <button class="km-top-action" type="button" data-open="loginModal" id="authNavBtn">👤 <span>Login / Sign Up</span></button>
 <button class="km-top-action km-notification-action" type="button" id="kmSettingsNotifications" aria-label="Notifications" title="Notifications">🔔 <span>Notifications</span></button>
+<a id="kmPartnershipNav" href="partnership.html" aria-label="Open Partnership page"><span aria-hidden="true">🤝</span> <span>Partnership</span> <span aria-hidden="true" class="km-partnership-arrow">↗</span></a>
 <button class="km-settings-trigger" id="kmSettingsTrigger" type="button" aria-label="Open settings" aria-expanded="false" aria-controls="kmSettingsPanel">⚙️ <span>Settings</span></button>
 </div>
 </div></header>
-<nav class="km-partnership-topbar" aria-label="Partnership link">
-  <div class="km-partnership-topbar-inner">
-    <a id="kmPartnershipNav" href="partnership.html" aria-label="Open Partnership page">
-      <span aria-hidden="true">🤝</span> <span>Partnership</span> <span aria-hidden="true" class="km-partnership-arrow">↗</span>
-    </a>
-  </div>
-</nav>
 <div class="km-quality-banner"><strong>KaamMilega:</strong> Job search and standard job posting are free. Verify employer details before sharing documents or accepting offers.</div><section class="hero"><div class="hero-inner">
 <h1>Real Opportunities. Clear Details. A Better Way to Find Work.</h1>
 <p>Find jobs by skill and city, compare salary and work conditions, and connect with employers. Every listing should give you the details you need to make an informed decision.</p>
@@ -1156,6 +1168,15 @@ body.km-dark #kmPartnershipNav{background:#0b63ce!important;color:#fff!important
 <button class="btn ghost" id="ownerJobsRefresh" type="button">Refresh Jobs</button>
 </div>
 <div class="owner-grid" id="ownerJobs"><div class="card">Tap Refresh Jobs to load owner jobs.</div></div>
+<div id="ownerPartnershipSection" style="margin-top:20px">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin:10px 0">
+<h3 style="margin:0">Partnership Verification Applications</h3>
+<div style="display:flex;gap:8px;flex-wrap:wrap">
+<button class="btn ghost" id="ownerPartnershipsRefresh" type="button">Refresh Applications</button>
+<button class="btn secondary" id="ownerPartnershipsClear" type="button">Clear All</button>
+</div></div>
+<div class="owner-grid" id="ownerPartnershipApplications"><div class="card"><h3>No partnership applications yet</h3><p class="muted">Applications submitted from the partnership page on this device will appear here for owner verification.</p></div></div>
+</div>
 <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:18px">
 <button class="btn danger" id="ownerLogout">Owner Logout</button>
 <button class="btn secondary" data-close="">Close Panel</button>
@@ -5643,20 +5664,9 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
 <!-- Ad code 1/7: Adsterra Social Bar for kaammilaga.click -->
 <script id="kmAdsterraSocialBar2026" src="https://pl31582226.profitableratecpmnetwork.com/8c/56/61/8c566170f1e58ddce062524bee53ef1a.js"></script>
 
+
 <!-- Partnership settings owner entry: retain all existing protected owner login and management code. -->
-<script id="km-partnership-owner-entry">
-(function(){
-  if(new URLSearchParams(window.location.search).get('openOwner') !== '1') return;
-  function showOwner(){
-    var dialog=document.getElementById('ownerLoginModal');
-    if(!dialog) return;
-    dialog.classList.remove('hidden');
-    dialog.style.display='flex';
-    try { history.replaceState(null,'',location.pathname+location.hash); } catch(e) {}
-  }
-  window.addEventListener('load',function(){setTimeout(showOwner,350)},{once:true});
-})();
-</script>
+<script id="km-owner-entry-redirect">if(new URLSearchParams(location.search).get('openOwner')==='1'){location.replace('owner.html')}</script>
 </body>
 </html>
 <!-- Targeted fixes: only the buttons/errors reported by the owner -->
@@ -5911,6 +5921,7 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
    report(){show('Report Fake Job');const job=field('Job link / title'),reason=field('Reason','textarea');makeButton('Email report',()=>{if(!reason.value.trim()){alert('Enter a reason');return}location.href='mailto:kaammilaga.official@gmail.com?subject='+encodeURIComponent('Report Fake Job')+'&body='+encodeURIComponent('Job: '+job.value+'\nReason: '+reason.value)})},
    share(){const url='https://kaammilaga.click/';if(navigator.share)navigator.share({title:'KaamMilega',url}).catch(()=>{});else{show('Share KaamMilega');text(url);makeButton('Copy link',()=>{if(navigator.clipboard)navigator.clipboard.writeText(url).then(()=>alert('Copied')).catch(()=>prompt('Copy this link',url));else prompt('Copy this link',url)})}},
    profile(){panel.hidden=true;$('kmSettingsBackdrop').hidden=true;const b=$('authNavBtn');if(b)b.click();else alert('Profile requires login')},
+   owner(){panel.hidden=true;$('kmSettingsBackdrop').hidden=true;const ownerBtn=$('ownerLoginBtn'); if(ownerBtn) ownerBtn.click(); else location.href='owner.html';},
    privacy(){jump('privacyPolicy')},help(){jump('faq')},about(){jump('aboutKaamMilega')},
    logout(){show('Log out');text('Log out of your KaamMilega account?');makeButton('Log out',()=>{const b=$('logoutBtn');if(b)b.click();else alert('Please log in before logging out');close()})}
   };

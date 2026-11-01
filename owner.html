@@ -5740,13 +5740,38 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
     }catch(error){target.innerHTML='<div class="notice error">'+esc(error.message)+'</div>';}
   }
   async function review(id,action){
+    // Always send a normalized UUID and action to the review endpoint.
+    id=String(id??'').trim();
+    action=String(action??'').trim().toLowerCase();
+    if(!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id))
+      throw Error('Invalid application Tracking ID. Reload applications before retrying.');
+    if(!['approved','rejected','needs_information'].includes(action))
+      throw Error('Invalid Owner action: '+action);
     const {token}=await ownerSession();
-    const r=await fetch(SB_URL+'/functions/v1/partnership-review',{
-      method:'POST',headers:{apikey:SB_KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},
-      body:JSON.stringify({id,action})
-    });
-    const data=await r.json().catch(()=>null);
-    if(!r.ok)throw Error(data?.error||data?.message||`Review function error ${r.status}. Deploy the partnership-review Edge Function.`);
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),18000);
+    let response;
+    try{
+      response=await fetch(SB_URL+'/functions/v1/partnership-review',{
+        method:'POST',
+        headers:{apikey:SB_KEY,Authorization:'Bearer '+token,'Content-Type':'application/json'},
+        body:JSON.stringify({id,action}),
+        signal:controller.signal
+      });
+    }catch(error){
+      if(error?.name==='AbortError')throw Error('Supabase review request timed out. Check Edge Functions > partnership-review > Logs. No deletion was confirmed.');
+      if(error instanceof TypeError)throw Error('Cannot connect to partnership-review. Check that the function is deployed in the SAME Supabase project and inspect Edge Functions > Invocations/Logs for CORS, JWT or network errors. No deletion was confirmed.');
+      throw error;
+    }finally{clearTimeout(timer)}
+    const raw=await response.text();
+    let data=null;
+    try{data=raw?JSON.parse(raw):null}catch(_){data=null}
+    if(!response.ok){
+      const detail=data?.error||data?.message||raw.slice(0,240)||`HTTP ${response.status}`;
+      const hint=(data?.code==='INVALID_APPLICATION_ID'||data?.code==='INVALID_REVIEW_ACTION')
+        ? ' Your Owner Panel and Edge Function may be on different versions.': '';
+      throw Error(`Review failed (HTTP ${response.status}): ${detail}${hint}`);
+    }
     return data;
   }
   document.addEventListener('click',async e=>{
@@ -5844,13 +5869,12 @@ body.km-dark #companyRequirementsSection .requirement-meta > div > .requirement-
     try{
       const owner=await window.getOwnerUser?.();if(!owner)throw Error('Owner session required.');
       const token=await window.getSession?.();if(!token)throw Error('Sign in again.');
-      // Server verifies the logged-in Owner; service-role secret stays on Supabase.
-      const response=await fetch('https://cvlinhjhyxuntbbxrrxq.supabase.co/functions/v1/razorpay-job-posting',{
-        method:'POST',headers:{apikey:'sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2',Authorization:'Bearer '+token,'Content-Type':'application/json'},
-        body:JSON.stringify({action:'owner_delete_job',job_id:String(id)})
+      const response=await fetch('https://cvlinhjhyxuntbbxrrxq.supabase.co/rest/v1/jobs?id=eq.'+encodeURIComponent(id)+'&select=id',{
+        method:'DELETE',headers:{apikey:'sb_publishable_cQ1_ABy2MYZSSbJOGtw1HA_zqgU0mW2',Authorization:'Bearer '+token,Prefer:'return=representation'}
       });
       const result=await response.json().catch(()=>null);
-      if(!response.ok||result?.deleted!==true)throw Error(result?.error||result?.message||`Owner delete failed (HTTP ${response.status}). Deploy the updated razorpay-job-posting Edge Function.`);
+      if(!response.ok)throw Error(result?.message||`Database error ${response.status}`);
+      if(!Array.isArray(result)||result.length!==1)throw Error('No job deleted. Owner DELETE permission / RLS policy may be missing. Run the new SQL setup.');
       await window.loadOwnerJobs?.();
       try{await window.loadJobs?.();}catch(_){/* Public jobs refresh is not required for saved deletion. */}
       if(typeof window.showToast==='function')window.showToast('Job removed from database.');

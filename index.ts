@@ -1,205 +1,127 @@
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+// Supabase Edge Function: partnership-review
+// Deploy from Supabase Dashboard > Edge Functions; configure secrets privately.
+// Required: RESEND_API_KEY, RESEND_FROM_EMAIL (a verified sending domain).
+// Required by runtime: SUPABASE_URL, SUPABASE_ANON_KEY and SUPABASE_SERVICE_ROLE_KEY.
+// Never put Resend API keys or service-role key in public HTML.
+import { createClient } from 'npm:@supabase/supabase-js@2';
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-const json = (body: unknown, status = 200) => new Response(JSON.stringify(body), {
-  status, headers: { ...corsHeaders, "Content-Type": "application/json" },
-});
-const requiredEnv = (key: string) => {
-  const value = Deno.env.get(key);
-  if (!value) throw new Error(`Missing server secret: ${key}`);
-  return value;
-};
-const clean = (v: unknown, max = 5000) => String(v ?? "").trim().slice(0, max);
+const allowedOrigins=new Set(['https://kaammilaga.click','https://www.kaammilaga.click']);
+const uuid=/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const goodPath=(id:string,p:string)=>p.startsWith(id+'/')&&
+  /^[0-9a-f-]{36}\/(photo|aadhaar|pan|qualification|extra)\.(jpg|jpeg|png|webp|pdf)$/i.test(p);
 
-function normalizeJob(input: Record<string, unknown>) {
-  const job = {
-    title: clean(input.title, 120),
-    category: clean(input.category, 120),
-    city: clean(input.city, 120),
-    salary: clean(input.salary, 120),
-    job_type: clean(input.job_type || "Full Time", 40),
-    description: clean(input.description, 5000),
-    contact_phone: clean(input.contact_phone, 30),
+Deno.serve(async req=>{
+  const requestOrigin=req.headers.get('origin');
+  const cors={
+    'Access-Control-Allow-Origin':requestOrigin&&allowedOrigins.has(requestOrigin)?requestOrigin:'https://kaammilaga.click',
+    'Access-Control-Allow-Headers':'authorization, apikey, content-type, x-client-info',
+    'Access-Control-Allow-Methods':'POST, OPTIONS',
+    'Content-Type':'application/json; charset=utf-8', 'Vary':'Origin'
   };
-  if (!job.title || !job.category || !job.city) throw new Error("Please enter job title, category and city.");
-  return job;
-}
-
-async function hmacHex(secret: string, value: string) {
-  const key = await crypto.subtle.importKey("raw", new TextEncoder().encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
-  const signature = await crypto.subtle.sign("HMAC", key, new TextEncoder().encode(value));
-  return [...new Uint8Array(signature)].map((b) => b.toString(16).padStart(2, "0")).join("");
-}
-function safeEqual(a: string, b: string) {
-  if (a.length !== b.length) return false;
-  let out = 0;
-  for (let i = 0; i < a.length; i++) out |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  return out === 0;
-}
-
-Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
-  if (req.method !== "POST") return json({ error: "POST required." }, 405);
-
-  try {
-    const supabaseUrl = requiredEnv("SUPABASE_URL");
-    const anonKey = requiredEnv("SUPABASE_ANON_KEY");
-    const authHeader = req.headers.get("Authorization") || "";
-    const token = authHeader.replace(/^Bearer\s+/i, "");
-    if (!token) return json({ error: "Please login first." }, 401);
-
-    const userClient = createClient(supabaseUrl, anonKey, { global: { headers: { Authorization: `Bearer ${token}` } }, auth: { persistSession: false } });
-    const { data: userData, error: userError } = await userClient.auth.getUser(token);
-    if (userError || !userData.user) return json({ error: "Your login session expired. Please login again." }, 401);
-    const userId = userData.user.id;
-    // Parse the action BEFORE validating any job details.
-    // Razorpay checkout verification does not send a job payload, so validating
-    // job fields globally would incorrectly reject legitimate paid checkouts.
-    let body: Record<string, unknown>;
-    try {
-      const parsed: unknown = await req.json();
-      if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) {
-        return json({ error: "Invalid request body." }, 400);
-      }
-      body = parsed as Record<string, unknown>;
-    } catch {
-      return json({ error: "Invalid JSON body." }, 400);
+  const reply=(payload:unknown,status=200)=>new Response(JSON.stringify(payload),{status,headers:cors});
+  if(req.method==='OPTIONS')return new Response('ok',{headers:cors});
+  if(req.method!=='POST')return reply({error:'POST required'},405);
+  if(requestOrigin && !allowedOrigins.has(requestOrigin))return reply({error:'Origin not allowed'},403);
+  try{
+  const url=Deno.env.get('SUPABASE_URL');
+  const anon=Deno.env.get('SUPABASE_ANON_KEY')||Deno.env.get('SUPABASE_PUBLISHABLE_KEY');
+  const secret=Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')||Deno.env.get('KM_SUPABASE_SECRET_KEY');
+  if(!url||!anon||!secret)return reply({error:'Missing Supabase server secrets'},503);
+  const bearer=req.headers.get('authorization')||'';
+  if(!bearer.startsWith('Bearer '))return reply({error:'Owner login required'},401);
+  const token=bearer.slice(7);
+  const caller=createClient(url,anon,{global:{headers:{Authorization:bearer}},auth:{persistSession:false,autoRefreshToken:false}});
+  const {data:ud,error:ue}=await caller.auth.getUser(token);
+  if(ue||!ud.user?.id)return reply({error:'Invalid owner session'},401);
+  const {data:allowed,error:ae}=await caller.rpc('km_is_partnership_owner');
+  if(ae||allowed!==true)return reply({error:'Owner permission required'},403);
+  const admin=createClient(url,secret,{auth:{persistSession:false,autoRefreshToken:false}});
+  let body;
+  try{body=await req.json()}catch{return reply({error:'Invalid JSON'},400)}
+  // Match the payload used by both the current and older Owner Panel versions.
+  // Reject unknown actions; only a verified owner can reach this code.
+  const details=(body && typeof body==='object' && !Array.isArray(body))?body:{};
+  const nested=(details.application && typeof details.application==='object')?details.application:{};
+  const id=String(details.id ?? details.application_id ?? details.applicationId ?? details.tracking_id ?? details.trackingId ?? nested.id ?? '').trim();
+  const rawAction=String(details.action ?? details.review_action ?? details.reviewAction ?? details.status ?? '').trim().toLowerCase();
+  const actionAliases:Record<string,string>={
+    approve:'approved',approval:'approved',approved:'approved',
+    reject:'rejected',rejected:'rejected',
+    cleanup:'rejected',retry_cleanup:'rejected',cleanup_rejected:'rejected',
+    retry_proof_cleanup:'rejected',delete_rejected:'rejected',
+    needs_information:'needs_information',request_info:'needs_information',
+    needs_info:'needs_information',request_information:'needs_information'
+  };
+  const action=actionAliases[rawAction] || '';
+  if(!uuid.test(id)){
+    console.warn('Review request rejected: application UUID missing or invalid.');
+    return reply({error:'Invalid application ID. Expected the full tracking/application UUID. Update owner.html and partnership-review together.',code:'INVALID_APPLICATION_ID'},400);
+  }
+  if(!action){
+    console.warn('Review request rejected: unsupported action',rawAction.slice(0,45));
+    return reply({error:'Invalid review action. Accepted actions: approved, rejected, needs_information. Update owner.html and partnership-review together.',code:'INVALID_REVIEW_ACTION'},400);
+  }
+  const {data:application,error:fetchError}=await admin.from('partnership_applications').select('*').eq('id',id).maybeSingle();
+  if(fetchError)return reply({error:'Could not load application: '+fetchError.message},500);
+  if(!application)return reply({error:'Application not found or already deleted'},404);
+  if(action==='needs_information'){
+    const {error}=await admin.from('partnership_applications').update({status:'needs_information',reviewed_at:new Date().toISOString(),reviewed_by:ud.user.id}).eq('id',id);
+    if(error)return reply({error:error.message},500);
+    return reply({ok:true,status:'needs_information'});
+  }
+  if(action==='rejected'){
+    if(application.status!=='rejected'){
+      const {error}=await admin.from('partnership_applications').update({status:'rejected',reviewed_at:new Date().toISOString(),reviewed_by:ud.user.id}).eq('id',id);
+      if(error)return reply({error:'Could not reject: '+error.message},500);
     }
-    const action = clean(body.action, 30);
-    if (!["trial", "create_order", "verify", "owner_delete_job"].includes(action)) {
-      return json({ error: "Unknown action." }, 400);
+    // Storage API removal, not direct DELETE from storage.objects.
+    const proofValues=Object.values(application.proof_paths||{});
+    // Never delete the database row when we cannot safely identify every
+    // uploaded proof: that could leave private identity documents orphaned.
+    if(proofValues.some(v=>typeof v!=='string'||!goodPath(id,v))){
+      return reply({error:'One or more proof paths have an unexpected format. Cleanup stopped to avoid leaving orphaned identity documents; check Edge Function logs and storage.',code:'INVALID_PROOF_PATH'},409);
     }
-
-    // Only trial/create_order need a complete job, never verify/delete.
-    const job = (action === "trial" || action === "create_order")
-      ? normalizeJob((body.job && typeof body.job === "object" && !Array.isArray(body.job)
-          ? body.job : {}) as Record<string, unknown>)
-      : null;
-
-    if (action === "trial") {
-      const { data, error } = await userClient.rpc("publish_free_trial_job", { p_job: job! });
-      if (error) {
-        const message = error.message || "Could not use free trial.";
-        if (/FREE_TRIAL_ALREADY_USED|duplicate key/i.test(message)) {
-          return json({ code: "FREE_TRIAL_USED", error: "Your one free job post has already been used. The next post costs ₹299 for 30 days." }, 409);
-        }
-        if (/LOGIN_REQUIRED/i.test(message)) return json({ error: "Please login first." }, 401);
-        return json({ error: message }, 400);
-      }
-      return json(data || { success: true, trial_used: true });
+    const paths=proofValues as string[];
+    if(paths.length){
+      const {error}=await admin.storage.from('partnership-proofs').remove(paths);
+      if(error)return reply({error:'Application rejected but proof cleanup failed. Retry cleanup: '+error.message},503);
     }
+    // SQL AFTER DELETE trigger retains only hashed email + rejected tracking state.
+    const {data:deleted,error:deleteError}=await admin.from('partnership_applications').delete().eq('id',id).select('id');
+    if(deleteError||!deleted?.length)return reply({error:'Proofs removed but database cleanup failed. Retry: '+(deleteError?.message||'0 rows')},503);
+    return reply({ok:true,status:'rejected',deleted:true});
+  }
 
-    if (action === "create_order") {
-      // Paid-flow secrets are not required just to use the free trial.
-      const serviceKey = requiredEnv("SUPABASE_SERVICE_ROLE_KEY");
-      const razorpayKeyId = requiredEnv("RAZORPAY_KEY_ID");
-      const razorpaySecret = requiredEnv("RAZORPAY_KEY_SECRET");
-      const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
-      const { data: trialRow, error: trialError } = await admin
-        .from("job_posting_trials").select("user_id").eq("user_id", userId).maybeSingle();
-      if (trialError) return json({ error: "Could not verify your free-trial status. Please try again." }, 500);
-      if (!trialRow) return json({ code: "FREE_TRIAL_REQUIRED", error: "Use your one free job post first. After that, each additional post costs ₹299 for 30 days." }, 409);
-
-      const orderResponse = await fetch("https://api.razorpay.com/v1/orders", {
-        method: "POST",
-        headers: {
-          "Authorization": `Basic ${btoa(`${razorpayKeyId}:${razorpaySecret}`)}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: 29900,
-          currency: "INR",
-          receipt: `km_${crypto.randomUUID().replaceAll("-", "").slice(0, 28)}`,
-          notes: { product: "KaamMilega 30-day job post", user_id: userId },
-        }),
-      });
-      const order = await orderResponse.json();
-      if (!orderResponse.ok || !order.id) return json({ error: order.error?.description || "Razorpay could not create an order." }, 502);
-
-      const { error: insertError } = await admin.from("job_posting_payments").insert({
-        user_id: userId,
-        order_id: order.id,
-        amount_paise: 29900,
-        currency: "INR",
-        status: "created",
-        job_payload: job!,
-      });
-      if (insertError) return json({ error: "Payment order was created but could not be saved. Please contact support before retrying." }, 500);
-      return json({ key_id: razorpayKeyId, order_id: order.id, amount: 29900, currency: "INR", name: "KaamMilega", description: "Job post active for 30 days after approval" });
-    }
-
-    if (action === "verify") {
-      const orderId = clean(body.razorpay_order_id, 100);
-      const paymentId = clean(body.razorpay_payment_id, 100);
-      const signature = clean(body.razorpay_signature, 200);
-      if (!orderId || !paymentId || !signature) return json({ error: "Payment verification details are incomplete." }, 400);
-      const serviceKey = requiredEnv("SUPABASE_SERVICE_ROLE_KEY");
-      const razorpayKeyId = requiredEnv("RAZORPAY_KEY_ID");
-      const razorpaySecret = requiredEnv("RAZORPAY_KEY_SECRET");
-      const expected = await hmacHex(razorpaySecret, `${orderId}|${paymentId}`);
-      if (!safeEqual(expected, signature.toLowerCase())) return json({ error: "Payment signature could not be verified." }, 400);
-
-      const admin = createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } });
-      const { data: row, error: rowError } = await admin.from("job_posting_payments")
-        .select("id,user_id,order_id,status,amount_paise,currency")
-        .eq("order_id", orderId).eq("user_id", userId).maybeSingle();
-      if (rowError || !row) return json({ error: "This payment order was not found for your account." }, 404);
-      if (row.amount_paise !== 29900 || row.currency !== "INR") return json({ error: "Payment amount does not match the job-posting plan." }, 400);
-
-      // Verify the payment with Razorpay API as well as checking the signed checkout response.
-      const paymentResponse = await fetch(`https://api.razorpay.com/v1/payments/${encodeURIComponent(paymentId)}`, {
-        headers: { "Authorization": `Basic ${btoa(`${razorpayKeyId}:${razorpaySecret}`)}` },
-      });
-      const payment = await paymentResponse.json();
-      if (!paymentResponse.ok || payment.order_id !== orderId || payment.amount !== 29900 || payment.currency !== "INR" || !["captured", "authorized"].includes(payment.status)) {
-        return json({ error: "Razorpay payment is not captured/authorized yet. Please wait and contact support if money was deducted." }, 400);
-      }
-      if (payment.status === "authorized") {
-        const captureResponse = await fetch(`https://api.razorpay.com/v1/payments/${encodeURIComponent(paymentId)}/capture`, {
-          method: "POST",
-          headers: { "Authorization": `Basic ${btoa(`${razorpayKeyId}:${razorpaySecret}`)}`, "Content-Type": "application/json" },
-          body: JSON.stringify({ amount: 29900, currency: "INR" }),
-        });
-        const captured = await captureResponse.json();
-        if (!captureResponse.ok || captured.status !== "captured" || captured.order_id !== orderId || captured.amount !== 29900 || captured.currency !== "INR") {
-          return json({ error: "Payment capture could not be confirmed. Please contact support before paying again." }, 502);
-        }
-      }
-
-      const { data: result, error: finalizeError } = await admin.rpc("finalize_paid_job_post", {
-        p_user_id: userId, p_order_id: orderId, p_payment_id: paymentId,
-      });
-      if (finalizeError) return json({ error: finalizeError.message || "Payment was received but the job could not be submitted. Contact support with payment ID " + paymentId }, 500);
-      return json(result || { success: true, message: "Payment verified and job submitted for owner review." });
-    }
-
-    if (action === "owner_delete_job") {
-      // Optional server-side owner deletion for job posts. No owner can be
-      // impersonated using an email supplied in the request body.
-      const jobId = clean(body.job_id, 80);
-      if (!/^(\d{1,18}|[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i.test(jobId)) {
-        return json({ error: "Invalid job ID." }, 400);
-      }
-      const { data: isOwner, error: ownerError } = await userClient.rpc("km_is_partnership_owner");
-      if (ownerError || isOwner !== true) {
-        return json({ error: "Only the authorized Owner can delete job posts." }, 403);
-      }
-      const admin = createClient(supabaseUrl, requiredEnv("SUPABASE_SERVICE_ROLE_KEY"), { auth: { persistSession: false } });
-      const { data: removed, error: removeError } = await admin.from("jobs")
-        .delete().eq("id", jobId).select("id");
-      if (removeError) return json({ error: "Could not delete job: " + removeError.message }, 500);
-      if (!Array.isArray(removed) || removed.length !== 1) {
-        return json({ error: "Job was not found or has already been deleted." }, 404);
-      }
-      return json({ success: true, deleted: true, job_id: jobId });
-    }
-
-    return json({ error: "Unknown action." }, 400);
-  } catch (error) {
-    return json({ error: error instanceof Error ? error.message : "Unexpected server error." }, 500);
+  const apiKey=Deno.env.get('RESEND_API_KEY');const from=Deno.env.get('RESEND_FROM_EMAIL');
+  if(!apiKey||!from)return reply({error:'Approval email service is not configured. Set RESEND_API_KEY and RESEND_FROM_EMAIL before approving.'},503);
+  // Do not send duplicate approvals for previously emailed applications.
+  if(application.approval_email_sent_at)return reply({ok:true,status:'approved',email_sent:true,already_sent:true});
+  if(application.status!=='approved'){
+    const {error}=await admin.from('partnership_applications').update({status:'approved',reviewed_at:new Date().toISOString(),reviewed_by:ud.user.id}).eq('id',id);
+    if(error)return reply({error:'Could not approve: '+error.message},500);
+  }
+  const applicantName=String(application.full_name||'Applicant').slice(0,90).replace(/[<>]/g,'');
+  const message=`Namaste ${applicantName},\n\nAapki KaamMilega partnership application ko initial approval mil gaya hai.\n\nHamari team agle 24–48 ghanton mein aapki registered email ID par aapse sampark karegi.\n\nTracking ID: ${id}\nStatus check: https://kaammilaga.click/partnership.html#track\n\nFinal partnership / authority, fee terms aur responsibilities alag written agreement aur required verification ke baad hi effective hongi.\n\nRegards,\nKaamMilega Team`;
+  let sent=false;let mailId='';let errText='';
+  try{
+    const mail=await fetch('https://api.resend.com/emails',{
+      method:'POST',headers:{Authorization:'Bearer '+apiKey,'Content-Type':'application/json','Idempotency-Key':'km-partner-approval-'+id},
+      body:JSON.stringify({from,to:[String(application.email)],subject:'KaamMilega Partnership — Application Approved',text:message})
+    });
+    const result=await mail.json().catch(()=>({}));
+    if(!mail.ok)throw Error(result?.message||('Email API returned '+mail.status));
+    mailId=String(result?.id||'');sent=true;
+  }catch(e){errText=String(e instanceof Error?e.message:e).slice(0,500);}
+  const {error:saveError}=await admin.from('partnership_applications').update({
+    approval_email_sent_at:sent?new Date().toISOString():null,
+    approval_email_id:sent?mailId:null,
+    approval_email_error:sent?null:errText
+  }).eq('id',id);
+  if(saveError)return reply({error:'Approval applied, but email delivery logging failed: '+saveError.message,email_sent:sent},503);
+  if(!sent)return reply({error:'Application approved but email NOT sent: '+errText+'. Configure email provider and retry.'},503);
+  return reply({ok:true,status:'approved',email_sent:true,email_id:mailId});
+  }catch(error){
+    console.error('partnership-review unexpected error:',error);
+    return reply({error:'Server error in partnership-review. Check Edge Function logs.'},500);
   }
 });

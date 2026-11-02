@@ -297,4 +297,107 @@ function salary(){const form=$('salary-form');if(!form)return;const out=$('salar
 window.addEventListener('DOMContentLoaded',()=>{renderJobs();renderDetail();applyJob();renderApplications();renderAlerts();renderOwner();resume();salary()});
 })();
 
-</script></head><body data-city="Gandhinagar"><header class="nav"><nav class="nav-in" aria-label="Main navigation"><a href="index.html" class="logo">Kaam<b>Milega</b></a><div class="navlinks"><a href="career-hub.html">Career Hub</a><a href="jobs.html">Latest Jobs</a><a href="alerts.html">Job Alerts</a><a href="resume.html">Resume PDF</a><a href="applications.html">Applications</a><a href="index.html#kmUniqueFeatures">Salary Calculator</a><a href="career-guides.html">Career Guides</a></div></nav></header><main class="wrap" id="career-main"><section class="hero"><div class="eyebrow">Jobs in Gandhinagar</div><h1>Latest job vacancies in Gandhinagar</h1><p>Search active jobs in Gandhinagar. Listings update from KaamMilega; there are no invented job vacancies on this page.</p></section><form id="job-search" class="card form-grid" aria-label="Search jobs"><div class="field"><label for="city">City</label><input id="city" name="city" placeholder="e.g. Ahmedabad" autocomplete="address-level2"></div><div class="field"><label for="keyword">Job title or skill</label><input id="keyword" name="keyword" placeholder="e.g. Helper, Driver"></div><div class="field full"><label for="job-range">Posted when?</label><select id="job-range"><option value="all">All active jobs</option><option value="today">Posted today</option><option value="week">Last 7 days</option></select></div><div class="full"><button class="btn" type="submit">Search active jobs</button></div></form><p id="job-count" class="muted" aria-live="polite">Loading…</p><section id="job-results" class="jobs" aria-live="polite"></section><p class="muted">Looking outside Gandhinagar? <a href="jobs.html">See all India jobs</a>.</p></main><footer class="footer"><div class="footer-in"><strong>KaamMilega</strong> · Career services and genuine job listings. Jobs and application interest are free.<p><a href="index.html">Home</a><a href="partnership.html">Partnership</a><a href="index.html#privacyPolicy">Privacy Policy</a><a href="career-sitemap.xml">Career sitemap</a></p><span>Verify employers and never pay someone to secure an interview or job.</span></div></footer></body></html>
+</script><style id="km-career-two-ad-fix">
+
+/* KaamMilega Career update: two ad placements and eliminate post-footer blank. */
+html{min-height:100%;}
+body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
+.wrap{width:100%;padding-bottom:22px;}
+.footer{margin-top:0;width:100%;}
+.km-career-ads{
+  width:min(1140px, calc(100% - 44px));
+  margin:22px auto 30px;
+  padding:22px;
+  border:1px solid #d3dfeb;
+  border-radius:22px;
+  box-shadow:0 10px 30px #0d2f4b10;
+  background:linear-gradient(125deg,#fff 0%,#f1f7fd 100%);
+}
+.km-career-ads__top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:17px;}
+.km-career-ads__label{margin:0;color:#162f4d;font-size:19px;font-weight:800;letter-spacing:-.035em;}
+.km-career-ads__disclosure{font-size:11px;font-weight:800;letter-spacing:1.2px;color:#54708b;text-transform:uppercase;}
+.km-career-ads__grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;align-items:start;}
+.km-career-ad{margin:0;background:#fff;border:1px solid #dae6f1;border-radius:16px;padding:16px 10px;
+  box-shadow:inset 0 1px #fff,0 4px 17px #102b4510;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:10px;min-width:0;
+}
+.km-career-ad figcaption{font-size:11px;color:#667b91;text-transform:uppercase;font-weight:750;letter-spacing:1px;}
+.km-career-ad__frame{display:block;border:0;outline:0;overflow:hidden;max-width:100%;background:#fff;}
+.km-career-ad__frame--300{width:300px;height:250px;}
+.km-career-ad__frame--160{width:160px;height:300px;}
+.km-career-ads__notice{margin:16px 0 0;font-size:12px;line-height:1.6;color:#536c84;text-align:center;}
+@media(max-width:760px){
+ .wrap{padding-bottom:16px;}
+ .km-career-ads{width:calc(100% - 26px);margin:18px auto 24px;padding:15px 11px;border-radius:17px;}
+ .km-career-ads__label{font-size:18px;}
+ .km-career-ads__grid{grid-template-columns:1fr;gap:12px;}
+ .km-career-ad{padding:12px 5px;border-radius:14px;}
+}
+@media print{.km-career-ads{display:none!important}}
+
+</style>
+<style id="km-inpage-two-ads-style">
+
+/* Visible ad area is part of career-main, BEFORE the footer; no ad after the footer. */
+body{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;}
+body>.wrap{width:100%;flex:1 0 auto;}
+body>.footer{margin-top:auto;width:100%;}
+.km-inline-ads{
+  width:100%;margin:30px auto 8px;padding:clamp(18px,3vw,29px);
+  background:linear-gradient(125deg,#fff,#f2f7fc);
+  border:1px solid #d1dfed;border-radius:19px;
+  box-shadow:0 9px 27px #102f4c12;
+}
+.km-inline-ads__head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:19px}
+.km-inline-ads__head h2{font-size:clamp(20px,3vw,25px);margin:5px 0 5px;color:#17344e}
+.km-inline-ads__head p{margin:0;max-width:700px;font-size:12px;color:#53687f;line-height:1.6}
+.km-inline-ads__eyebrow{font-weight:850;letter-spacing:1.35px;color:#245b88;font-size:10px}
+.km-inline-ads__count{border:1px solid #cce0ed;border-radius:99px;padding:7px 11px;background:#e9f3fb;color:#174b7d;font-size:11px;font-weight:800;white-space:nowrap}
+.km-inline-ads__grid{display:grid;grid-template-columns:1fr 1fr;gap:17px;align-items:stretch}
+.km-inline-ad{background:#fff;border:1px solid #dce6ef;border-radius:15px;min-width:0;min-height:362px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:14px;padding:19px 12px 17px;box-shadow:0 6px 15px #0b28400a;}
+.km-inline-ad__label{font-size:11px;font-weight:850;color:#547086;letter-spacing:.8px;text-transform:uppercase}
+.km-inline-ad__box{width:100%;display:flex;justify-content:center;align-items:flex-start;overflow:hidden;background:#f7f9fc;border:1px solid #edf0f3;border-radius:7px;}
+.km-inline-ad__box--wide{max-width:302px;min-height:252px}
+.km-inline-ad__box--tower{max-width:162px;min-height:302px}
+.km-inline-ad iframe{display:block;flex:none;border:0;max-width:100%;background:transparent;}
+@media(max-width:700px){
+  .km-inline-ads{margin:22px auto 7px;padding:16px;border-radius:16px}
+  .km-inline-ads__grid{grid-template-columns:1fr;gap:13px}
+  .km-inline-ad{min-height:0;padding:15px 10px}
+  .km-inline-ad__label{font-size:10px}
+}
+@media print{.km-inline-ads{display:none!important}}
+
+</style></head><body data-city="Gandhinagar"><header class="nav"><nav class="nav-in" aria-label="Main navigation"><a href="index.html" class="logo">Kaam<b>Milega</b></a><div class="navlinks"><a href="career-hub.html">Career Hub</a><a href="jobs.html">Latest Jobs</a><a href="alerts.html">Job Alerts</a><a href="resume.html">Resume PDF</a><a href="applications.html">Applications</a><a href="index.html#kmUniqueFeatures">Salary Calculator</a><a href="career-guides.html">Career Guides</a></div></nav></header><main class="wrap" id="career-main"><section class="hero"><div class="eyebrow">Jobs in Gandhinagar</div><h1>Latest job vacancies in Gandhinagar</h1><p>Search active jobs in Gandhinagar. Listings update from KaamMilega; there are no invented job vacancies on this page.</p></section><form id="job-search" class="card form-grid" aria-label="Search jobs"><div class="field"><label for="city">City</label><input id="city" name="city" placeholder="e.g. Ahmedabad" autocomplete="address-level2"></div><div class="field"><label for="keyword">Job title or skill</label><input id="keyword" name="keyword" placeholder="e.g. Helper, Driver"></div><div class="field full"><label for="job-range">Posted when?</label><select id="job-range"><option value="all">All active jobs</option><option value="today">Posted today</option><option value="week">Last 7 days</option></select></div><div class="full"><button class="btn" type="submit">Search active jobs</button></div></form><p id="job-count" class="muted" aria-live="polite">Loading…</p><section id="job-results" class="jobs" aria-live="polite"></section><p class="muted">Looking outside Gandhinagar? <a href="jobs.html">See all India jobs</a>.</p>
+<!-- KaamMilega: 2 sponsor slots INSIDE the career page, just before footer. -->
+<section class="km-inline-ads no-print" id="kmCareerPageAds" aria-label="Sponsored advertisements">
+  <div class="km-inline-ads__head">
+    <div><span class="km-inline-ads__eyebrow">SPONSORED CONTENT</span>
+    <h2>Advertisements</h2>
+    <p>These ads are separate from KaamMilega job listings. Ads dekhna ya click karna job apply karne ke liye zaroori nahi hai.</p></div>
+    <span class="km-inline-ads__count">2 Ad Placements</span>
+  </div>
+  <div class="km-inline-ads__grid">
+    <div class="km-inline-ad" aria-label="Advertisement 1">
+      <span class="km-inline-ad__label">Advertisement 1</span>
+      <div class="km-inline-ad__box km-inline-ad__box--wide">
+        <iframe title="Sponsored advertisement 300 by 250" loading="lazy"
+          width="300" height="250" referrerpolicy="strict-origin-when-cross-origin"
+          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          src="https://kobraking97875-dotcom.github.io/kaammilaga-ads/km-ad-300.html"></iframe>
+      </div>
+    </div>
+    <div class="km-inline-ad" aria-label="Advertisement 2">
+      <span class="km-inline-ad__label">Advertisement 2</span>
+      <div class="km-inline-ad__box km-inline-ad__box--tower">
+        <iframe title="Sponsored advertisement 160 by 300" loading="lazy"
+          width="160" height="300" referrerpolicy="strict-origin-when-cross-origin"
+          sandbox="allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+          src="https://kobraking97875-dotcom.github.io/kaammilaga-ads/km-ad-160x300.html"></iframe>
+      </div>
+    </div>
+  </div>
+</section>
+</main><footer class="footer"><div class="footer-in"><strong>KaamMilega</strong> · Career services and genuine job listings. Jobs and application interest are free.<p><a href="index.html">Home</a><a href="partnership.html">Partnership</a><a href="index.html#privacyPolicy">Privacy Policy</a><a href="career-sitemap.xml">Career sitemap</a></p><span>Verify employers and never pay someone to secure an interview or job.</span></div></footer>
+</body></html>

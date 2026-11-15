@@ -712,20 +712,10 @@ details[open]>.km-fold-content{display:block}
 <button class="km-settings-trigger" id="kmSettingsTrigger" type="button" aria-label="Open settings" aria-expanded="false" aria-controls="kmSettingsPanel">⚙️ <span>Settings</span></button>
 </div>
 </div></header>
-
-<section id="km-post-first" aria-label="Quick posting and hiring actions">
-  <div class="km-post-first-inner">
-    <div class="km-post-first-copy">
-      <span class="km-post-first-kicker">START HERE</span>
-      <strong>Need to post or hire?</strong>
-      <small>Choose an action — no need to search through the website.</small>
-    </div>
-    <div class="km-post-first-actions">
-      <button type="button" class="km-post-first-job" data-open="jobModal">＋ Post a Job</button>
-      <button type="button" class="km-post-first-workers" data-open="urgentModal">👷 Request Workers</button>
-    </div>
-  </div>
-</section>
+<details open class="km-fold"><summary>Workers Required by Companies</summary><section class="section km-bottom-leads" id="companyRequirementsSection">
+<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">COMPANY HIRING REQUIREMENTS</span><h2 style="margin:5px 0">Workers Required by Companies</h2><p class="muted" style="margin:0">Company requirements posted through KaamMilega. Contact the support team for current verification.</p></div><div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn secondary" id="publicCompanyRefresh" type="button">Refresh Requirements</button><button class="btn" data-open="ownerRequirementModal" id="ownerRequirementBtn">Post Company Requirement</button></div>
+<div class="requirement-grid" id="companyRequirements" style="margin-top:18px"><div class="card">Loading company requirements...</div></div>
+</div></section></details>
 
 <section id="km-urgent-hiring-top" aria-label="Urgent Hiring">
   <div class="km-urgent-inner">
@@ -753,6 +743,23 @@ details[open]>.km-fold-content{display:block}
 #km-urgent-hiring-top .km-urgent-cta span{font-size:25px;line-height:14px}
 @media(max-width:700px){#km-urgent-hiring-top{margin:12px auto 18px;padding:0 10px}#km-urgent-hiring-top .km-urgent-inner{align-items:flex-start;flex-wrap:wrap;padding:19px 16px;gap:12px}#km-urgent-hiring-top .km-urgent-icon{flex-basis:56px;height:56px;font-size:34px;border-radius:16px}#km-urgent-hiring-top .km-urgent-copy{flex:1 1 calc(100% - 72px)}#km-urgent-hiring-top .km-urgent-points{gap:7px 12px;font-size:11px}#km-urgent-hiring-top .km-urgent-cta{width:100%;justify-content:center;padding:13px}}
 </style>
+
+
+<section id="km-post-first" aria-label="Quick posting and hiring actions">
+  <div class="km-post-first-inner">
+    <div class="km-post-first-copy">
+      <span class="km-post-first-kicker">START HERE</span>
+      <strong>Need to post or hire?</strong>
+      <small>Choose an action — no need to search through the website.</small>
+    </div>
+    <div class="km-post-first-actions">
+      <button type="button" class="km-post-first-job" data-open="jobModal">＋ Post a Job</button>
+      <button type="button" class="km-post-first-workers" data-open="urgentModal">👷 Request Workers</button>
+    </div>
+  </div>
+</section>
+
+
 
 
 
@@ -4356,10 +4363,7 @@ body.km-dark #kmAiPanel .km-ai-form input::placeholder{color:#adc3dd!important}
     </div>
   </div>
 </aside>
-<details open class="km-fold"><summary>Workers Required by Companies</summary><section class="section km-bottom-leads" id="companyRequirementsSection">
-<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">COMPANY HIRING REQUIREMENTS</span><h2 style="margin:5px 0">Workers Required by Companies</h2><p class="muted" style="margin:0">Company requirements posted through KaamMilega. Contact the support team for current verification.</p></div><div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn secondary" id="publicCompanyRefresh" type="button">Refresh Requirements</button><button class="btn" data-open="ownerRequirementModal" id="ownerRequirementBtn">Post Company Requirement</button></div>
-<div class="requirement-grid" id="companyRequirements" style="margin-top:18px"><div class="card">Loading company requirements...</div></div>
-</div></section></details>
+
 <details open class="km-fold"><summary>Companies &amp; Hiring Leads on KaamMilega</summary><section class="section km-company-directory" id="companyDirectory">
 <div class="trust-head">
 <div>

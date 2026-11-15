@@ -619,6 +619,51 @@ details[open]>.km-fold-content{display:block}
 }
 </style>
 
+
+<style id="km-platinum-live-company-design">
+#companyRequirementsSection,#companyDirectory{max-width:1240px!important;margin:0 auto!important;padding:24px 18px!important}
+#companyRequirementsSection{background:linear-gradient(120deg,#4c12c7 0%,#8b18e9 48%,#ff7b22 100%);border-radius:0 0 26px 26px;color:#fff;box-shadow:0 12px 30px #4d12a522}
+#companyRequirementsSection .eyebrow{color:#ffe28a!important;letter-spacing:1.6px}
+#companyRequirementsSection h2{color:#fff!important;font-size:clamp(25px,3vw,38px)!important}
+#companyRequirementsSection p{color:#f5edff!important}
+#companyRequirementsSection #publicCompanyRefresh{background:#fff!important;color:#5c1ac5!important;border:0!important}
+#companyRequirementsSection #ownerRequirementBtn{background:linear-gradient(100deg,#ff8a00,#ff168b)!important;color:#fff!important;border:1px solid #ffd36c!important;box-shadow:0 6px 18px #2b005a40!important}
+#companyRequirements{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:16px!important}
+#companyRequirements .requirement-card{position:relative;overflow:hidden;border:2px solid #f3c5ff!important;border-radius:24px!important;padding:22px!important;background:linear-gradient(135deg,#fff7fb 0%,#fff 45%,#fff7df 100%)!important;box-shadow:0 10px 30px #25004a22, inset 0 0 0 1px #fff!important}
+#companyRequirements .requirement-card:before{content:"";position:absolute;inset:0 0 auto;height:7px;background:linear-gradient(90deg,#ffb900,#ff31b8,#7127ff,#16a8ff)}
+#companyRequirements .requirement-top{align-items:center!important}
+#companyRequirements .requirement-card h3{color:#29105f!important;font-size:clamp(21px,2.5vw,30px)!important}
+#companyRequirements .requirement-meta{gap:10px!important}
+#companyRequirements .requirement-meta>div{border:1px solid #e1d9ff!important;border-radius:14px!important;padding:13px!important;background:linear-gradient(135deg,#e8f4ff,#f4edff)!important}
+#companyRequirements .requirement-meta>div:nth-child(3n+2){background:linear-gradient(135deg,#fff1cc,#fff9e9)!important}
+#companyRequirements .requirement-meta>div:nth-child(3n){background:linear-gradient(135deg,#e0fff0,#f2fff8)!important}
+#companyRequirements .requirement-label{color:#6b55a1!important}
+#companyRequirements .requirement-value{color:#201344!important}
+#companyRequirements .requirement-status{background:linear-gradient(90deg,#08a83c,#00c853)!important;color:#fff!important;padding:8px 13px!important;border-radius:999px!important;box-shadow:0 4px 12px #009b3b2b}
+.km-live-hiring{display:inline-flex;align-items:center;gap:7px;margin:8px 0 3px;padding:7px 14px;border-radius:999px;background:linear-gradient(90deg,#e90019,#ff382d);color:#fff!important;font-size:15px;font-weight:950;letter-spacing:.3px;box-shadow:0 4px 12px #e9001940}
+.km-live-hiring:before{content:"";width:8px;height:8px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px #ffffff35;animation:km-live-pulse 1.25s infinite}
+@keyframes km-live-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.45;transform:scale(.72)}}
+#companyDirectory{margin-top:18px!important;border:2px solid #f0d6ff;border-radius:24px!important;background:linear-gradient(140deg,#f5eaff,#fff 55%,#fff0d8)!important;box-shadow:0 10px 30px #40108012}
+#companyDirectory .trust-head{padding:20px!important;border-radius:18px!important;background:linear-gradient(105deg,#4b10c8,#8b17eb 62%,#ff8a00)!important;color:#fff!important}
+#companyDirectory .eyebrow,#companyDirectory h2,#companyDirectory p{color:#fff!important}
+#companyDirectory h2{font-size:clamp(23px,3vw,34px)!important}
+.km-company-directory-grid{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:12px!important;margin-top:16px!important}
+.km-company-directory-card{position:relative!important;min-height:112px;padding:38px 14px 14px!important;border:2px solid #d9c5ff!important;border-radius:18px!important;background:linear-gradient(135deg,#e3f5ff,#fff)!important;box-shadow:0 7px 18px #39107712!important;overflow:hidden}
+.km-company-directory-card:nth-child(3n+2){background:linear-gradient(135deg,#fff2d4,#fff)!important;border-color:#ffd47b!important}
+.km-company-directory-card:nth-child(3n){background:linear-gradient(135deg,#ffe5f4,#fff)!important;border-color:#f5a8d6!important}
+.km-company-directory-card:before{content:"★ PLATINUM";position:absolute;left:12px;top:9px;padding:4px 10px;border-radius:999px;background:linear-gradient(90deg,#ffd64b,#ffad00);color:#3d2500;font-size:10px;font-weight:1000;box-shadow:0 2px 7px #c58a2430}
+.km-company-directory-card:after{content:"● LIVE";position:absolute;right:10px;top:9px;padding:5px 9px;border-radius:999px;background:#00a83b;color:#fff;font-size:10px;font-weight:950;box-shadow:0 2px 8px #00a83b35}
+.km-company-directory-card h3{color:#211044!important;font-size:16px!important}
+.km-company-directory-card .muted{color:#6c6680!important}
+@media(max-width:760px){
+ #companyRequirementsSection,#companyDirectory{padding:18px 12px!important}
+ #companyRequirements .requirement-meta{grid-template-columns:1fr 1fr!important}
+ .km-company-directory-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #companyRequirements .requirement-card{padding:18px 14px!important}
+}
+@media(max-width:430px){.km-company-directory-grid{grid-template-columns:1fr!important}#companyRequirements .requirement-meta{grid-template-columns:1fr!important}}
+</style>
+
 </head>
 <style id="km-google-gate-style">
 #kmGoogleGate{position:fixed;inset:0;z-index:999999;background:linear-gradient(145deg,#071b3c 0%,#0b63ce 58%,#0d9488 100%);display:flex;align-items:center;justify-content:center;padding:22px;font-family:Arial,sans-serif;color:#fff}#kmGoogleGate .km-gate-card{width:min(100%,520px);max-height:calc(100dvh - 28px);overflow-y:auto;box-sizing:border-box;background:#fff;color:#172033;border-radius:22px;padding:28px 24px;box-shadow:0 24px 80px #0005;text-align:center}#kmGoogleGate .km-gate-info{margin-top:22px;text-align:left;border-top:1px solid #e2e8f0;padding-top:18px}#kmGoogleGate .km-gate-info h2{font-size:18px;margin:0 0 10px;color:#172033}#kmGoogleGate .km-gate-info p{margin:8px 0;font-size:13px}#kmGoogleGate .km-gate-benefits{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:12px 0}#kmGoogleGate .km-gate-benefit{background:#f1f6ff;border:1px solid #dbeafe;border-radius:11px;padding:11px;font-size:12px;line-height:1.45;color:#26364c}#kmGoogleGate .km-gate-benefit strong{display:block;font-size:13px;margin-bottom:4px;color:#174ea6}#kmGoogleGate .km-gate-steps{background:#f8fafc;border-radius:11px;padding:12px;font-size:12px;line-height:1.65;color:#475569}#kmGoogleGate .km-gate-notice{font-size:11px!important;color:#64748b!important;margin-top:12px!important}@media(max-width:420px){#kmGoogleGate{padding:10px}#kmGoogleGate .km-gate-card{padding:22px 17px;border-radius:18px}#kmGoogleGate .km-gate-benefits{grid-template-columns:1fr}}#kmGoogleGate .km-gate-logo{font-size:26px;font-weight:900;margin-bottom:8px}#kmGoogleGate .km-gate-logo span{color:#f28b14}#kmGoogleGate h1{font-size:24px;line-height:1.25;margin:12px 0}#kmGoogleGate p{color:#64748b;line-height:1.55;font-size:14px}#kmGoogleLoginBtn{width:100%;display:flex;align-items:center;justify-content:center;gap:12px;background:#fff;border:1px solid #cbd5e1;border-radius:10px;padding:13px 15px;font-weight:700;color:#1f2937;font-size:15px;cursor:pointer;box-shadow:0 1px 2px #0001}#kmGoogleLoginBtn:disabled{opacity:.65;cursor:wait}#kmGoogleGate .km-google-g{font-size:22px;font-weight:900;color:#4285f4}#kmGoogleGateMsg{font-size:13px;color:#b91c1c;white-space:pre-wrap;margin-top:12px}#kmGoogleGate .km-gate-small{font-size:11px;color:#94a3b8;margin-top:18px}body.km-auth-locked{overflow:hidden}
@@ -681,6 +726,38 @@ details[open]>.km-fold-content{display:block}
     </div>
   </div>
 </section>
+
+<section id="km-urgent-hiring-top" aria-label="Urgent Hiring">
+  <div class="km-urgent-inner">
+    <div class="km-urgent-icon">⚡</div>
+    <div class="km-urgent-copy">
+      <span class="km-urgent-kicker">FAST MANPOWER SUPPORT</span>
+      <h2>Urgent Hiring</h2>
+      <p>Need workers immediately? Get skilled or unskilled manpower for your company, project or site on priority basis.</p>
+      <div class="km-urgent-points"><span>🚀 Quick Response</span><span>👥 Worker Requirements</span><span>📍 Pan India Support</span></div>
+    </div>
+    <button type="button" class="km-urgent-cta" data-open="urgentModal">👥 Request Workers <span>›</span></button>
+  </div>
+</section>
+<style id="km-urgent-hiring-top-style">
+#km-urgent-hiring-top{max-width:1240px;margin:18px auto 24px;padding:0 14px}
+#km-urgent-hiring-top .km-urgent-inner{position:relative;overflow:hidden;display:flex;align-items:center;gap:22px;padding:24px 28px;border-radius:24px;color:#fff;background:linear-gradient(105deg,#4810c9 0%,#8d12e8 48%,#ff6c20 100%);box-shadow:0 12px 30px #4b12b52b}
+#km-urgent-hiring-top .km-urgent-inner:after{content:"";position:absolute;inset:0;background:radial-gradient(circle at 85% 20%,#ffdc6d88,transparent 25%),linear-gradient(90deg,transparent 45%,#ffb52b25);pointer-events:none}
+#km-urgent-hiring-top .km-urgent-icon{z-index:1;display:grid;place-items:center;flex:0 0 76px;height:76px;border-radius:22px;background:linear-gradient(145deg,#fff,#ffe7a7);color:#ff7a00;font-size:48px;box-shadow:0 8px 20px #26005235}
+#km-urgent-hiring-top .km-urgent-copy{z-index:1;flex:1;min-width:0}
+#km-urgent-hiring-top .km-urgent-kicker{font-size:10px;letter-spacing:1.8px;font-weight:950;color:#ffe88a}
+#km-urgent-hiring-top h2{margin:2px 0 5px;color:#fff;font-size:clamp(28px,3.4vw,42px);line-height:1.05;font-weight:950}
+#km-urgent-hiring-top p{margin:0;color:#fff;font-size:15px;line-height:1.45;max-width:680px}
+#km-urgent-hiring-top .km-urgent-points{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:13px;font-size:12px;font-weight:800;color:#fff4d6}
+#km-urgent-hiring-top .km-urgent-cta{z-index:1;display:inline-flex;align-items:center;gap:12px;white-space:nowrap;border:2px solid #fff8;border-radius:999px;padding:15px 22px;background:linear-gradient(100deg,#6512e9,#a300f3);color:#fff;font-size:16px;font-weight:900;box-shadow:0 7px 18px #21005245;cursor:pointer}
+#km-urgent-hiring-top .km-urgent-cta span{font-size:25px;line-height:14px}
+@media(max-width:700px){#km-urgent-hiring-top{margin:12px auto 18px;padding:0 10px}#km-urgent-hiring-top .km-urgent-inner{align-items:flex-start;flex-wrap:wrap;padding:19px 16px;gap:12px}#km-urgent-hiring-top .km-urgent-icon{flex-basis:56px;height:56px;font-size:34px;border-radius:16px}#km-urgent-hiring-top .km-urgent-copy{flex:1 1 calc(100% - 72px)}#km-urgent-hiring-top .km-urgent-points{gap:7px 12px;font-size:11px}#km-urgent-hiring-top .km-urgent-cta{width:100%;justify-content:center;padding:13px}}
+</style>
+
+
+
+
+
 <style id="km-post-first-style">
 #km-post-first{position:relative;z-index:5;padding:14px 20px;background:linear-gradient(100deg,#3e0da8 0%,#7615df 52%,#a51be4 100%);color:#fff;box-shadow:0 8px 24px #42108d22}
 #km-post-first .km-post-first-inner{max-width:1240px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:18px}
@@ -1899,8 +1976,8 @@ async function loadCompanyRequirements(){
     }
     box.innerHTML=rows.map(x=>`<article class="requirement-card">
       <div class="requirement-top">
-        <div><span class="eyebrow">HIRING REQUIREMENT</span><h3 style="margin:5px 0">${escapeHtml(x.company_name)}</h3></div>
-        <span class="requirement-status">ACTIVE</span>
+        <div><span class="eyebrow">HIRING REQUIREMENT</span><div class="km-live-hiring">◉ LIVE Hiring</div><h3 style="margin:5px 0">${escapeHtml(x.company_name)}</h3></div>
+        <span class="requirement-status">● ACTIVE</span>
       </div>
       <div class="requirement-meta">
         <div><div class="requirement-label">Members Needed</div><div class="requirement-value">${escapeHtml(String(x.members_needed??''))}</div></div>
@@ -4279,11 +4356,25 @@ body.km-dark #kmAiPanel .km-ai-form input::placeholder{color:#adc3dd!important}
     </div>
   </div>
 </aside>
-
 <details open class="km-fold"><summary>Workers Required by Companies</summary><section class="section km-bottom-leads" id="companyRequirementsSection">
 <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap"><div><span class="eyebrow">COMPANY HIRING REQUIREMENTS</span><h2 style="margin:5px 0">Workers Required by Companies</h2><p class="muted" style="margin:0">Company requirements posted through KaamMilega. Contact the support team for current verification.</p></div><div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px"><button class="btn secondary" id="publicCompanyRefresh" type="button">Refresh Requirements</button><button class="btn" data-open="ownerRequirementModal" id="ownerRequirementBtn">Post Company Requirement</button></div>
 <div class="requirement-grid" id="companyRequirements" style="margin-top:18px"><div class="card">Loading company requirements...</div></div>
 </div></section></details>
+<details open class="km-fold"><summary>Companies &amp; Hiring Leads on KaamMilega</summary><section class="section km-company-directory" id="companyDirectory">
+<div class="trust-head">
+<div>
+<span class="eyebrow">COMPANY DIRECTORY</span>
+<h2>Companies &amp; Hiring Leads on KaamMilega</h2>
+<p class="muted">Company names and hiring leads are listed here at the bottom of the website. Vacancy status can change; verify the current listing before applying.</p>
+</div>
+</div>
+<div class="km-company-directory-grid">
+<article class="km-company-directory-card"><div class="km-company-directory-logo">NC</div><div><h3>NR Company</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">HI</div><div><h3>Hariyana Industries</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">MS</div><div><h3>Maruti Suzuki India Limited</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">H</div><div><h3>Honda</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">SI</div><div><h3>Swiggy Instamart</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">VG</div><div><h3>Ve Gee Auto Components Pvt Ltd</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article>
+</div>
+</section></details>
+
+
+
 <style id="km-company-requirements-layout-fix">
   #companyRequirements{display:grid !important;grid-template-columns:minmax(0,1fr) !important;width:100%;align-items:stretch}
   #companyRequirements>.card,#companyRequirements>article{width:100%;max-width:none;min-width:0;box-sizing:border-box}
@@ -4445,18 +4536,7 @@ body.km-dark #kmAiPanel .km-ai-form input::placeholder{color:#adc3dd!important}
   }));
 })();
 </script>
-<details open class="km-fold"><summary>Companies &amp; Hiring Leads on KaamMilega</summary><section class="section km-company-directory" id="companyDirectory">
-<div class="trust-head">
-<div>
-<span class="eyebrow">COMPANY DIRECTORY</span>
-<h2>Companies &amp; Hiring Leads on KaamMilega</h2>
-<p class="muted">Company names and hiring leads are listed here at the bottom of the website. Vacancy status can change; verify the current listing before applying.</p>
-</div>
-</div>
-<div class="km-company-directory-grid">
-<article class="km-company-directory-card"><div class="km-company-directory-logo">NC</div><div><h3>NR Company</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">HI</div><div><h3>Hariyana Industries</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">MS</div><div><h3>Maruti Suzuki India Limited</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">H</div><div><h3>Honda</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">SI</div><div><h3>Swiggy Instamart</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article><article class="km-company-directory-card"><div class="km-company-directory-logo">VG</div><div><h3>Ve Gee Auto Components Pvt Ltd</h3><p class="muted">Company / hiring lead listed on KaamMilega</p></div></article>
-</div>
-</section></details>
+
 <!-- KAAMMILEGA LIVE WORKER ID CARDS -->
 <style id="km-live-worker-id-style">
 .km-live-id-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}.km-live-id-card{background:#0b1728;border:1px solid #334155;border-radius:18px;overflow:hidden;color:#fff}.km-live-id-head{background:#f59e0b;color:#0b1220;padding:12px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center}.km-live-id-body{display:grid;grid-template-columns:130px 1fr;gap:16px;padding:18px}.km-live-id-photo{width:130px;height:165px;border-radius:12px;object-fit:cover;background:#e2e8f0}.km-live-id-row{margin-bottom:9px}.km-live-id-label{font-size:11px;color:#94a3b8;font-weight:700}.km-live-id-value{font-size:15px;font-weight:700;overflow-wrap:anywhere}.km-live-id-foot{padding:10px 16px;background:rgba(0,0,0,.28);font-size:12px;color:#cbd5e1}.km-owner-id-row{border:1px solid #334155;border-radius:14px;padding:14px;margin-bottom:10px;background:#0b1728;color:#fff}.km-owner-id-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}@media(max-width:800px){.km-live-id-grid{grid-template-columns:1fr}.km-live-id-body{grid-template-columns:100px 1fr}.km-live-id-photo{width:100px;height:130px}}
@@ -4558,7 +4638,7 @@ $('ownerMegaRefresh')?.addEventListener('click',ownerList);$('ownerMegaClearExpi
     rows=Array.isArray(rows)?rows.filter(x=>String(x.status||'active')==='active'):[];
     if(!rows.length){box.innerHTML='<div class="card">No active company requirements yet.</div>';return;}
     box.innerHTML=rows.map(x=>`<article class="requirement-card">
-      <div class="requirement-top"><div><span class="eyebrow">HIRING REQUIREMENT</span><h3 style="margin:5px 0">${esc2(x.company_name)}</h3></div><span class="requirement-status">ACTIVE</span></div>
+      <div class="requirement-top"><div><span class="eyebrow">HIRING REQUIREMENT</span><div class="km-live-hiring">◉ LIVE Hiring</div><h3 style="margin:5px 0">${esc2(x.company_name)}</h3></div><span class="requirement-status">● ACTIVE</span></div>
       <div class="requirement-meta">
         <div><div class="requirement-label">Members Needed</div><div class="requirement-value">${esc2(x.members_needed)}</div></div>
         <div><div class="requirement-label">Worker Required</div><div class="requirement-value">${esc2(x.worker_requirement)}</div></div>
